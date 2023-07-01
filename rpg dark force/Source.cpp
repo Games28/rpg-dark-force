@@ -68,7 +68,9 @@ public:
 		//ray.renderMapRays(this, player, wall.nTestRay );   // rays in the map
 		saber.DrawSaber(this,fElapsedTime);
 		DrawString(300, 10, "player look up or down  = " + std::to_string(player.lookupordown));
+		DrawString(300, 20, "playerheight  = " + std::to_string(player.fPlayerH));
 		
+
 
 		//DrawLine( wall.nTestRay, 0, wall.nTestRay, ScreenHeight(), olc::MAGENTA );
 

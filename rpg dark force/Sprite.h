@@ -9,7 +9,6 @@ struct sprite_t
 {
 	float x, y;
 	int texture;
-	
 	float distance;
 	float angle;
 	bool visible;

@@ -2,10 +2,10 @@
 
 void Sprite::initSpriteinfo()
 {
-	sprites[0] = {640,630, 1};
-	sprites[1] = { 660,690,1  };
-	sprites[2] = { 250,600, 1  };
-	sprites[3] = { 240,610, 2 };
+	//sprites[0] = {640,630, 0};
+	//sprites[1] = { 660,690,1 };
+	//sprites[2] = { 250,600, 1 };
+	//sprites[3] = { 240,610, 2 };
 	sprites[4] = { 300,400, 2 };
 }
 
@@ -29,7 +29,7 @@ void Sprite::calculateBottomandTop(Player& player, float distance,float& SHeight
 void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player)
 {
 	
-	
+	int halfscreenheight = WINDOW_HEIGHT * player.fPlayerH;
 	
 	auto normalizeAngle = [=](float* angle)
 	{
@@ -86,8 +86,6 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		}
 	}
 
-	
-
 	for (int i = 0; i < numVisibleSprites; i++)
 	{
 		sprite_t sprite = visibleSprites[i];
@@ -128,7 +126,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 		int textureWidth = spriteptr[sprite.texture]->width;
 		int textureHeight = spriteptr[sprite.texture]->height;
-	
+
 		for (int x = spriteLeftX; x < spriteRightX; x++)
 		{
 
@@ -197,54 +195,3 @@ void Sprite::mapSprites(olc::PixelGameEngine* PGEptr)
 		}
 	}
 }
-
-
-
-/*josephe inspired sprite rendering code 
-
-int halfScreenWidth = WINDOW_WIDTH / 2;
-	int halfScreenHeight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
-
-	for (int i = 0; i < numVisibleSprites; i++)
-	{
-		sprite_t sprite = visibleSprites[i];
-		float fCompensatePlayerHeight = player.fPlayerH - 0.5f;
-		float fObjectHiveSliceHeight = float(WINDOW_HEIGHT / sprite.distance);
-		float fObjectHiveSliceHeightScaled = float((WINDOW_HEIGHT * 1) / sprite.distance);
-
-		//not picked up
-		float fObjectceilnormialized = float(halfScreenHeight) - fObjectHiveSliceHeight;
-		float fObjectCeilingscaled = float(halfScreenHeight) - fObjectHiveSliceHeightScaled;
-		float fObjectFLoor = float(halfScreenHeight) + fObjectHiveSliceHeight;
-
-		float fScaledifference = fObjectceilnormialized - fObjectCeilingscaled;
-		float fObjectceiling = fObjectceilnormialized - 2 * fScaledifference;
-
-		float fObjectHeight = fObjectFLoor - fObjectceiling;
-		float fObjectAspectRatio = float(spriteptr[sprite.texture]->height) / float(spriteptr[sprite.texture]->width);
-		float fObjectWidth = fObjectHeight / fObjectAspectRatio;
-		float fMiddleofObject = (0.5f * (sprite.angle / (player.rotationAngle * PI / 180.0f) / 2.0f) + 0.50f) * float(WINDOW_WIDTH);
-		for (float fx = 0.0f; fx < fObjectWidth; fx++)
-		{
-			int nObjColumn = int(fMiddleofObject + fx - (fObjectWidth / 2.0f));
-
-			if (nObjColumn >= 0 && nObjColumn < WINDOW_WIDTH)
-			{
-				for (float fy = 0.0f; fy < fObjectHeight; fy++)
-				{
-					float fSampleX = fx / fObjectWidth;
-					float fSampleY = fy / fObjectHeight;
-
-					olc::Pixel p = spriteptr[sprite.texture]->Sample(fSampleX, fSampleY);
-
-					if (p != olc::MAGENTA)
-					{
-						PGEptr->Draw(nObjColumn, fObjectceiling + fy, p);
-					}
-
-				}
-			}
-		}
-
-
-	}*/

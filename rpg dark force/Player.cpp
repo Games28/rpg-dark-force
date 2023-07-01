@@ -183,7 +183,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 	}
 	if (PGEptr->GetKey(olc::PGDN).bReleased)
 	{
-		movevert = false;
+	    movevert = false;
 		
 	}
 
