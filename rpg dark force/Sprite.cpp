@@ -86,7 +86,60 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		}
 	}
 
+	int nHorizonHeight = WINDOW_HEIGHT* player.fPlayerH + (int)player.lookupordown;
+
+
+
 	for (int i = 0; i < numVisibleSprites; i++)
+	{
+		sprite_t sprite = visibleSprites[i];
+		float fPlayerFOV_rad = deg2rad(60.0f);
+		float fCompensatePlayerHeight = player.fPlayerH - 0.5f;
+		
+		float  fObjHlveSliceHeight = float(WINDOW_HEIGHT / sprite.distance);
+		float  spriteheight = (TILE_SIZE / sprite.distance) * DIST_TO_PROJ_PLANE;
+		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 1) / sprite.distance);
+
+		float fObjCeilingNormalized = float(nHorizonHeight) - fObjHlveSliceHeight;
+		float fObjCeilingScaled = float(nHorizonHeight) - sprite.distance;
+		// and adapt all the scaling into the ceiling value
+		float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
+		float fObjCeiling = float(nHorizonHeight) - (spriteheight / 2);
+		float fObjFloor = float(nHorizonHeight) + (spriteheight / 2);
+
+		fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
+		fObjFloor += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
+
+		float fObjHeight = fObjFloor - fObjCeiling;
+		float fObjAR = float(spriteptr[sprite.texture]->height) / float(spriteptr[sprite.texture]->width);
+		float fObjWidth = fObjHeight / fObjAR;
+		
+		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
+
+		// render the sprite
+		for (float fx = 0.0f; fx < fObjWidth; fx++) {
+			// get distance across the screen to render
+			int nObjColumn = int(fMidOfObj + fx - (fObjWidth / 2.0f));
+			// only render this column if it's on the screen
+			if (nObjColumn >= 0 && nObjColumn < WINDOW_WIDTH) {
+				for (float fy = 0.0f; fy < fObjHeight; fy++) {
+					// calculate sample coordinates as a percentage of object width and height
+					float fSampleX = fx / fObjWidth;
+					float fSampleY = fy / fObjHeight;
+					// sample the pixel and draw it
+					olc::Pixel pSample = spriteptr[sprite.texture]->Sample(fSampleX, fSampleY);
+					if (pSample != olc::MAGENTA) {
+						PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
+						
+					}
+				}
+			}
+		}
+		
+	}
+
+
+	/*for (int i = 0; i < numVisibleSprites; i++)
 	{
 		sprite_t sprite = visibleSprites[i];
 
@@ -176,7 +229,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 	
 		
 	}
-	
+	*/
 	
 }
 

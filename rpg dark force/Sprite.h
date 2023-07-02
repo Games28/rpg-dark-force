@@ -26,7 +26,7 @@ public:
 	void calculateBottomandTop(Player& player, float distance,float& SHeight, float& SWidth, int halfheight, float& ceiling, float& floor);
 	void SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player);
 	void mapSprites(olc::PixelGameEngine* PGEptr);
-
+	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }
 public:
 	sprite_t sprites[NUM_SPRITES];
 	olc::Sprite* spriteptr[NUM_SPRITES];
