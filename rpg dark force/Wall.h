@@ -14,7 +14,8 @@ public:
 	Wall() = default;
 	void wallTextures();
 	void changeColorIntensity(olc::Pixel& p, float factor);
-	void calculateBottomAndTop(float wallDistance,int halfheight, int wallheight, int& wallceil, int& wallfloor, Player& player);
+	//change from int wallheight to float fwallheight
+	void calculateBottomAndTop(float wallDistance,int halfheight, float fwallheight, int& wallceil, int& wallfloor, Player& player);
 	
 	void renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays);
 

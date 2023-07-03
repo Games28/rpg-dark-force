@@ -2,10 +2,10 @@
 
 void Sprite::initSpriteinfo()
 {
-	//sprites[0] = {640,630, 0};
-	//sprites[1] = { 660,690,1 };
-	//sprites[2] = { 250,600, 1 };
-	//sprites[3] = { 240,610, 2 };
+	sprites[0] = {640,630, 0};
+	sprites[1] = { 660,690,1 };
+	sprites[2] = { 250,600, 1 };
+	sprites[3] = { 240,610, 2 };
 	sprites[4] = { 300,400, 2 };
 }
 
@@ -30,7 +30,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 {
 	
 	int halfscreenheight = WINDOW_HEIGHT * player.fPlayerH;
-	
+
 	auto normalizeAngle = [=](float* angle)
 	{
 		*angle = remainder(*angle, TWO_PI);
@@ -48,15 +48,26 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 	for (int i = 0; i < NUM_SPRITES; i++)
 	{
+		//float fVecX = sprites[i].x - player.x;
+		//float fVecY = sprites[i].y - player.y;
+		//
+		//float fEyeX = cos(player.rotationAngle);
+		//float fEyeY = sin(player.rotationAngle);
+		//
+		//float angleSpritePlayer = atan2f(fVecY, fVecX) - atan2f(fEyeY, fEyeX);
+		//
+		//if (angleSpritePlayer < -PI) angleSpritePlayer += 2.0f * PI;
+		//if (angleSpritePlayer > PI) angleSpritePlayer -= 2.0f * PI;
 
-		float angleSpritePlayer = player.rotationAngle - atan2(sprites[i].y - player.y, sprites[i].x - player.x);
+
+		float angleSpritePlayer = atan2(sprites[i].y - player.y, sprites[i].x - player.x) - atan2(sin(player.rotationAngle), cos(player.rotationAngle));
 
 		if (angleSpritePlayer > PI)
 			angleSpritePlayer -= TWO_PI;
 		if (angleSpritePlayer < -PI)
 			angleSpritePlayer += TWO_PI;
 
-		angleSpritePlayer = fabs(angleSpritePlayer);
+		//angleSpritePlayer = fabs(angleSpritePlayer);
 
 		const float ESPSILON = 0.2f;
 
@@ -86,26 +97,28 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		}
 	}
 
-	int nHorizonHeight = WINDOW_HEIGHT* player.fPlayerH + (int)player.lookupordown;
+	int nHorizonHeight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
 
 
 
 	for (int i = 0; i < numVisibleSprites; i++)
 	{
 		sprite_t sprite = visibleSprites[i];
+
+		int spritescaling = 1;
 		float fPlayerFOV_rad = deg2rad(60.0f);
-		float fCompensatePlayerHeight = player.fPlayerH - 0.5f;
-		
+		float fCompensatePlayerHeight = (player.fPlayerH - 0.5f) * 64;
+
 		float  fObjHlveSliceHeight = float(WINDOW_HEIGHT / sprite.distance);
-		float  spriteheight = (TILE_SIZE / sprite.distance) * DIST_TO_PROJ_PLANE;
+		float  spriteheight = ((TILE_SIZE / sprite.distance)) * DIST_TO_PROJ_PLANE;
 		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 1) / sprite.distance);
 
 		float fObjCeilingNormalized = float(nHorizonHeight) - fObjHlveSliceHeight;
 		float fObjCeilingScaled = float(nHorizonHeight) - sprite.distance;
 		// and adapt all the scaling into the ceiling value
 		float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
-		float fObjCeiling = float(nHorizonHeight) - (spriteheight / 2);
-		float fObjFloor = float(nHorizonHeight) + (spriteheight / 2);
+		float fObjCeiling = float(nHorizonHeight) - ((spriteheight / 2) * spritescaling);
+		float fObjFloor = float(nHorizonHeight) + ( (spriteheight / 2));
 
 		fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
 		fObjFloor += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
@@ -113,7 +126,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		float fObjHeight = fObjFloor - fObjCeiling;
 		float fObjAR = float(spriteptr[sprite.texture]->height) / float(spriteptr[sprite.texture]->width);
 		float fObjWidth = fObjHeight / fObjAR;
-		
+
 		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
 
 		// render the sprite
@@ -130,106 +143,13 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 					olc::Pixel pSample = spriteptr[sprite.texture]->Sample(fSampleX, fSampleY);
 					if (pSample != olc::MAGENTA) {
 						PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
-						
+
 					}
 				}
 			}
 		}
-		
+
 	}
-
-
-	/*for (int i = 0; i < numVisibleSprites; i++)
-	{
-		sprite_t sprite = visibleSprites[i];
-
-		float prepDistance = sprite.distance * cos(sprite.angle);
-		
-		float spriteHeight = (TILE_SIZE / prepDistance) * DIST_TO_PROJ_PLANE;
-		
-		float spriteWidth = spriteHeight;
-		
-
-		float spriteTopY = (WINDOW_HEIGHT / 2)-(spriteHeight / 2);
-		spriteTopY = (spriteTopY < 0) ? 0 : spriteTopY;
-		
-		float spriteBottomY = (WINDOW_HEIGHT / 2) + (spriteHeight / 2);
-		spriteBottomY = (spriteBottomY > WINDOW_HEIGHT) ? WINDOW_HEIGHT : spriteBottomY;
-		
-		if (player.lookvert)
-		{
-			vertlook = player.lookupordown;
-		
-		}
-		if(player.movevert)
-		{
-			vertlook = -player.lookupordown;
-		}
-		
-		spriteTopY += vertlook;
-		spriteBottomY += vertlook;
-		
-		
-		
-		float spriteAngle = atan2(sprite.y - player.y, sprite.x - player.x) - player.rotationAngle;
-		float spriteScreenPosX = tan(spriteAngle) * DIST_TO_PROJ_PLANE;
-
-		float spriteLeftX = (WINDOW_WIDTH / 2) + spriteScreenPosX - spriteWidth / 2;
-		float spriteRightX = spriteLeftX + spriteWidth;
-
-		int textureWidth = spriteptr[sprite.texture]->width;
-		int textureHeight = spriteptr[sprite.texture]->height;
-
-		for (int x = spriteLeftX; x < spriteRightX; x++)
-		{
-
-			float texelWidth = (textureWidth / spriteWidth);
-			int textureOffSetX = (x - spriteLeftX) * texelWidth;
-			
-			for (int y = spriteTopY; y < spriteBottomY; y++)
-			{
-				
-				if (player.lookvert)
-				{
-					vertposition = -player.lookupordown;
-				}
-				if (player.movevert)
-				{
-					vertposition = player.lookupordown;
-				}
-				
-					int distanceFromTop = (y + vertposition) + (spriteHeight / 2) - (WINDOW_HEIGHT / 2) ;
-					int textureOffSetY = distanceFromTop * (textureHeight / spriteHeight);
-			
-				
-		
-				
-					
-				
-				
-
-				if (x > 0 && x < WINDOW_WIDTH && y > 0 && y < WINDOW_HEIGHT)
-				{
-					olc::Pixel p = spriteptr[sprite.texture]->GetPixel(textureOffSetX, textureOffSetY);
-					if (sprite.distance < rays.rays[x].listinfo[0].distance)
-					{
-						if (p != olc::MAGENTA)
-						{
-							PGEptr->Draw(x, y, p);
-						}
-					}
-				
-				}
-				
-			}
-			
-			
-		}
-
-	
-		
-	}
-	*/
 	
 }
 

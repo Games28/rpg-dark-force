@@ -20,10 +20,10 @@ void Wall::changeColorIntensity(olc::Pixel& p, float factor)
     p *= factor;
 }
 
-void Wall::calculateBottomAndTop(float wallDistance, int halfheight, int wallheight, int& wallceil, int& wallfloor, Player &player)
+void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float fwallheight, int& wallceil, int& wallfloor, Player &player)
 {
 	int nsliceHeight = ((TILE_SIZE / wallDistance) * DIST_TO_PROJ_PLANE);
-	wallceil  = halfheight - (nsliceHeight * (1.0f - player.fPlayerH)) - (wallheight - 1) * nsliceHeight;
+	wallceil  = halfheight - (nsliceHeight * (1.0f - player.fPlayerH)) - (fwallheight - 1) * nsliceHeight;
 	wallfloor = halfheight + (nsliceHeight *  player.fPlayerH );
 }
 
@@ -41,7 +41,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 		float fViewangle = float(x - halfscreenwidth) * anglestep;
 
 		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor;
-		int colheight;
+		//int colheight;
+		float colheight;
 
 		// calculated corrected distance as well as bottom and top of the wall projection - per hitpoint
 		for (int i = 0; i < (int)rays.rays[x].listinfo.size(); i++)
@@ -196,8 +197,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				
 				int nSampleX = (int)(fRoofProjX) % TILE_SIZE;
 				int nSampleY = (int)(fRoofProjY) % TILE_SIZE;
-				olc::Pixel p = sprites[3].GetPixel(nSampleX, nSampleY);
-				PGEptr->Draw(x, y, p);
+				olc::Pixel p = sprites[2].GetPixel(nSampleX, nSampleY);
+				PGEptr->Draw(x, y, olc::DARK_GREEN);
 				break;
 			}
 			case WALL_DRAW:
@@ -236,7 +237,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				fSampleY = fSampleY * TILE_SIZE;
 				// having both sample coordinates, get the sample and draw the pixel
 				olc::Pixel auxSample = sprites[nDisplayBlockHeight].GetPixel(fSampleX, fSampleY);
-				PGEptr->Draw(x, y, auxSample);
+				PGEptr->Draw(x, y, olc::DARK_CYAN);
 				break;
 			}
 			}

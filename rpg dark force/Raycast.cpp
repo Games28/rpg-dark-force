@@ -57,7 +57,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 	// temp fix - tan( angle ) can get very small so that xIntercept gets very big
 	// NOTE: this blunt fix may cause glitches in the rendering
 	if (xintercept < 0.0f) xintercept = 0.0f;
-	if (xintercept > MAP_NUM_COLS * TILE_SIZE) xintercept = MAP_NUM_COLS * TILE_SIZE;
+	if (xintercept > MAP_NUM_COLS_X * TILE_SIZE) xintercept = MAP_NUM_COLS_X * TILE_SIZE;
 
 	// Calculate the increments xstep and ystep
 	ystep = TILE_SIZE * (isRayFacingUp ? -1 : 1);
@@ -80,11 +80,17 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
         // determine the height of the next adjacent tile. If there's no next tile
         // because analysis arrived at boundary of the map, set height to 0
-        int nextHeight;
+        //int nextHeight;
+        float nextHeight;
         if (map.isOnMapBoundary( xintercept, yintercept )) {
             nextHeight = 0;
         } else {
-            nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
+            //nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
+            nextHeight = map.heightmapfloat(nXtoCheck, nYtoCheck);
+            if (nextHeight == 0.75f)
+            {
+                int i = 0;
+           }
         }
 
         // just store each grid intersection point in the list - this brute force was necessary to debug the code
@@ -96,11 +102,11 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         hitInfo.height   = nextHeight;
 
         //code for all textures related to each level of a height thats more then 1 level
-        for (int i = 1; i <= hitInfo.height; i++)
-        {
-            int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
-            hitInfo.textures.push_back(texture);
-        }
+        //for (int i = 1; i <= hitInfo.height; i++)
+        //{
+        //    int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
+        //    hitInfo.textures.push_back(texture);
+        //}
         hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = false;
@@ -137,7 +143,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 	// temp fix - tan( angle ) can get very big so that yIntercept gets very big
 	// NOTE: this blunt fix may cause glitches in the rendering
 	if (yintercept < 0.0f) yintercept = 0.0f;
-	if (yintercept > MAP_NUM_ROWS * TILE_SIZE) yintercept = MAP_NUM_ROWS * TILE_SIZE;
+	if (yintercept > MAP_NUM_ROWS_Y * TILE_SIZE) yintercept = MAP_NUM_ROWS_Y * TILE_SIZE;
 
 	// Calculate the increments xstep and ystep
 	xstep = TILE_SIZE * (isRayFacingLt ? -1 : 1);
@@ -160,11 +166,14 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
         // determine the height of the next adjacent tile. If there's no next tile
         // because analysis arrived at boundary of the map, set height to 0
-        int nextHeight;
+        //int nextHeight;
+        float nextHeight;
         if (map.isOnMapBoundary( xintercept, yintercept )) {
             nextHeight = 0;
         } else {
-            nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
+            //nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
+            nextHeight = map.heightmapfloat(nXtoCheck, nYtoCheck);
+           
         }
 
         // just store each grid intersection point in the list - this brute force was necessary to debug the code
@@ -177,11 +186,11 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         hitInfo.height   = nextHeight;
 
         //code for all textures related to each level of a height thats more then 1 level
-        for (int i = 1; i <= hitInfo.height; i++)
-        {
-            int texture = map.getTextureMap( nXtoCheck, nYtoCheck, i);
-            hitInfo.textures.push_back(texture);
-        }
+        //for (int i = 1; i <= hitInfo.height; i++)
+        //{
+        //    int texture = map.getTextureMap( nXtoCheck, nYtoCheck, i);
+        //    hitInfo.textures.push_back(texture);
+        //}
         hitInfo.texture = map.getTextureMap( nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = true;

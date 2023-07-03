@@ -12,8 +12,8 @@
 #define WINDOW_WIDTH  600
 #define WINDOW_HEIGHT 420
 
-#define MAP_NUM_ROWS 14
-#define MAP_NUM_COLS 20
+#define MAP_NUM_ROWS_Y 14
+#define MAP_NUM_COLS_X 20
 #define MAXHEIGHT 4
 #define TILE_SIZE 64
 
