@@ -30,12 +30,6 @@
     <ClInclude Include="Player.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Powers.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Raycast.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Saber.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -45,15 +39,15 @@
     <ClInclude Include="Wall.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Raycast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Powers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raycast.cpp">

@@ -5,7 +5,9 @@ void Raycast::castAllRays(Player& player, Map& map)
 	for (int col = 0; col < NUM_RAYS; col++) {
 		float rayAngle = player.rotationAngle + (col - NUM_RAYS / 2) / (float)(NUM_RAYS)*FOV_ANGLE;
 		castRay(rayAngle, col, player, map);
+        
 	}
+    
 }
 
 void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
@@ -57,7 +59,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 	// temp fix - tan( angle ) can get very small so that xIntercept gets very big
 	// NOTE: this blunt fix may cause glitches in the rendering
 	if (xintercept < 0.0f) xintercept = 0.0f;
-	if (xintercept > MAP_NUM_COLS_X * TILE_SIZE) xintercept = MAP_NUM_COLS_X * TILE_SIZE;
+	if (xintercept > MAP_NUM_COLS * TILE_SIZE) xintercept = MAP_NUM_COLS * TILE_SIZE;
 
 	// Calculate the increments xstep and ystep
 	ystep = TILE_SIZE * (isRayFacingUp ? -1 : 1);
@@ -80,17 +82,16 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
         // determine the height of the next adjacent tile. If there's no next tile
         // because analysis arrived at boundary of the map, set height to 0
-        //int nextHeight;
-        float nextHeight;
+        int nextHeight;
+        // new
+        float fnextHeight;
         if (map.isOnMapBoundary( xintercept, yintercept )) {
             nextHeight = 0;
+            fnextHeight = 0;
         } else {
-            //nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
-            nextHeight = map.heightmapfloat(nXtoCheck, nYtoCheck);
-            if (nextHeight == 0.75f)
-            {
-                int i = 0;
-           }
+            nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
+            fnextHeight = map.FloatgetfromHeightmap(nXtoCheck, nYtoCheck);
+            
         }
 
         // just store each grid intersection point in the list - this brute force was necessary to debug the code
@@ -99,15 +100,18 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         hitInfo.wallHitY = yintercept;
         hitInfo.mapX     = nXtoCheck;
         hitInfo.mapY     = nYtoCheck;
-        hitInfo.height   = nextHeight;
-
+        //changed
+        hitInfo.height = nextHeight;
+        hitInfo.FHeight   = fnextHeight;
+        hitInfo.texture = 0;
         //code for all textures related to each level of a height thats more then 1 level
+        // commented out for now
         //for (int i = 1; i <= hitInfo.height; i++)
         //{
         //    int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
         //    hitInfo.textures.push_back(texture);
         //}
-        hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
+        //hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = false;
         hitInfo.distance       = distanceBetweenPoints(player.x, player.y, xintercept, yintercept);
@@ -143,7 +147,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 	// temp fix - tan( angle ) can get very big so that yIntercept gets very big
 	// NOTE: this blunt fix may cause glitches in the rendering
 	if (yintercept < 0.0f) yintercept = 0.0f;
-	if (yintercept > MAP_NUM_ROWS_Y * TILE_SIZE) yintercept = MAP_NUM_ROWS_Y * TILE_SIZE;
+	if (yintercept > MAP_NUM_ROWS * TILE_SIZE) yintercept = MAP_NUM_ROWS * TILE_SIZE;
 
 	// Calculate the increments xstep and ystep
 	xstep = TILE_SIZE * (isRayFacingLt ? -1 : 1);
@@ -166,14 +170,15 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
         // determine the height of the next adjacent tile. If there's no next tile
         // because analysis arrived at boundary of the map, set height to 0
-        //int nextHeight;
-        float nextHeight;
+        int nextHeight;
+        float fnextHeight;
         if (map.isOnMapBoundary( xintercept, yintercept )) {
             nextHeight = 0;
+            fnextHeight = 0;
         } else {
-            //nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
-            nextHeight = map.heightmapfloat(nXtoCheck, nYtoCheck);
-           
+            nextHeight = map.getFromHeightMap( nXtoCheck, nYtoCheck );
+            fnextHeight = map.FloatgetfromHeightmap(nXtoCheck, nYtoCheck);
+            
         }
 
         // just store each grid intersection point in the list - this brute force was necessary to debug the code
@@ -182,16 +187,18 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         hitInfo.wallHitY = yintercept;
         hitInfo.mapX     = nXtoCheck;
         hitInfo.mapY     = nYtoCheck;
-
-        hitInfo.height   = nextHeight;
-
+        hitInfo.height = nextHeight;
+        hitInfo.FHeight   = fnextHeight;
+       
+        hitInfo.texture = 0;
         //code for all textures related to each level of a height thats more then 1 level
+        // commented out for now
         //for (int i = 1; i <= hitInfo.height; i++)
         //{
         //    int texture = map.getTextureMap( nXtoCheck, nYtoCheck, i);
         //    hitInfo.textures.push_back(texture);
         //}
-        hitInfo.texture = map.getTextureMap( nXtoCheck, nYtoCheck, hitInfo.height);
+        //hitInfo.texture = map.getTextureMap( nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = true;
         hitInfo.distance       = distanceBetweenPoints(player.x, player.y, xintercept, yintercept);
@@ -217,23 +224,23 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
             return a.distance < b.distance;
         }
     );
-
+   
     bool bRunUp = true;
-    int nHeightTracker = 0;
+    float nHeightTracker = 0;
     std::vector<struct intersectInfo> tempList(rays[stripID].listinfo);   // copy hit list to a temporary list
     rays[stripID].listinfo.clear();                                         // clear hit list
 
     for (int i = 0; i < (int)tempList.size(); i++) {
         // this is to remove all unnecessary "hit" points with height 0 at the start of the list
         if (bRunUp) {
-            if (tempList[i].height > 0) {
+            if (tempList[i].FHeight > 0) {
                 bRunUp = false;
             }
         }
         // this is to remove all unnecessary in between hit points where the height doesn't change
         if (!bRunUp) {
-            if (tempList[i].height != nHeightTracker) {
-                nHeightTracker = tempList[i].height;
+            if (tempList[i].FHeight != nHeightTracker) {
+                nHeightTracker = tempList[i].FHeight;
                 // keep only hit points where the height differs from what it was before
                 rays[stripID].listinfo.push_back(tempList[i]);
             }

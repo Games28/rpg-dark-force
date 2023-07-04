@@ -2,22 +2,12 @@
 
 bool Map::mapHasWallAt(float x, float y)
 {
-	if (x < 0 || x >= MAP_NUM_COLS_X * TILE_SIZE || y < 0 || y >= MAP_NUM_ROWS_Y * TILE_SIZE) {
+	if (x < 0 || x >= MAP_NUM_COLS * TILE_SIZE || y < 0 || y >= MAP_NUM_ROWS * TILE_SIZE) {
 		return true;
 	}
 	int mapGridIndexX = floor(x / TILE_SIZE);
 	int mapGridIndexY = floor(y / TILE_SIZE);
 	return heightmap[mapGridIndexY][mapGridIndexX] != 0;
-}
-
-bool Map::FloatmapHasWallAt(float x, float y, float playerH)
-{
-	if (x < 0 || x >= MAP_NUM_COLS_X * TILE_SIZE || y < 0 || y >= MAP_NUM_ROWS_Y * TILE_SIZE) {
-		return true;
-	}
-	int mapGridIndexX = floor(x / TILE_SIZE);
-	int mapGridIndexY = floor(y / TILE_SIZE);
-	return HeightMapfloat[mapGridIndexY][mapGridIndexX] != 0;
 }
 
 // Joseph21 - a couple of convenience functions to safely compare floats using an error margin
@@ -34,14 +24,14 @@ bool floatLess(     float a, float b ) { return !floatEqual( a, b ) && a < b; }
 bool Map::isInsideMap(float x, float y)
 {
     // the boundaries of the map are considered to be part of the map
-    return floatGrtEqual( x, 0.0f ) && floatLssEqual( x, MAP_NUM_COLS_X * TILE_SIZE ) &&
-           floatGrtEqual( y, 0.0f ) && floatLssEqual( y, MAP_NUM_ROWS_Y * TILE_SIZE );
+    return floatGrtEqual( x, 0.0f ) && floatLssEqual( x, MAP_NUM_COLS * TILE_SIZE ) &&
+           floatGrtEqual( y, 0.0f ) && floatLssEqual( y, MAP_NUM_ROWS * TILE_SIZE );
 }
 
 bool Map::isOnMapBoundary(float x, float y)
 {
-    return floatEqual( x, 0.0f ) || floatEqual( x, MAP_NUM_COLS_X * TILE_SIZE ) ||
-           floatEqual( y, 0.0f ) || floatEqual( y, MAP_NUM_ROWS_Y * TILE_SIZE );
+    return floatEqual( x, 0.0f ) || floatEqual( x, MAP_NUM_COLS * TILE_SIZE ) ||
+           floatEqual( y, 0.0f ) || floatEqual( y, MAP_NUM_ROWS * TILE_SIZE );
 }
 
 bool Map::isOutSideMap(float x, float y)
@@ -52,11 +42,11 @@ bool Map::isOutSideMap(float x, float y)
 void Map::renderMapGrid(olc::PixelGameEngine* PGEptr)
 {
     // fill background for minimap
-    PGEptr->FillRect( 0, 0, MAP_NUM_COLS_X * TILE_SIZE * MINIMAP_SCALE_FACTOR, MAP_NUM_ROWS_Y * TILE_SIZE * MINIMAP_SCALE_FACTOR, olc::DARK_YELLOW );
+    PGEptr->FillRect( 0, 0, MAP_NUM_COLS * TILE_SIZE * MINIMAP_SCALE_FACTOR, MAP_NUM_ROWS * TILE_SIZE * MINIMAP_SCALE_FACTOR, olc::DARK_YELLOW );
 
     // draw each tile
-	for (int i = 0; i < MAP_NUM_ROWS_Y; i++) {
-		for (int j = 0; j < MAP_NUM_COLS_X; j++) {
+	for (int i = 0; i < MAP_NUM_ROWS; i++) {
+		for (int j = 0; j < MAP_NUM_COLS; j++) {
 			int tileX = j * TILE_SIZE;
 			int tileY = i * TILE_SIZE;
             // colour different for different heights
@@ -84,18 +74,10 @@ void Map::renderMapGrid(olc::PixelGameEngine* PGEptr)
 int Map::getFromHeightMap( int x, int y )
 {
     // Joseph21 - if coordinate is out of bounds, return 0, else return value of height map
-    if (x < 0 || x >= MAP_NUM_COLS_X || y < 0 || y >= MAP_NUM_ROWS_Y)
+    if (x < 0 || x >= MAP_NUM_COLS || y < 0 || y >= MAP_NUM_ROWS)
         return 0;
     else
         return heightmap[y][x];
-}
-
-float Map::heightmapfloat(int x, int y)
-{
-	if (x < 0 || x >= MAP_NUM_COLS_X || y < 0 || y >= MAP_NUM_ROWS_Y)
-		return 0;
-	else
-		return HeightMapfloat[y][x];
 }
 
 int Map::getTextureMap(int i, int j, int Height)
@@ -120,3 +102,10 @@ int Map::getTextureMap(int i, int j, int Height)
 	return textureid;
 }
 
+float Map::FloatgetfromHeightmap(int x, int y)
+{
+	if (x < 0 || x >= MAP_NUM_COLS || y < 0 || y >= MAP_NUM_ROWS)
+		return 0;
+	else
+		return Floatheightmap[y][x];
+}

@@ -20,10 +20,10 @@ void Wall::changeColorIntensity(olc::Pixel& p, float factor)
     p *= factor;
 }
 
-void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float fwallheight, int& wallceil, int& wallfloor, Player &player)
+void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float wallheight, int& wallceil, int& wallfloor, Player &player)
 {
 	int nsliceHeight = ((TILE_SIZE / wallDistance) * DIST_TO_PROJ_PLANE);
-	wallceil  = halfheight - (nsliceHeight * (1.0f - player.fPlayerH)) - (fwallheight - 1) * nsliceHeight;
+	wallceil  = halfheight - (nsliceHeight * (1.0f - player.fPlayerH)) - (wallheight - 1) * nsliceHeight;
 	wallfloor = halfheight + (nsliceHeight *  player.fPlayerH );
 }
 
@@ -41,14 +41,15 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 		float fViewangle = float(x - halfscreenwidth) * anglestep;
 
 		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor;
-		//int colheight;
-		float colheight;
-
+		int colheight;
+		float Fcolheight;
+		int below1 = 0;
+		
 		// calculated corrected distance as well as bottom and top of the wall projection - per hitpoint
 		for (int i = 0; i < (int)rays.rays[x].listinfo.size(); i++)
 		{
 			rays.rays[x].listinfo[i].distance *= cos(fViewangle * PI / 180.0f);
-			calculateBottomAndTop(rays.rays[x].listinfo[i].distance, halfscreenheight, rays.rays[x].listinfo[i].height, rays.rays[x].listinfo[i].ceil_front, rays.rays[x].listinfo[i].bottom_front, player);
+			calculateBottomAndTop(rays.rays[x].listinfo[i].distance, halfscreenheight, rays.rays[x].listinfo[i].FHeight, rays.rays[x].listinfo[i].ceil_front, rays.rays[x].listinfo[i].bottom_front, player);
 		}
 
 		for (int i = 0; i < (int)rays.rays[x].listinfo.size(); i++)
@@ -60,7 +61,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 			else
 			{
 				int nDummy;
-				calculateBottomAndTop(rays.rays[x].listinfo[i + 1].distance, halfscreenheight, rays.rays[x].listinfo[i].height, rays.rays[x].listinfo[i].ceil_back, nDummy, player);
+				calculateBottomAndTop(rays.rays[x].listinfo[i + 1].distance, halfscreenheight, rays.rays[x].listinfo[i].FHeight, rays.rays[x].listinfo[i].ceil_back, nDummy, player);
 			}
 		}
 
@@ -68,14 +69,15 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 		if (rays.rays[x].listinfo.size() > 0) {
 
             // ... set the working variables using the first hitpoint ...
-            colheight = rays.rays[x].listinfo[0].height;
+            Fcolheight = rays.rays[x].listinfo[0].FHeight;
             nWallCeil = rays.rays[x].listinfo[0].ceil_front;
             nWallCeil2 = rays.rays[x].listinfo[0].ceil_back;
             nWallFloor = rays.rays[x].listinfo[0].bottom_front;
+			
 		} else {
 		    // ... if there's no hitpoint, set the working variables to correspond with empty horizon displaying
 //            colheight = 0;
-            colheight = 1;
+            Fcolheight = 1;
             nWallCeil = halfscreenheight;
             nWallCeil2 = halfscreenheight;
             nWallFloor = halfscreenheight;
@@ -118,7 +120,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 			}
 			else if (nWallCeil >= y && y > nWallCeil2)
 			{
-				drawmode = (colheight == 0) ? FLOOR_DRAW : ROOF_DRAWING;
+				drawmode = (Fcolheight == 0) ? FLOOR_DRAW : ROOF_DRAWING;
 			}
 			else
 			{
@@ -129,7 +131,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 						// the y coord is above the current wall and roof slide, but there are still hit points to process
 						// so there could be other walls behind current wall sticking out above it
 						hitindex += 1;
-						colheight = rays.rays[x].listinfo[hitindex].height;
+						Fcolheight = rays.rays[x].listinfo[hitindex].FHeight;
 						nWallCeil = rays.rays[x].listinfo[hitindex].ceil_front;
 						nWallCeil2 = rays.rays[x].listinfo[hitindex].ceil_back;
 						nWallFloor = rays.rays[x].listinfo[hitindex].bottom_front;
@@ -191,14 +193,14 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 			{
 				//olc::Pixel p = ROOF_COLOR;
 
-				float fRoofProjDistance = (((player.fPlayerH - float(colheight)) * TILE_SIZE / float(y - halfscreenheight)) * DIST_TO_PROJ_PLANE) / fCosViewAngle;
+				float fRoofProjDistance = (((player.fPlayerH - float(Fcolheight)) * TILE_SIZE / float(y - halfscreenheight)) * DIST_TO_PROJ_PLANE) / fCosViewAngle;
 				float fRoofProjX = player.x + fRoofProjDistance * fCosCurAngle;
 				float fRoofProjY = player.y + fRoofProjDistance * fSinCurAngle;
 				
 				int nSampleX = (int)(fRoofProjX) % TILE_SIZE;
 				int nSampleY = (int)(fRoofProjY) % TILE_SIZE;
-				olc::Pixel p = sprites[2].GetPixel(nSampleX, nSampleY);
-				PGEptr->Draw(x, y, olc::DARK_GREEN);
+				olc::Pixel p = sprites[3].GetPixel(nSampleX, nSampleY);
+				PGEptr->Draw(x, y, p);
 				break;
 			}
 			case WALL_DRAW:
@@ -211,10 +213,10 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					fSampleY = float(y - wallTopY) / float(wallBottomY - wallTopY);
 				}
 				else {
-					float blocksize = float(nWallFloor - nWallCeil) / colheight;
+					float blocksize = float(nWallFloor - nWallCeil) / Fcolheight;
 
 					float relative = float(y - nWallCeil);
-					nDisplayBlockHeight = colheight;
+					nDisplayBlockHeight = Fcolheight;
 					while (relative > blocksize)
 					{
 						relative -= blocksize;
@@ -237,7 +239,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				fSampleY = fSampleY * TILE_SIZE;
 				// having both sample coordinates, get the sample and draw the pixel
 				olc::Pixel auxSample = sprites[nDisplayBlockHeight].GetPixel(fSampleX, fSampleY);
-				PGEptr->Draw(x, y, olc::DARK_CYAN);
+				PGEptr->Draw(x, y, auxSample);
 				break;
 			}
 			}

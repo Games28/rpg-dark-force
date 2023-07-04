@@ -16,7 +16,6 @@ struct intersectInfo
 	int mapY;
 	float distance;
 	int height;
-	float fheight;
 	bool wasHitVertical;
 	float rayAngle;
 	int texture;
@@ -29,6 +28,9 @@ struct intersectInfo
 
 	// for debugging purposes
 	bool rayUp, rayDn, rayLt, rayRt;
+
+	//new 
+	float FHeight;
 };
 
 

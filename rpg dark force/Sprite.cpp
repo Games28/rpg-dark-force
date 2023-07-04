@@ -105,20 +105,20 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 	{
 		sprite_t sprite = visibleSprites[i];
 
-		int spritescaling = 1;
+
 		float fPlayerFOV_rad = deg2rad(60.0f);
 		float fCompensatePlayerHeight = (player.fPlayerH - 0.5f) * 64;
 
 		float  fObjHlveSliceHeight = float(WINDOW_HEIGHT / sprite.distance);
-		float  spriteheight = ((TILE_SIZE / sprite.distance)) * DIST_TO_PROJ_PLANE;
+		float  spriteheight = (TILE_SIZE / sprite.distance) * DIST_TO_PROJ_PLANE;
 		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 1) / sprite.distance);
 
 		float fObjCeilingNormalized = float(nHorizonHeight) - fObjHlveSliceHeight;
 		float fObjCeilingScaled = float(nHorizonHeight) - sprite.distance;
 		// and adapt all the scaling into the ceiling value
 		float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
-		float fObjCeiling = float(nHorizonHeight) - ((spriteheight / 2) * spritescaling);
-		float fObjFloor = float(nHorizonHeight) + ( (spriteheight / 2));
+		float fObjCeiling = float(nHorizonHeight) - (spriteheight / 2);
+		float fObjFloor = float(nHorizonHeight) + (spriteheight / 2);
 
 		fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
 		fObjFloor += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;

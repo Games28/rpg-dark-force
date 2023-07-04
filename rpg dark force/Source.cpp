@@ -32,7 +32,6 @@ public:
 		sprite.initSpriteinfo();
 		sprite.initsprites();
 		saber.initSaber();
-		
 		return true;
 	}
 
@@ -68,12 +67,7 @@ public:
 		//sprite.mapSprites(this);
 		//ray.renderMapRays(this, player, wall.nTestRay );   // rays in the map
 		saber.DrawSaber(this,fElapsedTime);
-		DrawString(400, 10, "player x  = " + std::to_string(player.x));
-		DrawString(400, 20, "player y  = " + std::to_string(player.y));
-		DrawString(400, 30, "player a1 = " + std::to_string(player.rotationAngle));
-		DrawString(400, 40, "player a2 = " + std::to_string(player.playerLookAngle));
-		DrawString(400, 50, "fLookUp   = " + std::to_string(player.lookupordown));
-		DrawString(400, 60, "fPlayerH  = " + std::to_string(player.fPlayerH));
+		
 
 		//DrawLine( wall.nTestRay, 0, wall.nTestRay, ScreenHeight(), olc::MAGENTA );
 

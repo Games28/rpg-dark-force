@@ -3,7 +3,7 @@
 
 #include "defs.h"
 
-static const  int heightmap[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
+static const  int heightmap[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 	{1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
 	{0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -21,16 +21,16 @@ static const  int heightmap[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 4, 2, 1, 1, 1, 1, 1, 1}
 };
 
-static const float HeightMapfloat[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
+static const float Floatheightmap[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 	{1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
 	{0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{0, 0, 0, 0, 0, 0, 0.25f, 0, 0, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0.50f, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0.75f, 0, 0, 0, 0, 2, 0, 3, 2, 4, 4, 0, 0, 1},
-	{1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
-	{0, 1, 0, 0, 0, 0, 0.10f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	{0, 0, 0, 0, 0, 0, 0.20f, 0, 0, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0.10f, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0.10f, 0, 0, 0, 2, 0, 3, 2, 4, 4, 0, 0, 1},
+	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
+	{0, 1, 0, 0, 0, 0, 0, 0, 0.30f, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 	{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1},
 	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 	{1, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -39,7 +39,7 @@ static const float HeightMapfloat[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 4, 2, 1, 1, 1, 1, 1, 1}
 };
 
-static const  int texturemapOne[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
+static const  int texturemapOne[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -57,7 +57,7 @@ static const  int texturemapOne[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-static const  int texturemapTwo[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
+static const  int texturemapTwo[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -75,7 +75,7 @@ static const  int texturemapTwo[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-static const  int texturemapThree[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
+static const  int texturemapThree[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -93,7 +93,7 @@ static const  int texturemapThree[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-static const  int texturemapFour[MAP_NUM_ROWS_Y][MAP_NUM_COLS_X] = {
+static const  int texturemapFour[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},

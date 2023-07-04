@@ -144,7 +144,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 		{
 			movevert = true;
 			float fNewHeight = fPlayerH - strafeupspeed * run * deltatime;
-			if (fNewHeight > 0.0f && map.getFromHeightMap(int(x), int(y)) < fNewHeight)
+			if (fNewHeight > 0.0f && map.getFromHeightMap(int(x),int(y)) < fNewHeight)
 			{
 				fPlayerH = fNewHeight;
 				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
@@ -212,18 +212,10 @@ void Player::movePlayer(float deltatime, Map& map)
 	float newPlayerY = y + sin(rotationAngle) * moveStep * run;
 
 	//wall collision
-	//if (!map.mapHasWallAt(newPlayerX, newPlayerY)) {
-	//	x = newPlayerX;
-	//	y = newPlayerY;
-	//}
-	 
-	//new float hasmapat
-	if (!map.FloatmapHasWallAt(newPlayerX, newPlayerY,fPlayerH))
-	{
+	if (!map.mapHasWallAt(newPlayerX, newPlayerY)) {
 		x = newPlayerX;
 		y = newPlayerY;
 	}
-
 	//strafe left and strafe right movement code
 	float strafeStep = strafedirection * walkSpeed * deltatime;
 
@@ -240,14 +232,7 @@ void Player::movePlayer(float deltatime, Map& map)
 		strafePlayerY = y - cos(rotationAngle) * strafeStep;
 	}
 
-	//if (!map.mapHasWallAt(strafePlayerX, strafePlayerY))
-	//{
-	//	x = strafePlayerX;
-	//	y = strafePlayerY;
-	//}
-
-	//new float hasmapat
-	if (!map.FloatmapHasWallAt(strafePlayerX, strafePlayerY,fPlayerH))
+	if (!map.mapHasWallAt(strafePlayerX, strafePlayerY))
 	{
 		x = strafePlayerX;
 		y = strafePlayerY;
