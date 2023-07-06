@@ -10,6 +10,7 @@
 #include "Saber.h"
 
 
+
 class darkforce : public olc::PixelGameEngine
 {
 public:
@@ -32,6 +33,14 @@ public:
 		sprite.initSpriteinfo();
 		sprite.initsprites();
 		saber.initSaber();
+		map.InitMap(MAP_NUM_COLS_X, MAP_NUM_ROWS_Y);
+		map.addMapLayer(map.Map_levelOne);
+		map.addMapLayer(map.Map_levelTwo);
+		map.addMapLayer(map.Map_levelThree);
+		map.addTextures(map.Texture_levelOne);
+		map.addTextures(map.Texture_levelTwo);
+		map.addTextures(map.Texture_levelThree);
+
 		return true;
 	}
 

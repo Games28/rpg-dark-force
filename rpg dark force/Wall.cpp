@@ -44,7 +44,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 		int colheight;
 		float Fcolheight;
 		int below1 = 0;
-		
+		int theTexture;
 		// calculated corrected distance as well as bottom and top of the wall projection - per hitpoint
 		for (int i = 0; i < (int)rays.rays[x].listinfo.size(); i++)
 		{
@@ -73,6 +73,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
             nWallCeil = rays.rays[x].listinfo[0].ceil_front;
             nWallCeil2 = rays.rays[x].listinfo[0].ceil_back;
             nWallFloor = rays.rays[x].listinfo[0].bottom_front;
+			theTexture = rays.rays[x].listinfo[0].textures[0];
 			
 		} else {
 		    // ... if there's no hitpoint, set the working variables to correspond with empty horizon displaying
@@ -81,6 +82,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
             nWallCeil = halfscreenheight;
             nWallCeil2 = halfscreenheight;
             nWallFloor = halfscreenheight;
+			theTexture = 0;
 		}
 
 		// code to debug the result of the hit list info
@@ -135,6 +137,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 						nWallCeil = rays.rays[x].listinfo[hitindex].ceil_front;
 						nWallCeil2 = rays.rays[x].listinfo[hitindex].ceil_back;
 						nWallFloor = rays.rays[x].listinfo[hitindex].bottom_front;
+						theTexture = rays.rays[x].listinfo[hitindex].textures[hitindex];
 
 						if (y >= nWallFloor)
 						{
@@ -238,7 +241,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				//fSampleX = int(fSampleX) % TILE_SIZE;
 				fSampleY = fSampleY * TILE_SIZE;
 				// having both sample coordinates, get the sample and draw the pixel
-				olc::Pixel auxSample = sprites[nDisplayBlockHeight].GetPixel(fSampleX, fSampleY);
+				olc::Pixel auxSample = sprites[theTexture].GetPixel(fSampleX, fSampleY);
 				PGEptr->Draw(x, y, auxSample);
 				break;
 			}

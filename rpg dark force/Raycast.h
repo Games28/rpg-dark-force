@@ -29,8 +29,10 @@ struct intersectInfo
 	// for debugging purposes
 	bool rayUp, rayDn, rayLt, rayRt;
 
-	//new 
+	
 	float FHeight;
+	//new
+	float fDistanceFront;
 };
 
 
