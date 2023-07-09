@@ -17,7 +17,7 @@ public:
 	void calculateBottomAndTop(float wallDistance,int halfheight, float wallheight, int& wallceil, int& wallfloor, Player& player);
 	
 	void renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays);
-
+	int getTexture(std::vector<int>& texture, int& id);
 public:
 	olc::Sprite sprites[7];
 	int text = 0;

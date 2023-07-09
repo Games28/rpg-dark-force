@@ -144,7 +144,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 		{
 			movevert = true;
 			float fNewHeight = fPlayerH - strafeupspeed * run * deltatime;
-			if (fNewHeight > 0.0f && map.getFromHeightMap(int(x),int(y)) < fNewHeight)
+			if (fNewHeight > 0.0f && map.FloatgetfromHeightmap(int(x),int(y)) < fNewHeight)
 			{
 				fPlayerH = fNewHeight;
 				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);

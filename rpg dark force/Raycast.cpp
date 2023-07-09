@@ -110,12 +110,12 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         //code for all textures related to each level of a height thats more then 1 level
         // commented out for now
         
-        for (int i = 1; i <= hitInfo.height; i++)
+        for (int i = 1; i <= hitInfo.FHeight; i++)
         {
-            int texture = map.gettexture(nXtoCheck, nYtoCheck, i);
+            int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
             hitInfo.textures.push_back(texture);
         }
-        hitInfo.texture = map.gettexture(nXtoCheck, nYtoCheck, hitInfo.height);
+        hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = false;
         hitInfo.distance       = distanceBetweenPoints(player.x, player.y, xintercept, yintercept);
@@ -200,12 +200,12 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
         //code for all textures related to each level of a height thats more then 1 level
         // commented out for now
-        for (int i = 1; i <= hitInfo.height; i++)
+        for (int i = 1; i <= hitInfo.FHeight; i++)
         {
-            int texture = map.gettexture(nXtoCheck, nYtoCheck, i);
-        hitInfo.textures.push_back(texture);
-         }
-       hitInfo.texture = map.gettexture( nXtoCheck, nYtoCheck, hitInfo.height);
+            int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
+            hitInfo.textures.push_back(texture);
+        }
+        hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = true;
         hitInfo.distance       = distanceBetweenPoints(player.x, player.y, xintercept, yintercept);

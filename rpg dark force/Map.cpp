@@ -7,7 +7,13 @@ bool Map::mapHasWallAt(float x, float y)
 	}
 	int mapGridIndexX = floor(x / TILE_SIZE);
 	int mapGridIndexY = floor(y / TILE_SIZE);
-	return heightmap[mapGridIndexY][mapGridIndexX] != 0;
+	//return heightmap[mapGridIndexY][mapGridIndexX] != 0;
+	float height = 0;
+	for (int i = 0; i < fMaps.size(); i++)
+	{
+		height += fMaps[i][mapGridIndexY * MapX + mapGridIndexX];
+	}
+	return height != 0;
 }
 
 // Joseph21 - a couple of convenience functions to safely compare floats using an error margin
@@ -211,6 +217,7 @@ void Map::addTextures(const std::string& sUserTexture)
 		for (int x = 0; x < MapX; x++)
 		{
 			switch (sTexture[y * MapX + x]) {
+			case GRND_FLOOR: ITexture[y * MapX + x] = 0; break;
 			case TEXTURE_ONE: ITexture[y * MapX + x] = 1; break;
 			case TEXTURE_TWO: ITexture[y * MapX + x] = 2; break;
 			case TEXTURE_THREE: ITexture[y * MapX + x] = 3; break;
@@ -218,7 +225,7 @@ void Map::addTextures(const std::string& sUserTexture)
 			case TEXTURE_FIVE: ITexture[y * MapX + x] = 5; break;
 			
 
-			default: std::cout << "ERROR: AddLayer() --> unknown sMap value: " << sTexture[y * MapX + x] << std::endl;
+			default: std::cout << "ERROR: AddLayer() --> unknown sTexture value: " << sTexture[y * MapX + x] << std::endl;
 			}
 		}
 	}

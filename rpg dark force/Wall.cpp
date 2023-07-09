@@ -45,6 +45,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 		float Fcolheight;
 		int below1 = 0;
 		int theTexture;
+		std::vector<int> textures;
 		// calculated corrected distance as well as bottom and top of the wall projection - per hitpoint
 		for (int i = 0; i < (int)rays.rays[x].listinfo.size(); i++)
 		{
@@ -73,7 +74,11 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
             nWallCeil = rays.rays[x].listinfo[0].ceil_front;
             nWallCeil2 = rays.rays[x].listinfo[0].ceil_back;
             nWallFloor = rays.rays[x].listinfo[0].bottom_front;
-			theTexture = rays.rays[x].listinfo[0].textures[0];
+			for (int i = 0; i < rays.rays[x].listinfo[0].textures.size(); i++)
+			{
+				int texture = rays.rays[x].listinfo[0].textures[i];
+				textures.push_back(texture);
+			}
 			
 		} else {
 		    // ... if there's no hitpoint, set the working variables to correspond with empty horizon displaying
@@ -137,7 +142,12 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 						nWallCeil = rays.rays[x].listinfo[hitindex].ceil_front;
 						nWallCeil2 = rays.rays[x].listinfo[hitindex].ceil_back;
 						nWallFloor = rays.rays[x].listinfo[hitindex].bottom_front;
-						theTexture = rays.rays[x].listinfo[hitindex].textures[hitindex];
+						for (int i = 0; i < rays.rays[x].listinfo[hitindex].textures.size(); i++)
+						{
+							int texture = rays.rays[x].listinfo[hitindex].textures[i];
+							textures.push_back(texture);
+						}
+
 
 						if (y >= nWallFloor)
 						{
@@ -210,7 +220,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 			{
 				float fSampleY = 0;
 				int nDisplayBlockHeight = 0;
-
+				int textureid = 0;
 				if (STRETCHED_TEXTURING)
 				{
 					fSampleY = float(y - wallTopY) / float(wallBottomY - wallTopY);
@@ -229,7 +239,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					fSampleY = relative / blocksize;
 				}
 				float fSampleX;
-
+				textureid = getTexture(textures, nDisplayBlockHeight);
 				if (rays.rays[x].listinfo[hitindex].wasHitVertical) {
 					fSampleX = (int)rays.rays[x].listinfo[hitindex].wallHitY % TILE_SIZE;
 				}
@@ -241,7 +251,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				//fSampleX = int(fSampleX) % TILE_SIZE;
 				fSampleY = fSampleY * TILE_SIZE;
 				// having both sample coordinates, get the sample and draw the pixel
-				olc::Pixel auxSample = sprites[theTexture].GetPixel(fSampleX, fSampleY);
+				olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
 				PGEptr->Draw(x, y, auxSample);
 				break;
 			}
@@ -252,5 +262,31 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 //		PGEptr->DrawString(10, 50, "fLookUp  = " + std::to_string(player.lookupordown));
 //		PGEptr->DrawString(10, 40, "fPlayerH = " + std::to_string(player.fPlayerH));
 	}
+}
+
+int Wall::getTexture(std::vector<int>& texture, int& id)
+{
+	int textureid = 0;
+	
+	switch (id)
+	{
+	case 1:
+		textureid = texture[0];
+		break;
+	case 2:
+		textureid = texture[1];
+		break;
+	case 3:
+		textureid = texture[2];
+		break;
+	case 4:
+		textureid = texture[3];
+		break;
+	case 5:
+		textureid = texture[4];
+		break;
+	}
+
+	return textureid;
 }
 
