@@ -68,7 +68,7 @@ public:
 		Clear(RENDER_CEILING ? olc::BLACK : olc::BLUE);
 		ray.castAllRays(player, map);
 
-		wall.renderWallProjection(this, player, ray);
+		wall.renderWallProjection(this, player, ray,map);
 		sprite.SpriteProjection(this, ray, player);
 
 		//map.renderMapGrid(this);           // little map

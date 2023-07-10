@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Raycast.h"
 #include "defs.h"
+#include "Map.h"
 
 
 class Wall
@@ -16,8 +17,8 @@ public:
 	void changeColorIntensity(olc::Pixel& p, float factor);
 	void calculateBottomAndTop(float wallDistance,int halfheight, float wallheight, int& wallceil, int& wallfloor, Player& player);
 	
-	void renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays);
-	int getTexture(std::vector<int>& texture, int& id);
+	void renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays, Map& map);
+	int getTexture(int x,int y, int& id, Map& map);
 public:
 	olc::Sprite sprites[7];
 	int text = 0;

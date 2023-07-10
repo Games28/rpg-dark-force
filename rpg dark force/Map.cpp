@@ -217,7 +217,8 @@ void Map::addTextures(const std::string& sUserTexture)
 		for (int x = 0; x < MapX; x++)
 		{
 			switch (sTexture[y * MapX + x]) {
-			case GRND_FLOOR: ITexture[y * MapX + x] = 0; break;
+			case TEXTURE_BLANK: ITexture[y * MapX + x] = -1; break;
+			case TEXTURE_ZERO: ITexture[y * MapX + x] = 0; break;
 			case TEXTURE_ONE: ITexture[y * MapX + x] = 1; break;
 			case TEXTURE_TWO: ITexture[y * MapX + x] = 2; break;
 			case TEXTURE_THREE: ITexture[y * MapX + x] = 3; break;

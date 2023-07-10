@@ -29,7 +29,7 @@ void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float wallh
 
 
 
-void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays)
+void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays, Map& map)
 {
 	int halfscreenwidth  = WINDOW_WIDTH / 2;
 	int halfscreenheight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
@@ -40,7 +40,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
         // work out angle from player perspective belonging to this slice
 		float fViewangle = float(x - halfscreenwidth) * anglestep;
 
-		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor;
+		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor, coordX, coordY;
 		int colheight;
 		float Fcolheight;
 		int below1 = 0;
@@ -74,11 +74,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
             nWallCeil = rays.rays[x].listinfo[0].ceil_front;
             nWallCeil2 = rays.rays[x].listinfo[0].ceil_back;
             nWallFloor = rays.rays[x].listinfo[0].bottom_front;
-			for (int i = 0; i < rays.rays[x].listinfo[0].textures.size(); i++)
-			{
-				int texture = rays.rays[x].listinfo[0].textures[i];
-				textures.push_back(texture);
-			}
+			coordX = rays.rays[x].listinfo[0].wallHitX;
+			coordY = rays.rays[x].listinfo[0].wallHitY;
 			
 		} else {
 		    // ... if there's no hitpoint, set the working variables to correspond with empty horizon displaying
@@ -142,11 +139,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 						nWallCeil = rays.rays[x].listinfo[hitindex].ceil_front;
 						nWallCeil2 = rays.rays[x].listinfo[hitindex].ceil_back;
 						nWallFloor = rays.rays[x].listinfo[hitindex].bottom_front;
-						for (int i = 0; i < rays.rays[x].listinfo[hitindex].textures.size(); i++)
-						{
-							int texture = rays.rays[x].listinfo[hitindex].textures[i];
-							textures.push_back(texture);
-						}
+						coordX = rays.rays[x].listinfo[hitindex].wallHitX;
+						coordY = rays.rays[x].listinfo[hitindex].wallHitY;
 
 
 						if (y >= nWallFloor)
@@ -221,6 +215,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				float fSampleY = 0;
 				int nDisplayBlockHeight = 0;
 				int textureid = 0;
+				
 				if (STRETCHED_TEXTURING)
 				{
 					fSampleY = float(y - wallTopY) / float(wallBottomY - wallTopY);
@@ -238,8 +233,12 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 
 					fSampleY = relative / blocksize;
 				}
+				if (nDisplayBlockHeight == 2)
+				{
+					int i = 0;
+				}
 				float fSampleX;
-				textureid = getTexture(textures, nDisplayBlockHeight);
+				textureid = getTexture(coordX,coordY, nDisplayBlockHeight, map);
 				if (rays.rays[x].listinfo[hitindex].wasHitVertical) {
 					fSampleX = (int)rays.rays[x].listinfo[hitindex].wallHitY % TILE_SIZE;
 				}
@@ -251,8 +250,10 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				//fSampleX = int(fSampleX) % TILE_SIZE;
 				fSampleY = fSampleY * TILE_SIZE;
 				// having both sample coordinates, get the sample and draw the pixel
-				olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
-				PGEptr->Draw(x, y, auxSample);
+				
+					olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
+					PGEptr->Draw(x, y, auxSample);
+				
 				break;
 			}
 			}
@@ -264,29 +265,22 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 	}
 }
 
-int Wall::getTexture(std::vector<int>& texture, int& id)
+int Wall::getTexture(int x,int y, int& id, Map& map)
 {
 	int textureid = 0;
-	
-	switch (id)
+	int selected = id - 1;
+	for (int i = 0; i < map.iTextures.size(); i++)
 	{
-	case 1:
-		textureid = texture[0];
-		break;
-	case 2:
-		textureid = texture[1];
-		break;
-	case 3:
-		textureid = texture[2];
-		break;
-	case 4:
-		textureid = texture[3];
-		break;
-	case 5:
-		textureid = texture[4];
-		break;
+		int mapGridIndexX = floor(x / TILE_SIZE);
+		int mapGridIndexY = floor(y / TILE_SIZE);
+		
+		if (i == selected)
+		{
+			textureid = map.iTextures[i][mapGridIndexY * map.MapX + mapGridIndexX];
+			break;
+		}
 	}
-
 	return textureid;
+	
 }
 
