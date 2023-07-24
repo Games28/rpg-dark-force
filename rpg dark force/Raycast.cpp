@@ -93,10 +93,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
             fnextHeight = map.FloatgetfromHeightmap(nXtoCheck, nYtoCheck);
             
         }
-        if (stripID == 96)
-        {
-            int i = 0;
-        }
+       
         // just store each grid intersection point in the list - this brute force was necessary to debug the code
         intersectInfo hitInfo;
         hitInfo.wallHitX = xintercept;
@@ -110,12 +107,13 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         //code for all textures related to each level of a height thats more then 1 level
         // commented out for now
         
-        for (int i = 1; i <= hitInfo.FHeight; i++)
-        {
-            int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
-            hitInfo.textures.push_back(texture);
-        }
-        hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
+       // for (int i = 1; i <= hitInfo.FHeight; i++)
+       // {
+       //     int texture = map.gettexture(nXtoCheck, nYtoCheck, i);
+       //    
+       //     hitInfo.textures.push_back(texture);
+       // }
+        //hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = false;
         hitInfo.distance       = distanceBetweenPoints(player.x, player.y, xintercept, yintercept);
@@ -183,6 +181,8 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
         else {
             nextHeight = map.getFromHeightMap(nXtoCheck, nYtoCheck);
             fnextHeight = map.FloatgetfromHeightmap(nXtoCheck, nYtoCheck);
+            
+
 
         }
 
@@ -197,15 +197,17 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
 
 
-
+       
         //code for all textures related to each level of a height thats more then 1 level
         // commented out for now
-        for (int i = 1; i <= hitInfo.FHeight; i++)
-        {
-            int texture = map.getTextureMap(nXtoCheck, nYtoCheck, i);
-            hitInfo.textures.push_back(texture);
-        }
-        hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
+        //for (int i = 1; i <= hitInfo.FHeight; i++)
+        //{
+        //   
+        //    int texture = map.gettexture(nXtoCheck, nYtoCheck, i);
+        //   
+        //    hitInfo.textures.push_back(texture);
+        //}
+        //hitInfo.texture = map.getTextureMap(nXtoCheck, nYtoCheck, hitInfo.height);
 
         hitInfo.wasHitVertical = true;
         hitInfo.distance       = distanceBetweenPoints(player.x, player.y, xintercept, yintercept);
@@ -236,7 +238,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
     float nHeightTracker = 0;
     std::vector<struct intersectInfo> tempList(rays[stripID].listinfo);   // copy hit list to a temporary list
     rays[stripID].listinfo.clear();                                         // clear hit list
-
+    
     for (int i = 0; i < (int)tempList.size(); i++) {
         // this is to remove all unnecessary "hit" points with height 0 at the start of the list
         if (bRunUp) {
@@ -253,6 +255,9 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
             }
         }
     }
+
+    
+   
 }
 
 void Raycast::renderMapRays(olc::PixelGameEngine* PGEptr, Player& player, int testRay)

@@ -3,13 +3,14 @@
 void Wall::wallTextures()
 {
     //std::string sPath = "image/";
-	sprites[0] = olc::Sprite(            "sand1.png");
-	sprites[1] = olc::Sprite(        "stonewall.png");
-	sprites[2] = olc::Sprite(    "Tatooinedoor1.png");
-	sprites[3] = olc::Sprite(    "Tatooinedoor2.png");
-	sprites[4] = olc::Sprite("Tatooinehousewall.png");
-	sprites[5] = olc::Sprite(  "tatooinewindow1.png");
-	sprites[6] = olc::Sprite(  "tatooinewindow2.png");
+	sprites[0] = olc::Sprite("sand1.png");
+	sprites[1] = olc::Sprite("stonewall.png");
+	sprites[2] = olc::Sprite("Tatooinedoor1.png");
+	sprites[3] = olc::Sprite("Tatooinedoor2.png");
+	sprites[4] = olc::Sprite("tatooinewindow2.png");
+	sprites[5] = olc::Sprite("Tatooinehousewall.png");
+	
+	
 
 	std::cout << "All textures loaded." << std::endl;
 }
@@ -40,8 +41,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
         // work out angle from player perspective belonging to this slice
 		float fViewangle = float(x - halfscreenwidth) * anglestep;
 
-		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor, coordX, coordY;
-		int colheight;
+		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor;
+		int colheight, coordX, coordY;
 		float Fcolheight;
 		int below1 = 0;
 		int theTexture;
@@ -206,7 +207,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				
 				int nSampleX = (int)(fRoofProjX) % TILE_SIZE;
 				int nSampleY = (int)(fRoofProjY) % TILE_SIZE;
-				olc::Pixel p = sprites[3].GetPixel(nSampleX, nSampleY);
+				olc::Pixel p = sprites[1].GetPixel(nSampleX, nSampleY);
 				PGEptr->Draw(x, y, p);
 				break;
 			}
@@ -238,7 +239,11 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					int i = 0;
 				}
 				float fSampleX;
-				textureid = getTexture(coordX,coordY, nDisplayBlockHeight, map);
+				int indexX = int(coordX) / TILE_SIZE;
+				int indexY = int(coordY) / TILE_SIZE;
+				//int inx = rays.rays[x].listinfo[hitindex].mapX;
+				//int iny = rays.rays[x].listinfo[hitindex].mapY;
+				textureid = getTexture(indexX,indexY, nDisplayBlockHeight,map);
 				if (rays.rays[x].listinfo[hitindex].wasHitVertical) {
 					fSampleX = (int)rays.rays[x].listinfo[hitindex].wallHitY % TILE_SIZE;
 				}
@@ -267,20 +272,11 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 
 int Wall::getTexture(int x,int y, int& id, Map& map)
 {
-	int textureid = 0;
+	
+	int textureid[3];
 	int selected = id - 1;
-	for (int i = 0; i < map.iTextures.size(); i++)
-	{
-		int mapGridIndexX = floor(x / TILE_SIZE);
-		int mapGridIndexY = floor(y / TILE_SIZE);
-		
-		if (i == selected)
-		{
-			textureid = map.iTextures[i][mapGridIndexY * map.MapX + mapGridIndexX];
-			break;
-		}
-	}
-	return textureid;
+	
+    return map.iTextures[selected][y * map.MapX + x];
 	
 }
 

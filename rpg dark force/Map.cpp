@@ -7,13 +7,13 @@ bool Map::mapHasWallAt(float x, float y)
 	}
 	int mapGridIndexX = floor(x / TILE_SIZE);
 	int mapGridIndexY = floor(y / TILE_SIZE);
-	//return heightmap[mapGridIndexY][mapGridIndexX] != 0;
-	float height = 0;
-	for (int i = 0; i < fMaps.size(); i++)
-	{
-		height += fMaps[i][mapGridIndexY * MapX + mapGridIndexX];
-	}
-	return height != 0;
+	return Floatheightmap[mapGridIndexY][mapGridIndexX] != 0;
+	//float height = 0;
+	//for (int i = 0; i < fMaps.size(); i++)
+	//{
+	//	height += fMaps[i][mapGridIndexY * MapX + mapGridIndexX];
+	//}
+	//return height != 0;
 }
 
 // Joseph21 - a couple of convenience functions to safely compare floats using an error margin
@@ -86,6 +86,14 @@ int Map::getFromHeightMap( int x, int y )
         return heightmap[y][x];
 }
 
+void Map::setTextures()
+{
+	
+		
+	
+	
+}
+
 int Map::getTextureMap(int i, int j, int Height)
 {
 	int textureid = 0;
@@ -112,24 +120,35 @@ int Map::gettexture(int x, int y,int layer)
 {
 	
 	int texture = 0;
-	if (x < 0 || x >= MAP_NUM_COLS_X || y < 0 || y >= MAP_NUM_ROWS_Y)
+	int indexX = x;
+	int indexY = y;
+	int offsetX = 1;
+	int offsetY = 1;
+	bool xzero = false;
+	bool yzero = false;
+	
+	if (indexX < 0 || indexX >= MAP_NUM_COLS_X || indexY < 0 || indexY >= MAP_NUM_ROWS_Y)
 	{
 		return texture;
 	}
 	else
 	{
+		
 		switch (layer)
 		{
 		case 1:
-			texture = iTextures[0][y * MAP_NUM_COLS_X + x];
+			texture = iTextures[0][indexY * MAP_NUM_COLS_X + indexX];
 			break;
 		case 2:
-			texture = iTextures[1][y * MAP_NUM_COLS_X + x];
+			texture = iTextures[1][indexY * MAP_NUM_COLS_X + indexX];
 			break;
 		case 3:
-			texture = iTextures[2][y * MAP_NUM_COLS_X + x];
+			texture = iTextures[2][indexY * MAP_NUM_COLS_X + indexX];
 			break;
 		}
+		
+		
+		
 		return texture;
 	}
 }
@@ -148,13 +167,14 @@ float Map::FloatgetfromHeightmap(int x, int y)
 		result = 0;
 		for (int i = 0; i < fMaps.size(); i++)
 		{
+			
 			result += fMaps[i][y * MapX + x];
 		}
-
+		
 		return result;
 	}
 	//current
-	//if (x < 0 || x >= MAP_NUM_COLS || y < 0 || y >= MAP_NUM_ROWS)
+	//if (x < 0 || x >= MAP_NUM_COLS_X || y < 0 || y >= MAP_NUM_ROWS_Y)
 	//	return 0;
 	//else
 	//	return Floatheightmap[y][x];
