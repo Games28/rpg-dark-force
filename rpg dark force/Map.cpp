@@ -7,13 +7,13 @@ bool Map::mapHasWallAt(float x, float y)
 	}
 	int mapGridIndexX = floor(x / TILE_SIZE);
 	int mapGridIndexY = floor(y / TILE_SIZE);
-	return Floatheightmap[mapGridIndexY][mapGridIndexX] != 0;
-	//float height = 0;
-	//for (int i = 0; i < fMaps.size(); i++)
-	//{
-	//	height += fMaps[i][mapGridIndexY * MapX + mapGridIndexX];
-	//}
-	//return height != 0;
+	//return Floatheightmap[mapGridIndexY][mapGridIndexX] != 0;
+	float height = 0;
+	for (int i = 0; i < fMaps.size(); i++)
+	{
+		height += fMaps[i][mapGridIndexY * MapX + mapGridIndexX];
+	}
+	return height != 0;
 }
 
 // Joseph21 - a couple of convenience functions to safely compare floats using an error margin

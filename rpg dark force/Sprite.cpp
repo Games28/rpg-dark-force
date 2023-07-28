@@ -13,7 +13,7 @@ void Sprite::initsprites()
 {
 	spriteptr[0] = new olc::Sprite("probidletest.png");
 	spriteptr[1] = new olc::Sprite("r2idletest.png");
-	spriteptr[2] = new olc::Sprite("trooper.png");
+	spriteptr[2] = new olc::Sprite("trooperT.png");
 
 
 }
@@ -48,17 +48,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 	for (int i = 0; i < NUM_SPRITES; i++)
 	{
-		//float fVecX = sprites[i].x - player.x;
-		//float fVecY = sprites[i].y - player.y;
-		//
-		//float fEyeX = cos(player.rotationAngle);
-		//float fEyeY = sin(player.rotationAngle);
-		//
-		//float angleSpritePlayer = atan2f(fVecY, fVecX) - atan2f(fEyeY, fEyeX);
-		//
-		//if (angleSpritePlayer < -PI) angleSpritePlayer += 2.0f * PI;
-		//if (angleSpritePlayer > PI) angleSpritePlayer -= 2.0f * PI;
-
+		
 
 		float angleSpritePlayer = atan2(sprites[i].y - player.y, sprites[i].x - player.x) - atan2(sin(player.rotationAngle), cos(player.rotationAngle));
 
@@ -67,9 +57,9 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		if (angleSpritePlayer < -PI)
 			angleSpritePlayer += TWO_PI;
 
-		//angleSpritePlayer = fabs(angleSpritePlayer);
+		
 
-		const float ESPSILON = 0.2f;
+		
 
 		const float EPSILON = 0.2f;
 		if (angleSpritePlayer < (FOV_ANGLE / 2) + EPSILON) {
@@ -98,6 +88,8 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 	}
 
 	int nHorizonHeight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
+
+
 
 
 

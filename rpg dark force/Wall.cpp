@@ -239,11 +239,10 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					int i = 0;
 				}
 				float fSampleX;
-				int indexX = int(coordX) / TILE_SIZE;
-				int indexY = int(coordY) / TILE_SIZE;
-				//int inx = rays.rays[x].listinfo[hitindex].mapX;
-				//int iny = rays.rays[x].listinfo[hitindex].mapY;
-				textureid = getTexture(indexX,indexY, nDisplayBlockHeight,map);
+				
+				int indexX = rays.rays[x].listinfo[hitindex].mapX;
+				int indexY = rays.rays[x].listinfo[hitindex].mapY;
+				textureid = getTexture(indexX, indexY, nDisplayBlockHeight, map);
 				if (rays.rays[x].listinfo[hitindex].wasHitVertical) {
 					fSampleX = (int)rays.rays[x].listinfo[hitindex].wallHitY % TILE_SIZE;
 				}
