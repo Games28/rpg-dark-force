@@ -2,8 +2,10 @@
 
 void Raycast::castAllRays(Player& player, Map& map)
 {
+   
 	for (int col = 0; col < NUM_RAYS; col++) {
 		float rayAngle = player.rotationAngle + (col - NUM_RAYS / 2) / (float)(NUM_RAYS)*FOV_ANGLE;
+        
 		castRay(rayAngle, col, player, map);
         
 	}
@@ -27,7 +29,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 
 	// preparation for the DDA algo: clear the hit list for this ray, normalize the angle and set the ray direction booleans
 	rays[stripID].listinfo.clear();
-
+    rays[stripID].distance.clear();
 	normalizeAngle(&rayAngle);
 	float fRayAngleTan = tan( rayAngle );
 
@@ -219,7 +221,8 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
    
     bool bRunUp = true;
     float nHeightTracker = 0;
-    std::vector<struct intersectInfo> tempList(rays[stripID].listinfo);   // copy hit list to a temporary list
+    std::vector<struct intersectInfo> tempList(rays[stripID].listinfo); // copy hit list to a temporary list
+    rays[stripID].distance.push_back(rays[stripID].listinfo[0].distance);
     rays[stripID].listinfo.clear();                                         // clear hit list
     
     for (int i = 0; i < (int)tempList.size(); i++) {

@@ -13,7 +13,10 @@ struct sprite_t
 	float angle;
 	bool visible;
 	bool inSight;
+	int width;
+	int height;
 };
+
 
 
 class Sprite
@@ -25,6 +28,8 @@ public:
 	void initsprites();
 	void calculateBottomandTop(Player& player, float distance,float& SHeight, float& SWidth, int halfheight, float& ceiling, float& floor);
 	
+	
+	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite *sprite, float samplex, float sampley, float &diffangle);
 	void SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player);
 	void mapSprites(olc::PixelGameEngine* PGEptr);
 	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }
@@ -35,6 +40,7 @@ public:
 	int vertlook = 0;
 	int heightoffset = 0;
 	int lookoffset = 0;
+	
 };
 
 

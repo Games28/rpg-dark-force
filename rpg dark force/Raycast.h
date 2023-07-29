@@ -36,8 +36,10 @@ struct intersectInfo
 };
 
 
+
 struct Ray {
 	std::vector<intersectInfo> listinfo;
+	std::vector<float> distance;
 };
 
 

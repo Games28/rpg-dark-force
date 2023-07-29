@@ -14,8 +14,8 @@ Player::Player()
 	islookingupdown = 0;
 	lookUpDown = 45 * (PI / 180.0f);
 	playerLookAngle = 0;
-	strafeLeft = false;
-	strafeRight = false;
+	strafeLeft = true;
+	strafeRight = true;
 	strafedirection = 0;
 	run = 1;
 	lookspeed = 200.0f;
@@ -49,12 +49,14 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 		strafeLeft = true;
 		strafedirection = +1;
 	}
+	
 
 	if (PGEptr->GetKey(olc::E).bHeld)
 	{
 		strafeRight = true;
 		strafedirection = -1;
 	}
+	
 
 	if (PGEptr->GetKey(olc::D).bHeld)
 	{
@@ -94,11 +96,13 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 
 	if (PGEptr->GetKey(olc::Q).bReleased)
 	{
+		
 		strafedirection = 0;
 	}
 
 	if (PGEptr->GetKey(olc::E).bReleased)
 	{
+		
 		strafedirection = 0;
 	}
 
@@ -219,18 +223,23 @@ void Player::movePlayer(float deltatime, Map& map)
 	//strafe left and strafe right movement code
 	float strafeStep = strafedirection * walkSpeed * deltatime;
 
-	float strafePlayerX = 0;
-	float strafePlayerY = 0;
+	
 	if (strafeLeft)
 	{
+		
 		strafePlayerX = x - sin(rotationAngle) * strafeStep;
 		strafePlayerY = y + cos(rotationAngle) * strafeStep;
+		
 	}
+	
 	if(strafeRight)
 	{
+		
 		strafePlayerX = x + sin(rotationAngle) * strafeStep;
 		strafePlayerY = y - cos(rotationAngle) * strafeStep;
+		
 	}
+	
 
 	if (!map.mapHasWallAt(strafePlayerX, strafePlayerY))
 	{

@@ -29,6 +29,7 @@ public:
 
 	bool OnUserCreate() override
 	{
+		
 		wall.wallTextures();
 		sprite.initSpriteinfo();
 		sprite.initsprites();

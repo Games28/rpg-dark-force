@@ -38,6 +38,10 @@ public:
 	float fPlayerH;
 	bool movevert;
 	bool lookvert;
+	float strafePlayerX = 0;
+	float strafePlayerY = 0;
+
+	
 };
 
 #endif // !PLAYER_H

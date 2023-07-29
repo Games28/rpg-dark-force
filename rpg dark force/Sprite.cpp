@@ -2,11 +2,11 @@
 
 void Sprite::initSpriteinfo()
 {
-	sprites[0] = {640,630, 0};
-	sprites[1] = { 660,690,1 };
-	sprites[2] = { 250,600, 1 };
-	sprites[3] = { 240,610, 2 };
-	sprites[4] = { 300,400, 2 };
+	//sprites[0] = {640,630, 2};
+	//sprites[1] = { 660,690,2 };
+	//sprites[2] = { 250,600, 2 };
+	//sprites[3] = { 240,610, 2 };
+	sprites[0] = { 300,400, 2 };
 }
 
 void Sprite::initsprites()
@@ -24,6 +24,37 @@ void Sprite::calculateBottomandTop(Player& player, float distance,float& SHeight
 	ceiling = halfheight - (sliceHeight *  player.fPlayerH) * sliceHeight;
 	floor = halfheight + (sliceHeight * player.fPlayerH);
 
+}
+
+
+
+
+
+olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* sprite, float samplex, float sampley, float& diffangle)
+{
+	auto is_in_range = [=](float a, float low, float high) {
+		return (low <= a && a < high);
+	};
+
+	// "bodge" angle in the range [ -PI, PI )
+	float fModAngle_rad = diffangle;
+	if (fModAngle_rad < -3.14159265f) fModAngle_rad += 2.0f * 3.14159265f;
+	if (fModAngle_rad >= +3.14159265f) fModAngle_rad -= 2.0f * 3.14159265f;
+	//ptr->DrawString(30, 30, "modanglerad: " + std::to_string(fModAngle_rad));
+	olc::vf2d vOffset;
+	if (is_in_range(fModAngle_rad, -0.75f * 3.14159265f, -0.25f * 3.14159265f))
+     	 vOffset = { 1.0f, 0.0f }; else   // sprite from the left
+		if (is_in_range(fModAngle_rad, -0.25f * 3.14159265f, +0.25f * 3.14159265f)) 
+			vOffset = { 0.0f, 0.0f }; else   //                 back
+			if (is_in_range(fModAngle_rad, +0.25f * 3.14159265f, +0.75f * 3.14159265f)) 
+				vOffset = { 3.0f, 0.0f }; 
+			else   //                 right
+				vOffset = { 2.0f, 0.0f };        //                 front
+
+
+	// the subsprites are 100 x 100 pixels
+	olc::vf2d vSample = ((vOffset + olc::vf2d(samplex, sampley)) * 200.0 / olc::vf2d(float(sprite->width), float(sprite->height)));
+	return sprite->Sample(vSample.x, vSample.y);
 }
 
 void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player)
@@ -59,12 +90,13 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 		
 
-		
+		const float ESPSILON = 0.2f;
 
 		const float EPSILON = 0.2f;
 		if (angleSpritePlayer < (FOV_ANGLE / 2) + EPSILON) {
 			sprites[i].visible = true;
 			sprites[i].angle = angleSpritePlayer;
+			
 			sprites[i].distance = distanceBetweenPoints(sprites[i].x, sprites[i].y, player.x, player.y);
 			visibleSprites[numVisibleSprites] = sprites[i];
 			numVisibleSprites++;
@@ -121,24 +153,47 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
 
+		//new
+		float fNewObjAngle_rad = sprite.angle;
+		if (fNewObjAngle_rad < 0.0f) fNewObjAngle_rad += 2.0f * 3.14159f;
+		if (fNewObjAngle_rad >= 2.0f * 3.14159f) fNewObjAngle_rad -= 2.0f * 3.14159f;
+		// get difference angle between objects view angle and the view angle from player to object
+		float player_angle_rad = player.rotationAngle * 3.14159f / 180.f;
+		float fDiffAngle_rad = sprite.angle - (player_angle_rad + fNewObjAngle_rad);
+		// bring fDiffAngle_rad in range [ 0, 2 PI )
+		if (fDiffAngle_rad < 0.0f) fDiffAngle_rad += 2.0f * 3.14159f;
+		if (fDiffAngle_rad >= 2.0f * 3.14159f) fDiffAngle_rad -= 2.0f * 3.14159f;
+		//new end
+
 		// render the sprite
-		for (float fx = 0.0f; fx < fObjWidth; fx++) {
+		for (int fx = 0; fx < (int)fObjWidth; fx++) {
 			// get distance across the screen to render
 			int nObjColumn = int(fMidOfObj + fx - (fObjWidth / 2.0f));
 			// only render this column if it's on the screen
 			if (nObjColumn >= 0 && nObjColumn < WINDOW_WIDTH) {
-				for (float fy = 0.0f; fy < fObjHeight; fy++) {
+				for (int fy = 0; fy < (int)fObjHeight; fy++) {
 					// calculate sample coordinates as a percentage of object width and height
 					float fSampleX = fx / fObjWidth;
 					float fSampleY = fy / fObjHeight;
 					// sample the pixel and draw it
-					olc::Pixel pSample = spriteptr[sprite.texture]->Sample(fSampleX, fSampleY);
-					if (pSample != olc::MAGENTA) {
-						PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
+					if (fx > 0 && fx < WINDOW_WIDTH && fy > 0 && fy < WINDOW_HEIGHT)
+					{
+						//new
+						olc::Pixel pSample = newSelectedPixel(PGEptr,spriteptr[sprite.texture], fSampleX, fSampleY, fDiffAngle_rad);
+						
+						float dist = rays.rays[nObjColumn].listinfo[0].distance;
+						if (sprite.distance < dist)
+						{
+							if (pSample != olc::MAGENTA)
+							{
+								PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
 
+							}
+						}
 					}
 				}
 			}
+			
 		}
 
 	}
