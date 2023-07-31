@@ -11,9 +11,6 @@ Player::Player()
 	rotationAngle = 0;
 	walkSpeed = 100;
 	turnSpeed = 45 * (PI/ 180.0f);
-	islookingupdown = 0;
-	lookUpDown = 45 * (PI / 180.0f);
-	playerLookAngle = 0;
 	strafeLeft = true;
 	strafeRight = true;
 	strafedirection = 0;
@@ -25,6 +22,10 @@ Player::Player()
 	fPlayerH = 0.5f;
 	lookvert = false;
 	movevert = false;
+	rotatebefore = 0.0f;
+	rotateafter = 0.0f;
+	movementbefore = { 0.0f,0.0f };
+	movementafter = { 0.0f,0.00f };
 }
 
 Player::~Player()
@@ -198,6 +199,8 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 
 void Player::movePlayer(float deltatime, Map& map)
 {
+	rotatebefore = rotationAngle;
+	movementbefore = { x,y };
 	auto normalizeAngle = [=](float* angle)
 	{
 		*angle = remainder(*angle, TWO_PI);
@@ -247,6 +250,8 @@ void Player::movePlayer(float deltatime, Map& map)
 		y = strafePlayerY;
 	}
 
+	rotateafter = rotationAngle;
+	movementafter = { x, y };
 	//look up and look down cod
 }
 

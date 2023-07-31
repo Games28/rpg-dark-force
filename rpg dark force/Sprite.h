@@ -9,12 +9,16 @@ struct sprite_t
 {
 	float x, y;
 	int texture;
+	bool stationary;
+	float size;
 	float distance;
 	float angle;
 	bool visible;
 	bool inSight;
 	int width;
 	int height;
+	bool pickedup;
+	
 };
 
 
@@ -29,7 +33,7 @@ public:
 	void calculateBottomandTop(Player& player, float distance,float& SHeight, float& SWidth, int halfheight, float& ceiling, float& floor);
 	
 	
-	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite *sprite, float samplex, float sampley, float &diffangle);
+	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite *sprite,float size, float samplex, float sampley, float &diffangle);
 	void SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player);
 	void mapSprites(olc::PixelGameEngine* PGEptr);
 	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }

@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
+    <ClInclude Include="Force_powers.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapEditor.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Force_powers.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raycast.cpp" />

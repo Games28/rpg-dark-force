@@ -8,6 +8,7 @@
 #include "Wall.h"
 #include "Sprite.h"
 #include "Saber.h"
+#include "Force_powers.h"
 
 
 
@@ -25,6 +26,7 @@ public:
 	Wall wall;
 	Sprite sprite;
 	Saber saber;
+	Force_powers powers;
 public:
 
 	bool OnUserCreate() override
@@ -41,6 +43,7 @@ public:
 		map.addTextures(map.Texture_levelOne);
 		map.addTextures(map.Texture_levelTwo);
 		map.addTextures(map.Texture_levelThree);
+		powers.initSprite();
 
 		return true;
 	}
@@ -63,10 +66,13 @@ public:
             wall.nTestRay = int( (NUM_RAYS - 1) * wall.fTestRay );
         }
 
-
+		
 		player.processInput(this,fElapsedTime,map);
 		player.movePlayer(fElapsedTime, map);
 		Clear(RENDER_CEILING ? olc::BLACK : olc::BLUE);
+		DrawString(10, 40, "movementbefore: x:" + std::to_string(player.movementbefore.x) + " y: " + std::to_string(player.movementbefore.y));
+		DrawString(10, 50, "movementafter: x:" + std::to_string(player.movementafter.x) + " y: " + std::to_string(player.movementafter.y));
+		
 		ray.castAllRays(player, map);
 
 		wall.renderWallProjection(this, player, ray,map);
@@ -77,7 +83,7 @@ public:
 		//sprite.mapSprites(this);
 		//ray.renderMapRays(this, player, wall.nTestRay );   // rays in the map
 		saber.DrawSaber(this,fElapsedTime);
-		
+		powers.Update(this, player, sprite);
 
 		//DrawLine( wall.nTestRay, 0, wall.nTestRay, ScreenHeight(), olc::MAGENTA );
 

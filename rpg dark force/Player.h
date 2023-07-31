@@ -24,9 +24,7 @@ public:
 	float rotationAngle;
 	float walkSpeed;
 	float turnSpeed;
-	int islookingupdown;
-	float lookUpDown;
-	float playerLookAngle;
+	
 	bool strafeLeft;
 	bool strafeRight;
 	int strafedirection;
@@ -41,6 +39,11 @@ public:
 	float strafePlayerX = 0;
 	float strafePlayerY = 0;
 
+	float rotatebefore;
+	float rotateafter;
+
+	olc::vf2d movementbefore;
+	olc::vf2d movementafter;
 	
 };
 
