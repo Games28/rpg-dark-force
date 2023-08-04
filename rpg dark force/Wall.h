@@ -7,16 +7,29 @@
 #include "Raycast.h"
 #include "defs.h"
 #include "Map.h"
+#include "Sprite.h"
 
 
 class Wall
 {
+
+public:
+
+	enum Side
+	{
+		Default,
+		Top,
+		Bottom,
+		WalL,
+		Roof
+	};
+
 public:
 	Wall() = default;
 	void wallTextures();
 	void changeColorIntensity(olc::Pixel& p, float factor);
 	void calculateBottomAndTop(float wallDistance,int halfheight, float wallheight, int& wallceil, int& wallfloor, Player& player);
-	
+	olc::Pixel SelectSceneryPixel(const int textureid,const float samplex, const float sampley, const float distance,Side side);
 	void renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays, Map& map);
 	int getTexture(int x,int y, int& id, Map& map);
 public:
@@ -26,6 +39,9 @@ public:
 
 	int nTestRay = NUM_RAYS / 2;
 	float fTestRay = 0.5f;
+	Side side = Side::Default;
+
+
 };
 
 #endif // !WALL_H

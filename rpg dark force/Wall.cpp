@@ -28,6 +28,66 @@ void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float wallh
 	wallfloor = halfheight + (nsliceHeight *  player.fPlayerH );
 }
 
+olc::Pixel Wall::SelectSceneryPixel(const int textureid, const float samplex, const float sampley, const float distance, Side side)
+{
+	olc::Pixel p;
+
+	switch (side)
+	{
+	case Side::Top:
+	{
+		p = sprites[textureid].GetPixel(samplex, sampley);
+	}break;
+
+	case Side::Roof:
+	{
+		p = sprites[textureid].GetPixel(samplex, sampley);
+	}break;
+
+	case Side::Bottom:
+	{
+		p = sprites[textureid].GetPixel(samplex, sampley);
+		//float fdistance = ((3.0f / distance) * 100.0f);
+		//
+		//if (fdistance >= 1.0f) fdistance = 1.0f;
+		//
+		//
+		//
+		//p.r = uint8_t(float(p.r) * fdistance);
+		//p.g = uint8_t(float(p.g) * fdistance);
+		//p.b = uint8_t(float(p.b) * fdistance);
+	}break;
+
+	case Side::WalL:
+	{
+		p = sprites[textureid].GetPixel(samplex, sampley);
+
+		float brightness = 3.0;
+		float scale = 0.0f;
+		if (distance >= 10) scale = 10.0f * brightness;
+		if (distance >= 100) scale = 100.0f * brightness;
+		float fdistance = ((1.0 / distance) * scale);
+		
+		if (fdistance >= 1.0f) fdistance = 1.0f;
+		
+
+
+		p.r = uint8_t(float(p.r) * fdistance);
+		p.g = uint8_t(float(p.g) * fdistance);
+		p.b = uint8_t(float(p.b) * fdistance);
+		
+	}break;
+
+	case Default:
+	{
+		std::cout << "error with texture" << std::endl;
+	}break;
+	}
+
+
+	return p;
+}
+
 
 
 void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays, Map& map)
@@ -35,7 +95,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 	int halfscreenwidth  = WINDOW_WIDTH / 2;
 	int halfscreenheight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
 	float anglestep = 60 / float(WINDOW_WIDTH);
-
+	
 	for (int x = 0; x < NUM_RAYS; x++) {     // iterate over all slices of the screen from left to right
 
         // work out angle from player perspective belonging to this slice
@@ -43,7 +103,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 
 		int wallTopY, wallBottomY, nWallCeil, nWallCeil2, nWallFloor;
 		int colheight, coordX, coordY;
-		float Fcolheight;
+		float Fcolheight, fDistnace;
 		int below1 = 0;
 		int theTexture;
 		std::vector<int> textures;
@@ -77,6 +137,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
             nWallFloor = rays.rays[x].listinfo[0].bottom_front;
 			coordX = rays.rays[x].listinfo[0].wallHitX;
 			coordY = rays.rays[x].listinfo[0].wallHitY;
+			fDistnace = rays.rays[x].listinfo[0].distance;
 			
 		} else {
 		    // ... if there's no hitpoint, set the working variables to correspond with empty horizon displaying
@@ -142,6 +203,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 						nWallFloor = rays.rays[x].listinfo[hitindex].bottom_front;
 						coordX = rays.rays[x].listinfo[hitindex].wallHitX;
 						coordY = rays.rays[x].listinfo[hitindex].wallHitY;
+						fDistnace = rays.rays[x].listinfo[hitindex].distance;
 
 
 						if (y >= nWallFloor)
@@ -177,7 +239,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					int nSampleX = (int)(fFloorProjX) % TILE_SIZE;
 					int nSampleY = (int)(fFloorProjY) % TILE_SIZE;
 
-					olc::Pixel p = sprites[0].GetPixel(nSampleX, nSampleY);
+					//olc::Pixel p = sprites[0].GetPixel(nSampleX, nSampleY);
+					olc::Pixel p = SelectSceneryPixel(0, nSampleX, nSampleY,fDistnace, Side::Top);
 					PGEptr->Draw(x, y, p);
 				}
 				break;
@@ -193,7 +256,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				int nSampleX = (int)(fFloorProjX) % TILE_SIZE;
 				int nSampleY = (int)(fFloorProjY) % TILE_SIZE;
 
-				olc::Pixel p = sprites[0].GetPixel(nSampleX, nSampleY);
+				//olc::Pixel p = sprites[0].GetPixel(nSampleX, nSampleY);
+				olc::Pixel p = SelectSceneryPixel(0, nSampleX, nSampleY,fDistnace, Side::Bottom);
 				PGEptr->Draw(x, y, p);
 				break;
 			}
@@ -207,7 +271,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				
 				int nSampleX = (int)(fRoofProjX) % TILE_SIZE;
 				int nSampleY = (int)(fRoofProjY) % TILE_SIZE;
-				olc::Pixel p = sprites[1].GetPixel(nSampleX, nSampleY);
+				//olc::Pixel p = sprites[1].GetPixel(nSampleX, nSampleY);
+				olc::Pixel p = SelectSceneryPixel(1, nSampleX, nSampleY,fDistnace, Side::Roof);
 				PGEptr->Draw(x, y, p);
 				break;
 			}
@@ -255,7 +320,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				fSampleY = fSampleY * TILE_SIZE;
 				// having both sample coordinates, get the sample and draw the pixel
 				
-					olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
+					//olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
+				olc::Pixel auxSample = SelectSceneryPixel(textureid, fSampleX, fSampleY,fDistnace, Side::WalL);
 					PGEptr->Draw(x, y, auxSample);
 				
 				break;

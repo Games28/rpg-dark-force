@@ -212,7 +212,7 @@ void Player::movePlayer(float deltatime, Map& map)
 	// move forward, backwards, turn right and turn left movment code
 	rotationAngle += turnDirection * turnSpeed * deltatime;
 	normalizeAngle(&rotationAngle);
-
+	rotateafter = rotationAngle;
 	float moveStep = walkDirection * walkSpeed * deltatime;
 
 	float newPlayerX = x + cos(rotationAngle) * moveStep * run;
@@ -222,6 +222,7 @@ void Player::movePlayer(float deltatime, Map& map)
 	if (!map.mapHasWallAt(newPlayerX, newPlayerY)) {
 		x = newPlayerX;
 		y = newPlayerY;
+		movementafter = { newPlayerX,newPlayerY };
 	}
 	//strafe left and strafe right movement code
 	float strafeStep = strafedirection * walkSpeed * deltatime;
@@ -248,9 +249,10 @@ void Player::movePlayer(float deltatime, Map& map)
 	{
 		x = strafePlayerX;
 		y = strafePlayerY;
+		
 	}
 
-	rotateafter = rotationAngle;
+	
 	movementafter = { x, y };
 	//look up and look down cod
 }

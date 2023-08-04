@@ -2,11 +2,11 @@
 
 void Sprite::initSpriteinfo()
 {
-	sprites[0] = { 640,630, 0, false ,100 };
-	sprites[1] = { 660,690,1 ,false,100};
-	sprites[2] = { 250,600, 1,false ,100 };
-	sprites[3] = { 240,610, 2 ,false,200};
-	sprites[4] = { 300,400, 2 ,false,200};
+	//sprites[0] = { 640,630, 0, false ,100 };
+	//sprites[1] = { 660,690,1 ,false,100};
+	//sprites[2] = { 250,600, 1,false ,100 };
+	//sprites[3] = { 240,610, 2 ,false,200};
+	sprites[0] = { 300,400, 2 ,false,200};
 }
 
 void Sprite::initsprites()
@@ -35,7 +35,7 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* spri
 	auto is_in_range = [=](float a, float low, float high) {
 		return (low <= a && a < high);
 	};
-
+	
 	// "bodge" angle in the range [ -PI, PI )
 	
 	
@@ -48,11 +48,19 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* spri
 				vOffset = { 3.0f, 0.0f }; 
 			else   //                 right
 				vOffset = { 2.0f, 0.0f };        //                 front
-
-
+	
+	
+	
+	
 	// the subsprites are 100 x 100 pixels
 	olc::vf2d vSample = ((vOffset + olc::vf2d(samplex, sampley)) * size / olc::vf2d(float(sprite->width), float(sprite->height)));
-	return sprite->Sample(vSample.x, vSample.y);
+
+	//test
+	olc::Pixel p = sprite->Sample(vSample.x, vSample.y);
+
+
+
+	return p;
 }
 
 void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player)

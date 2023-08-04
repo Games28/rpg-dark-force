@@ -70,8 +70,8 @@ public:
 		player.processInput(this,fElapsedTime,map);
 		player.movePlayer(fElapsedTime, map);
 		Clear(RENDER_CEILING ? olc::BLACK : olc::BLUE);
-		DrawString(10, 40, "movementbefore: x:" + std::to_string(player.movementbefore.x) + " y: " + std::to_string(player.movementbefore.y));
-		DrawString(10, 50, "movementafter: x:" + std::to_string(player.movementafter.x) + " y: " + std::to_string(player.movementafter.y));
+		//DrawString(10, 40, "movementbefore: x:" + std::to_string(player.movementbefore.x) + " y: " + std::to_string(player.movementbefore.y));
+		//DrawString(10, 50, "movementafter: x:" + std::to_string(player.movementafter.x) + " y: " + std::to_string(player.movementafter.y));
 		
 		ray.castAllRays(player, map);
 
