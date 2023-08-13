@@ -2,11 +2,11 @@
 
 void Sprite::initSpriteinfo()
 {
-	//sprites[0] = { 640,630, 0, false ,100 };
+	sprites[0] = { 640,630, 0, false ,100 };
 	//sprites[1] = { 660,690,1 ,false,100};
 	//sprites[2] = { 250,600, 1,false ,100 };
 	//sprites[3] = { 240,610, 2 ,false,200};
-	sprites[0] = { 300,400, 2 ,false,200};
+	sprites[1] = { 300,400, 2 ,false,200};
 }
 
 void Sprite::initsprites()
@@ -159,8 +159,8 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		float fObjCeilingScaled = float(nHorizonHeight) - sprite.distance;
 		// and adapt all the scaling into the ceiling value
 		float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
-		float fObjCeiling = float(nHorizonHeight) - (spriteheight / 2) * 1.0f;
-		float fObjFloor = float(nHorizonHeight) + (spriteheight / 2);
+		float fObjCeiling = float(sprite.liftup + nHorizonHeight) - (spriteheight / 2) * 1.0f;
+		float fObjFloor = float(sprite.liftup + nHorizonHeight) + (spriteheight / 2);
 
 		fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
 		fObjFloor += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;

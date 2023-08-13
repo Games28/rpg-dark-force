@@ -26,6 +26,11 @@ Player::Player()
 	rotateafter = 0.0f;
 	movementbefore = { 0.0f,0.0f };
 	movementafter = { 0.0f,0.00f };
+	movedifference = { 0.0f, 0.0f };
+	strafeafter = { 0.0f,0.0f };
+	strafebefore = { 0.0f,0.0f };
+	strafedifference = { 0.0f,0.0f };
+
 }
 
 Player::~Player()
@@ -213,6 +218,7 @@ void Player::movePlayer(float deltatime, Map& map)
 	rotationAngle += turnDirection * turnSpeed * deltatime;
 	normalizeAngle(&rotationAngle);
 	rotateafter = rotationAngle;
+	rotationdifference = rotateafter - rotatebefore;
 	float moveStep = walkDirection * walkSpeed * deltatime;
 
 	float newPlayerX = x + cos(rotationAngle) * moveStep * run;
@@ -220,13 +226,16 @@ void Player::movePlayer(float deltatime, Map& map)
 
 	//wall collision
 	if (!map.mapHasWallAt(newPlayerX, newPlayerY)) {
+		
 		x = newPlayerX;
 		y = newPlayerY;
 		movementafter = { newPlayerX,newPlayerY };
 	}
 	//strafe left and strafe right movement code
-	float strafeStep = strafedirection * walkSpeed * deltatime;
 
+	movedifference = movementafter - movementbefore;
+	float strafeStep = strafedirection * walkSpeed * deltatime;
+	strafebefore = { x,y };
 	
 	if (strafeLeft)
 	{
@@ -249,11 +258,12 @@ void Player::movePlayer(float deltatime, Map& map)
 	{
 		x = strafePlayerX;
 		y = strafePlayerY;
+		strafeafter = { strafePlayerX,strafePlayerY };
 		
 	}
-
+	strafedifference = strafeafter - strafebefore;
 	
-	movementafter = { x, y };
+	
 	//look up and look down cod
 }
 

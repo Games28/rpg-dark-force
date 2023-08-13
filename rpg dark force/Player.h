@@ -41,9 +41,15 @@ public:
 
 	float rotatebefore;
 	float rotateafter;
+	float rotationdifference;
 
 	olc::vf2d movementbefore;
 	olc::vf2d movementafter;
+	olc::vf2d movedifference;
+
+	olc::vf2d strafebefore;
+	olc::vf2d strafeafter;
+	olc::vf2d strafedifference;
 	
 };
 

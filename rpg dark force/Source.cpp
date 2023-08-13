@@ -51,7 +51,7 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override
 	{
 
-
+		Clear(RENDER_CEILING ? olc::BLACK : olc::BLUE);
         // for debugging purposes
         if (GetKey( olc::Key::F1 ).bHeld) {
             wall.fTestRay -= 0.1f * fElapsedTime;
@@ -67,23 +67,29 @@ public:
         }
 
 		
+		
+
+		
 		player.processInput(this,fElapsedTime,map);
+		
 		player.movePlayer(fElapsedTime, map);
-		Clear(RENDER_CEILING ? olc::BLACK : olc::BLUE);
-		//DrawString(10, 40, "movementbefore: x:" + std::to_string(player.movementbefore.x) + " y: " + std::to_string(player.movementbefore.y));
-		//DrawString(10, 50, "movementafter: x:" + std::to_string(player.movementafter.x) + " y: " + std::to_string(player.movementafter.y));
+		
+		
+		
 		
 		ray.castAllRays(player, map);
 
 		wall.renderWallProjection(this, player, ray,map);
 		sprite.SpriteProjection(this, ray, player);
-
+		
+		
+		
 		//map.renderMapGrid(this);           // little map
 		//player.renderMapPlayer(this);// player in the map
 		//sprite.mapSprites(this);
 		//ray.renderMapRays(this, player, wall.nTestRay );   // rays in the map
 		saber.DrawSaber(this,fElapsedTime);
-		powers.Update(this, player, sprite);
+		powers.Update(this, player, sprite,fElapsedTime);
 
 		//DrawLine( wall.nTestRay, 0, wall.nTestRay, ScreenHeight(), olc::MAGENTA );
 

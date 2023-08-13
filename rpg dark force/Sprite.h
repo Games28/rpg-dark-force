@@ -18,7 +18,7 @@ struct sprite_t
 	int width;
 	int height;
 	bool pickedup;
-	
+	int liftup = 0;
 };
 
 
@@ -43,7 +43,7 @@ public:
 	int vertposition = 0;
 	int vertlook = 0;
 	int heightoffset = 0;
-	int lookoffset = 0;
+	
 	
 };
 

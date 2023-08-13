@@ -8,11 +8,17 @@ void Force_powers::initSprite()
 
 void Force_powers::TKmove(sprite_t& sprite, Player& player)
 {
-	float differencex = player.movementafter.x - player.movementbefore.x;
-	float differencey = player.movementafter.y - player.movementbefore.y;
+	
 
-	sprite.x += differencex;
-	sprite.y += differencey;
+	
+	sprite.x += player.movedifference.x;
+	sprite.y += player.movedifference.y;
+}
+
+void Force_powers::TKstrafe(sprite_t& sprite, Player& player)
+{
+	sprite.x += player.strafedifference.x;
+	sprite.y += player.strafedifference.y;
 }
 
 void Force_powers::TKrotation(sprite_t& sprite, Player& player)
@@ -26,12 +32,12 @@ void Force_powers::TKrotation(sprite_t& sprite, Player& player)
 
 	float angle_player_to_object = atan2f(differenceY, differenceX);
 
-	float angle_difference = player.rotateafter - player.rotatebefore;
+	float angle_difference = player.rotationdifference;
 
-	float angledifRad = Deg2Rad(angle_difference);
+	
 
-	sprite.x = distance * (cosf(angle_player_to_object + angledifRad) - cosf(angle_player_to_object));
-	sprite.y = distance * (sinf(angle_player_to_object + angledifRad) - sinf(angle_player_to_object));
+	sprite.x += distance * (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
+	sprite.y += distance * (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));
 }
 
 
@@ -56,37 +62,82 @@ bool Force_powers::isinsight(sprite_t& sprite, Player& player, float fov, float&
 	return abs(ModuloTwoPI(fAligneda + 3.14159f) - angle2player) < fov;
 }
 
-void Force_powers::Update(olc::PixelGameEngine* PGEptr, Player& player, Sprite& sprite)
+void Force_powers::Update(olc::PixelGameEngine* PGEptr, Player& player, Sprite& sprite, float deltatime)
 {
 	float fObjPlyA;
 	olc::vi2d indicatorPos = { PGEptr->ScreenWidth() / 2, 30 };
 	PGEptr->DrawSprite(indicatorPos, indicatorsprite[0]);
-	sprite_t spr;
-	for (auto S : sprite.sprites)
+	
+
+	if (!ispickedup)
 	{
-		S.inSight = isinsight(S, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
+		
+			for (int i = 0; i < 5; i++)
+			{
+				spr = &sprite.sprites[i];
+				spr->inSight = isinsight(*spr, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
+
+				if (sprite.sprites[i].liftup < 0)
+				{
+					sprite.sprites[i].liftup += 100 * deltatime;
+				}
+				if (sprite.sprites[i].liftup >= 0)
+				{
+					sprite.sprites[i].liftup = 0;
+				}
+				if (spr->inSight)
+				{
+
+
+					PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
+
+					if (PGEptr->GetKey(olc::SPACE).bHeld)
+					{
+						spr->pickedup = true;
+						ispickedup = true;
+						break;
+					}
+
+
+
+				}
+
+			}
 		
 		
-		if (S.inSight)
-		{
-			spr = S;
-			
-				PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
-			
-				if (PGEptr->GetKey(olc::SPACE).bHeld)
-				{
-					S.pickedup = true;
-					
-				}
-				if (S.pickedup)
-				{
-  					TKmove(S, player);
-					TKrotation(S, player);
-				}
-		}
 		
 	}
+	else
+	{
+ 		if (spr->pickedup)
+		{
+			spr->liftup -= 100 * deltatime;
+			if (spr->liftup <= -50)
+			{
+				spr->liftup = -50;
+			}
+			//spr->liftup = -player.lookupordown;
+			PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
+			TKmove(*spr, player);
+			TKstrafe(*spr, player);
+			TKrotation(*spr, player);
+		}
+		if (PGEptr->GetKey(olc::SPACE).bReleased)
+		{
 
+			
+
+
+			spr->pickedup = false;
+			ispickedup = false;
+			spr = nullptr;
+		}
+		
+		
+	}
+	
+		
+	
 	
 
 }
