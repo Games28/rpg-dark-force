@@ -36,7 +36,6 @@ struct intersectInfo
 };
 
 
-
 struct Ray {
 	std::vector<intersectInfo> listinfo;
 	std::vector<float> distance;
@@ -53,6 +52,10 @@ public:
 
 public:
 	Ray rays[NUM_RAYS];
+	float* depthbuffer = new float[WINDOW_WIDTH];
+	float fMaxDistnace = sqrt(MAP_NUM_COLS_X * MAP_NUM_COLS_X + MAP_NUM_ROWS_Y * MAP_NUM_ROWS_Y);
+
+
 };
 
 #endif // !RAYCAST_H

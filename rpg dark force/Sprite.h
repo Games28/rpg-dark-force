@@ -9,6 +9,7 @@ struct sprite_t
 {
 	float x, y;
 	int texture;
+	float scale;
 	bool stationary;
 	float size;
 	float distance;
@@ -34,11 +35,13 @@ public:
 	
 	
 	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite *sprite,float size, float samplex, float sampley, float &diffangle);
+	olc::Pixel Selectobjectpixel(sprite_t* sprite, float fsamplex, float fsampley, float distnace, float angle);
 	void SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player);
 	void mapSprites(olc::PixelGameEngine* PGEptr);
 	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }
 public:
 	sprite_t sprites[NUM_SPRITES];
+	
 	olc::Sprite* spriteptr[NUM_SPRITES];
 	int vertposition = 0;
 	int vertlook = 0;

@@ -30,8 +30,11 @@
 //640               .5775
 #define DIST_TO_PROJ_PLANE ((WINDOW_WIDTH / 2) / tan(FOV_ANGLE / 2)) //1108.51
 
+
+
 #define FPS 60
 #define FRAME_TIME_LENGTH (1000 / FPS)
+
 
 
 #endif // #ifndef DEFS_H

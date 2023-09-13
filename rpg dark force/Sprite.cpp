@@ -2,18 +2,20 @@
 
 void Sprite::initSpriteinfo()
 {
-	sprites[0] = { 640,630, 0, false ,100 };
+	//sprites[0] = { 640,630, 0, false ,100 };
 	//sprites[1] = { 660,690,1 ,false,100};
 	//sprites[2] = { 250,600, 1,false ,100 };
 	//sprites[3] = { 240,610, 2 ,false,200};
-	sprites[1] = { 300,400, 2 ,false,200};
+	sprites[1] = { 300,400, 2 , 1.0f,true,200};
+
+	
 }
 
 void Sprite::initsprites()
 {
 	spriteptr[0] = new olc::Sprite("probidle.png");
 	spriteptr[1] = new olc::Sprite("r2d2ground.png");
-	spriteptr[2] = new olc::Sprite("trooperT.png");
+	spriteptr[2] = new olc::Sprite("troopertest.png");
 
 
 }
@@ -30,7 +32,7 @@ void Sprite::calculateBottomandTop(Player& player, float distance,float& SHeight
 
 
 
-olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* sprite,float size, float samplex, float sampley, float& diffangle)
+olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* sprite,float size, float samplex, float sampley, float& Angle)
 {
 	auto is_in_range = [=](float a, float low, float high) {
 		return (low <= a && a < high);
@@ -40,11 +42,11 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* spri
 	
 	
 	olc::vf2d vOffset;
-	if (is_in_range(diffangle, -0.75f * 3.14159265f, -0.25f * 3.14159265f))
+	if (is_in_range(Angle, -0.75f * 3.14159265f, -0.25f * 3.14159265f))
      	 vOffset = { 1.0f, 0.0f }; else   // sprite from the left
-		if (is_in_range(diffangle, -0.25f * 3.14159265f, +0.25f * 3.14159265f)) 
+		if (is_in_range(Angle, -0.25f * 3.14159265f, +0.25f * 3.14159265f)) 
 			vOffset = { 0.0f, 0.0f }; else   //                 back
-			if (is_in_range(diffangle, +0.25f * 3.14159265f, +0.75f * 3.14159265f)) 
+			if (is_in_range(Angle, +0.25f * 3.14159265f, +0.75f * 3.14159265f)) 
 				vOffset = { 3.0f, 0.0f }; 
 			else   //                 right
 				vOffset = { 2.0f, 0.0f };        //                 front
@@ -53,7 +55,10 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* spri
 	
 	
 	// the subsprites are 100 x 100 pixels
-	olc::vf2d vSample = ((vOffset + olc::vf2d(samplex, sampley)) * size / olc::vf2d(float(sprite->width), float(sprite->height)));
+	olc::vf2d vSample = ((vOffset + olc::vf2d(samplex, sampley)) * 200) / olc::vf2d(float(sprite->width), float(sprite->height));
+
+
+	
 
 	//test
 	olc::Pixel p = sprite->Sample(vSample.x, vSample.y);
@@ -63,29 +68,37 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* spri
 	return p;
 }
 
+olc::Pixel Sprite::Selectobjectpixel(sprite_t* sprite, float fsamplex, float fsampley, float distnace, float angle)
+{
+	olc::Pixel p = olc::MAGENTA;
+
+
+
+	return p;
+}
+
 void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player)
 {
-	
 	int halfscreenheight = WINDOW_HEIGHT * player.fPlayerH;
 
 	auto normalizeAngle = [=](float* angle)
-	{
-		*angle = remainder(*angle, TWO_PI);
-		if (*angle < 0) {
-			*angle = TWO_PI + *angle;
-		}
-	};
+		{
+			*angle = remainder(*angle, TWO_PI);
+			if (*angle < 0) {
+				*angle = TWO_PI + *angle;
+			}
+		};
 
 	auto distanceBetweenPoints = [=](float x1, float y1, float x2, float y2)
-	{
-		return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-	};
+		{
+			return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+		};
 	sprite_t visibleSprites[NUM_SPRITES];
 	int numVisibleSprites = 0;
 
 	for (int i = 0; i < NUM_SPRITES; i++)
 	{
-		
+
 
 		float angleSpritePlayer = atan2(sprites[i].y - player.y, sprites[i].x - player.x) - atan2(sin(player.rotationAngle), cos(player.rotationAngle));
 
@@ -94,7 +107,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		if (angleSpritePlayer < -PI)
 			angleSpritePlayer += TWO_PI;
 
-		
+
 
 		const float ESPSILON = 0.2f;
 
@@ -102,7 +115,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		if (angleSpritePlayer < (FOV_ANGLE / 2) + EPSILON) {
 			sprites[i].visible = true;
 			sprites[i].angle = angleSpritePlayer;
-			
+
 			sprites[i].distance = distanceBetweenPoints(sprites[i].x, sprites[i].y, player.x, player.y);
 			visibleSprites[numVisibleSprites] = sprites[i];
 			numVisibleSprites++;
@@ -134,7 +147,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 	for (int i = 0; i < numVisibleSprites; i++)
 	{
 		sprite_t sprite = visibleSprites[i];
-		//new
+
 		float fVecX = sprite.x - player.x;
 		float fVecY = sprite.y - player.y;
 		float distancefromplayer = sqrtf(fVecX * fVecX + fVecY * fVecY);
@@ -172,7 +185,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
 
 
-		
+
 		// render the sprite
 		for (int fx = 0; fx < (int)fObjWidth; fx++) {
 			// get distance across the screen to render
@@ -194,32 +207,32 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 						}
 						else
 						{
-							pSample = newSelectedPixel(PGEptr, spriteptr[sprite.texture],sprite.size, fSampleX, fSampleY, fObjectAngle);
+							pSample = newSelectedPixel(PGEptr, spriteptr[sprite.texture], sprite.size, fSampleX, fSampleY, fObjectAngle);
 						}
-						
+
 						float dist = rays.rays[nObjColumn].listinfo[0].distance;
 						if (sprite.distance < dist)
 						{
-							if (pSample != olc::MAGENTA)
+							if (pSample != olc::MAGENTA && rays.depthbuffer[nObjColumn] >= sprite.distance )
 							{
 								PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
+								rays.depthbuffer[nObjColumn] = sprite.distance;
 
 							}
 						}
 					}
 				}
 			}
-			
+
 		}
 
+
 	}
-	
 }
 
 void Sprite::mapSprites(olc::PixelGameEngine* PGEptr)
 {
-	for (int i = 0; i < NUM_SPRITES; i++)
-	{
+	
 		for (int i = 0; i < NUM_SPRITES; i++) {
 			PGEptr->FillRect(
 				sprites[i].x * MINIMAP_SCALE_FACTOR,
@@ -229,5 +242,7 @@ void Sprite::mapSprites(olc::PixelGameEngine* PGEptr)
 				(sprites[i].visible) ? 0xFF00FFFF : 0xFF444444
 			);
 		}
-	}
+	
+
+	
 }

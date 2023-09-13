@@ -72,19 +72,19 @@ void Force_powers::Update(olc::PixelGameEngine* PGEptr, Player& player, Sprite& 
 	if (!ispickedup)
 	{
 		
-			for (int i = 0; i < 5; i++)
+			for (auto & s : sprite.sprites)
 			{
-				spr = &sprite.sprites[i];
+				spr = &s;
 				spr->inSight = isinsight(*spr, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
 
-				if (sprite.sprites[i].liftup < 0)
-				{
-					sprite.sprites[i].liftup += 100 * deltatime;
-				}
-				if (sprite.sprites[i].liftup >= 0)
-				{
-					sprite.sprites[i].liftup = 0;
-				}
+				//if (sprite.sprites[i].liftup < 0)
+				//{
+				//	sprite.sprites[i].liftup += 100 * deltatime;
+				//}
+				//if (sprite.sprites[i].liftup >= 0)
+				//{
+				//	sprite.sprites[i].liftup = 0;
+				//}
 				if (spr->inSight)
 				{
 
@@ -111,11 +111,11 @@ void Force_powers::Update(olc::PixelGameEngine* PGEptr, Player& player, Sprite& 
 	{
  		if (spr->pickedup)
 		{
-			spr->liftup -= 100 * deltatime;
-			if (spr->liftup <= -50)
-			{
-				spr->liftup = -50;
-			}
+			//spr->liftup -= 100 * deltatime;
+			//if (spr->liftup <= -50)
+			//{
+			//	spr->liftup = -50;
+			//}
 			//spr->liftup = -player.lookupordown;
 			PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
 			TKmove(*spr, player);
