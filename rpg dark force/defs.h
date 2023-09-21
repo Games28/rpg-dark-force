@@ -31,6 +31,10 @@
 #define DIST_TO_PROJ_PLANE ((WINDOW_WIDTH / 2) / tan(FOV_ANGLE / 2)) //1108.51
 
 
+const int FPS = 60;
+const int MILLISECS_PER_FRAME = 1000 / FPS;
+const int PIXELS_PER_METER = 50;
+
 
 #define FPS 60
 #define FRAME_TIME_LENGTH (1000 / FPS)

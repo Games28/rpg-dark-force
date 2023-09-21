@@ -52,24 +52,8 @@ public:
 	{
 
 		Clear(RENDER_CEILING ? olc::BLACK : olc::BLUE);
-        // for debugging purposes
-        if (GetKey( olc::Key::F1 ).bHeld) {
-            wall.fTestRay -= 0.1f * fElapsedTime;
-            if (wall.fTestRay < 0.0f)
-                wall.fTestRay = 0.0f;
-            wall.nTestRay = int( (NUM_RAYS - 1) * wall.fTestRay );
-        }
-        if (GetKey( olc::Key::F2 ).bHeld) {
-            wall.fTestRay += 0.1f * fElapsedTime;
-            if (wall.fTestRay > 1.0f)
-                wall.fTestRay = 1.0f;
-            wall.nTestRay = int( (NUM_RAYS - 1) * wall.fTestRay );
-        }
+        
 
-		
-		
-
-		
 		player.processInput(this,fElapsedTime,map);
 		
 		player.movePlayer(fElapsedTime, map);
@@ -84,12 +68,12 @@ public:
 		
 		
 		
-		//map.renderMapGrid(this);           // little map
-		//player.renderMapPlayer(this);// player in the map
-		//sprite.mapSprites(this);
-		//ray.renderMapRays(this, player, wall.nTestRay );   // rays in the map
+		map.renderMapGrid(this);           // little map
+		player.renderMapPlayer(this);// player in the map
+		sprite.mapSprites(this);
+		ray.renderMapRays(this, player, wall.nTestRay );   // rays in the map
 		saber.DrawSaber(this,fElapsedTime);
-		powers.Update(this, player, sprite,fElapsedTime);
+		powers.Update(this, player,map, sprite,fElapsedTime);
 
 		//DrawLine( wall.nTestRay, 0, wall.nTestRay, ScreenHeight(), olc::MAGENTA );
 
