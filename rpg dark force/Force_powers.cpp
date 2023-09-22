@@ -6,13 +6,17 @@ void Force_powers::initSprite()
 	indicatorsprite[1] = new olc::Sprite( "newiconglow.png" );
 }
 
-void Force_powers::TKmove(object_t& sprite, Player& player)
+void Force_powers::TKmove(object_t& sprite, Player& player, Map& map)
 {
-	
+    float movex = sprite.x + player.movedifference.x;
+	float movey = sprite.y + player.movedifference.y;
 
+	if (!map.mapHasWallAt(movex, movey))
+	{
+		sprite.x += player.movedifference.x;
+		sprite.y += player.movedifference.y;
+	}
 	
-	sprite.x += player.movedifference.x;
-	sprite.y += player.movedifference.y;
 }
 
 void Force_powers::TKstrafe(object_t& sprite, Player& player)
@@ -21,7 +25,7 @@ void Force_powers::TKstrafe(object_t& sprite, Player& player)
 	sprite.y += player.strafedifference.y;
 }
 
-void Force_powers::TKrotation(object_t& sprite, Player& player)
+void Force_powers::TKrotation(object_t& sprite, Player& player, Map& map)
 {
 	auto Deg2Rad = [=](float angle) {return angle / 180.0f * 3.14159f; };
 
@@ -34,10 +38,16 @@ void Force_powers::TKrotation(object_t& sprite, Player& player)
 
 	float angle_difference = player.rotationdifference;
 
+	float rotatex = sprite.x + distance * (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
+	float rotatey = sprite.y + distance * (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));
 	
+	if (!map.mapHasWallAt(rotatex, rotatey))
+	{
+		sprite.x += distance * (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
+		sprite.y += distance * (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));
+	}
 
-	sprite.x += distance * (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
-	sprite.y += distance * (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));
+	
 }
 
 
@@ -62,7 +72,7 @@ bool Force_powers::isinsight(object_t& sprite, Player& player, float fov, float&
 	return abs(ModuloTwoPI(fAligneda + 3.14159f) - angle2player) < fov;
 }
 
-void Force_powers::Update(olc::PixelGameEngine* PGEptr, Player& player,Map& map, Sprite& sprite, float deltatime)
+void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player,Map& map, Sprite& sprite, float deltatime)
 {
 	float fObjPlyA;
 	olc::vi2d indicatorPos = { PGEptr->ScreenWidth() / 2, 30 };
@@ -104,73 +114,89 @@ void Force_powers::Update(olc::PixelGameEngine* PGEptr, Player& player,Map& map,
 	}
 	else
 	{
+		
+
  		if (spr->pickedup)
 		{
 			spr->rotationangle = player.rotationAngle;
+			moveInput(PGEptr,player, *spr, sprite, map, deltatime);
 			PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
-			TKmove(*spr, player);
+			TKmove(*spr, player, map);
 			TKstrafe(*spr, player);
-			TKrotation(*spr, player);
-			moveInput(PGEptr,*spr, sprite,map,deltatime);
+			TKrotation(*spr, player,map);
+			if (spr->islifting)
+			{
+				spr->liftup -= 5.0f;
+			}
 		}
+		else
+		{
+			
+		}
+	
+		
 		if (PGEptr->GetKey(olc::SPACE).bReleased)
 		{
-
-			
-
 
 			spr->pickedup = false;
 			ispickedup = false;
 			spr = nullptr;
+			
 		}
+		
 		
 		
 	}
 	
 		
-	
+	for (auto obj : sprite.objects)
+	{
+		
+			if (obj.liftup < 0)
+			{
+				float newlift = 0;
+				
+				obj.liftup = newlift;
+			}
+			if (obj.liftup >= 0)
+			{
+				obj.liftup = 0;
+			}
+		
+	}
 	
 
 }
 
-void Force_powers::moveInput(olc::PixelGameEngine* pge, object_t& sprite,Sprite& spr, Map& map, float dt)
+void Force_powers::moveInput(olc::PixelGameEngine* pge,Player& player, object_t& sprite,Sprite& spr, Map& map, float dt)
+{
+	//movement input
+			if (pge->GetKey(olc::I).bHeld) sprite.movedirection = +1;
+			if (pge->GetKey(olc::K).bHeld) sprite.movedirection = -1;
+		    if (pge->GetKey(olc::J).bHeld) sprite.rotationangle += -0.5;
+		    if (pge->GetKey(olc::L).bHeld) sprite.rotationangle += 0.5;
+			
+			if (pge->GetKey(olc::I).bReleased) sprite.movedirection = 0;
+			if (pge->GetKey(olc::K).bReleased) sprite.movedirection = 0;
+		    //if (pge->GetKey(olc::J).bReleased) sprite.turndirection = 0;
+		    //if (pge->GetKey(olc::L).bReleased) sprite.turndirection = 0;
+			
+		
+			//lift input
+			if (pge->GetKey(olc::U).bHeld) sprite.islifting = true;
+			if (pge->GetKey(olc::U).bReleased) sprite.islifting = false;
+			
+
+			spr.moveObject(sprite,player,map, dt);
+			
+}
+
+void Force_powers::physicsUpdate(object_t& sprite, float dt)
 {
 	
-			if (pge->GetKey(olc::I).bHeld)
-			{
-				sprite.movedirection = +1;
-			}
-
-			if (pge->GetKey(olc::K).bHeld)
-			{
-				sprite.movedirection = -1;
-			}
-			if (pge->GetKey(olc::J).bHeld)
-			{
-				sprite.turndirection = -1;
-			}
-			if (pge->GetKey(olc::L).bHeld)
-			{
-				sprite.turndirection = +1;
-			}
-
-			if (pge->GetKey(olc::I).bReleased)
-			{
-				sprite.movedirection = 0;
-			}
-
-			if (pge->GetKey(olc::K).bReleased)
-			{
-				sprite.movedirection = 0;
-			}
-			if (pge->GetKey(olc::J).bReleased)
-			{
-				sprite.turndirection = 0;
-			}
-			if (pge->GetKey(olc::L).bReleased)
-			{
-				sprite.turndirection = 0;
-			}
+	
 		
-			spr.moveObject(sprite,map, dt);
+
+		
+	
 }

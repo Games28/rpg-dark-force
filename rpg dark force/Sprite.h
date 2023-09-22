@@ -19,7 +19,7 @@ struct object_t
 	int width;
 	int height;
 	bool pickedup;
-	int liftup = 0;
+	float liftup = 0.0f;
 
 	//movement 
 	float rotationangle = 0;
@@ -27,6 +27,8 @@ struct object_t
 	int movedirection = 0;
 	float movespeed = 100;
 	float turnspeed = 45  * (PI / 180);
+	bool islifting = false;
+	bool isfalling = false;
 };
 
 
@@ -40,10 +42,10 @@ public:
 	void initsprites();
 	
 	
-	void moveObject(object_t& obj, Map& map,float deltatime);
+	void moveObject(object_t& obj,Player& player, Map& map,float deltatime);
 	
 	
-	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite *sprite,float size, float samplex, float sampley, float &diffangle);
+	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, object_t* obj, olc::Sprite *sprite,float size, float samplex, float sampley, float Angle);
 	void SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player);
 	void mapSprites(olc::PixelGameEngine* PGEptr);
 	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }

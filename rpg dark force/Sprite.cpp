@@ -22,7 +22,7 @@ void Sprite::initsprites()
 
 
 
-void Sprite::moveObject(object_t& obj,Map& map,float deltatime)
+void Sprite::moveObject(object_t& obj,Player& player,Map& map,float deltatime)
 {
 
 	auto normalizeangle = [=](float& angle)
@@ -35,12 +35,12 @@ void Sprite::moveObject(object_t& obj,Map& map,float deltatime)
 
 	
 
-		obj.rotationangle += obj.turndirection * obj.turnspeed * deltatime;
+		
 
 		float movestep = obj.movedirection * obj.movespeed * deltatime;
 
-		float newObjectX = obj.x + cos(obj.rotationangle) * movestep;
-		float newObjectY = obj.y + sin(obj.rotationangle) * movestep;
+		float newObjectX = obj.x + cos(player.rotationAngle) * movestep;
+		float newObjectY = obj.y + sin(player.rotationAngle) * movestep;
 
 		if (!map.mapHasWallAt(newObjectX, newObjectY))
 		{
@@ -56,14 +56,14 @@ void Sprite::moveObject(object_t& obj,Map& map,float deltatime)
 
 
 
-olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr, olc::Sprite* sprite,float size, float samplex, float sampley, float& Angle)
+olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr,object_t* obj, olc::Sprite* sprite,float size, float samplex, float sampley, float Angle)
 {
 	auto is_in_range = [=](float a, float low, float high) {
 		return (low <= a && a < high);
 	};
 	
 	// "bodge" angle in the range [ -PI, PI )
-	
+
 	
 	olc::vf2d vOffset;
 	if (is_in_range(Angle, -0.75f * 3.14159265f, -0.25f * 3.14159265f))
@@ -123,7 +123,9 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		if (angleSpritePlayer < -PI)
 			angleSpritePlayer += TWO_PI;
 
-
+		
+		
+		
 
 		const float ESPSILON = 0.2f;
 
@@ -163,19 +165,25 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 	for (int i = 0; i < numVisibleSprites; i++)
 	{
 		object_t sprite = visibleSprites[i];
-
+		
 		float fVecX = sprite.x - player.x;
 		float fVecY = sprite.y - player.y;
 		float distancefromplayer = sqrtf(fVecX * fVecX + fVecY * fVecY);
-		float fPlayerA_rad = deg2rad(player.rotationAngle);
+		
+		
+		float fPlayerA_rad = deg2rad(sprite.angle);
 		float fEyeX = cosf(fPlayerA_rad);
 		float fEyeY = sinf(fPlayerA_rad);
-		float fObjectAngle = atan2f(fVecY, fVecX) - atan2f(fEyeY, fEyeX);
+		float fObjectAngle = atan2f(fEyeY, fEyeX) - atan2f(fVecY, fVecX);
+		
 		if (fObjectAngle < -3.14159f)
 			fObjectAngle += 2.0f * 3.14159f;
-
+		
 		if (fObjectAngle > 3.14159f)
 			fObjectAngle -= 2.0f * 3.14159f;
+
+		
+ 	//fObjectAngle += sprite.rotationangle;
 
 		float fPlayerFOV_rad = deg2rad(60.0f);
 		float fCompensatePlayerHeight = (player.fPlayerH - 0.5f) * 64;
@@ -199,7 +207,10 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		float fObjWidth = fObjHeight;
 
 		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
-
+	
+	
+	
+	
 
 
 		// render the sprite
@@ -223,7 +234,7 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 						}
 						else
 						{
-							pSample = newSelectedPixel(PGEptr, spriteptr[sprite.texture], sprite.size, fSampleX, fSampleY, fObjectAngle);
+							pSample = newSelectedPixel(PGEptr,&sprite, spriteptr[sprite.texture], sprite.size, fSampleX, fSampleY, fObjectAngle);
 						}
 
 						float dist = rays.rays[nObjColumn].listinfo[0].distance;

@@ -7,34 +7,21 @@ class Particle
 {
 public:
 	Particle() = default;
-	void InitVert(float& vert, float mass);
-	void integrateVert(float& deltatime);
-	void addVertForce(const float& force);
-
-	void InitHorz(Vec2& pos, float mass);
-	void integrateHorz(float& deltatime);
-	void addHorzForce(const Vec2& force);
-
-	void ClearVertForces();
-	void ClearHorzForces();
+	void integrate(float& deltatime);
+	void physicsconstants();
+	void physicobjectlift(float& deltatime, bool& isfalling);
+	void physicssetup(float& lift);
+	
 
 public:
-	
-	float* objectVertPos = nullptr;
-	float VertAccelerate;
-	float VertVel;
-	float VertMass;
-	float VertinvMass;
-	float VertSumForces;
-
-	Vec2* objectHorzPos = nullptr;
-	Vec2 HorzVel;
-	Vec2 HorzAccelerate;
-   float HorzsumForces;
-   float Horzmass;
-   float HorzinvMass;
-
-
+	bool isfalling;
+	bool iscaught;
+	float gravity;
+	int pixels_per_meter;;
+	float* pos = nullptr;
+	float vel;
+	float accelerate;
+	float deltatime;
 };
 
 

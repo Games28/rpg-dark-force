@@ -9,12 +9,13 @@ class Force_powers
 {
 public:
 	void initSprite();
-	void TKmove(object_t& sprite, Player& player);
+	void TKmove(object_t& sprite, Player& player, Map& map);
 	void TKstrafe(object_t& sprite, Player& player);
-	void TKrotation(object_t& sprite, Player& player);
+	void TKrotation(object_t& sprite, Player& player, Map& map);
 	bool isinsight(object_t& sprite, Player& player, float fov, float& angle2player);
-	void Update(olc::PixelGameEngine* PGEptr, Player& player,Map& map, Sprite& sprite,float deltatime);
-	void moveInput(olc::PixelGameEngine* pge, object_t& sprite,Sprite& spr, Map& map, float dt);
+	void TKUpdate(olc::PixelGameEngine* PGEptr, Player& player,Map& map, Sprite& sprite,float deltatime);
+	void moveInput(olc::PixelGameEngine* pge,Player& player, object_t& sprite,Sprite& spr, Map& map, float dt);
+	void physicsUpdate(object_t& sprite, float dt);
 
 public:
 	olc::Sprite* indicatorsprite[2];
@@ -22,6 +23,7 @@ public:
 	float differencey;
 	bool ispickedup = false;
 	object_t* spr = nullptr;
+	Particle particle;
 };
 
 #endif // !FORCE_POWERS_H

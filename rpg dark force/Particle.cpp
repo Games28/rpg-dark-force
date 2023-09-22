@@ -1,43 +1,35 @@
 #include "Particle.h"
 
-
-
-void Particle::InitVert(float& vert, float mass)
+void Particle::integrate(float& deltatime)
 {
-	objectVertPos = &vert;
+	vel += accelerate * deltatime;
+	*pos += vel * deltatime;
 }
 
-void Particle::integrateVert(float& deltatime)
+void Particle::physicsconstants()
 {
-	VertAccelerate = VertSumForces * VertinvMass;
-	VertVel += VertAccelerate * deltatime;
-	*objectVertPos += VertVel * deltatime;
+	gravity = 9.8f;
+	pixels_per_meter = 50;
+	accelerate = gravity * pixels_per_meter;
 }
 
-void Particle::addVertForce(const float& force)
+void Particle::physicobjectlift(float& deltatime, bool& isfalling)
 {
-	VertSumForces += force;
+	if (isfalling)
+	{
+		integrate(deltatime);
+
+	}
+
+	if (*pos >= 0)
+	{
+		*pos = 0;
+
+		vel *= -0.9f;
+	}
 }
 
-void Particle::InitHorz(Vec2& pos, float mass)
+void Particle::physicssetup(float& lift)
 {
+	pos = &lift;
 }
-
-void Particle::integrateHorz(float& deltatime)
-{
-}
-
-void Particle::addHorzForce(const Vec2& force)
-{
-}
-
-void Particle::ClearVertForces()
-{
-	VertSumForces = 0;
-}
-
-void Particle::ClearHorzForces()
-{
-}
-
-
