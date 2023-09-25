@@ -8,10 +8,11 @@
 struct object_t
 {
 	float x, y;
+	
 	int texture;
 	float scale;
 	bool stationary;
-	float size;
+	olc::vf2d size;
 	float distance;
 	float angle;
 	bool visible;
@@ -37,17 +38,17 @@ class Sprite
 {
 public:
 	Sprite() = default;
-	
+
 	void initSpriteinfo();
 	void initsprites();
-	
-	
-	void moveObject(object_t& obj,Player& player, Map& map,float deltatime);
-	
-	
-	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, object_t* obj, olc::Sprite *sprite,float size, float samplex, float sampley, float Angle);
+
+
+	void moveObject(object_t& obj, Player& player, Map& map, float deltatime);
+
+
+	olc::Pixel newSelectedPixel(olc::PixelGameEngine* ptr, object_t* obj, olc::Sprite* sprite, olc::vf2d size, float samplex, float sampley, float Angle);
 	void SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Player& player);
-	void mapSprites(olc::PixelGameEngine* PGEptr);
+	void mapSprites(olc::PixelGameEngine* PGEptr, Sprite& sprite);
 	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }
 public:
 	object_t objects[NUM_SPRITES];

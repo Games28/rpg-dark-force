@@ -92,6 +92,7 @@ olc::Pixel Wall::SelectSceneryPixel(const int textureid, const float samplex, co
 
 void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Raycast& rays, Map& map)
 {
+
 	int halfscreenwidth  = WINDOW_WIDTH / 2;
 	int nHorizonHeight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
 	float anglestep = 60 / float(WINDOW_WIDTH);
@@ -149,7 +150,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 			theTexture = 0;
 		}
 
-		rays.depthbuffer[x] = fDistnace;
+		rays.Depthbuffer[x] = fDistnace;
 		// code to debug the resulof the hit list info
 		// prints the hit list info for the slice that is denoted by nTestRay (upon releasing T)
 		
@@ -324,7 +325,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					//olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
 				olc::Pixel auxSample = SelectSceneryPixel(textureid, fSampleX, fSampleY,fDistnace, Side::WalL);
 					PGEptr->Draw(x, y, auxSample);
-				
+				//DepthDraw(x, y, rays.rays[x].listinfo[0].distance, auxSample);
+
 				break;
 			}
 			}

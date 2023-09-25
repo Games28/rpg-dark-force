@@ -42,6 +42,7 @@ struct Ray {
 };
 
 
+
 class Raycast
 {
 public:
@@ -52,10 +53,10 @@ public:
 
 public:
 	Ray rays[NUM_RAYS];
-	float* depthbuffer = new float[WINDOW_WIDTH];
+	float* Depthbuffer = new float[WINDOW_WIDTH];
 	float fMaxDistnace = sqrt(MAP_NUM_COLS_X * MAP_NUM_COLS_X + MAP_NUM_ROWS_Y * MAP_NUM_ROWS_Y);
 
-
+	
 };
 
 #endif // !RAYCAST_H

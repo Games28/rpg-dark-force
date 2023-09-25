@@ -20,7 +20,7 @@ void Application::ProcessInput(olc::PixelGameEngine* pge, float& fElapsedTime)
 {
 	//player input
 	player.processInput(pge, fElapsedTime, map);
-
+	
 	//object movement input
 
 }
@@ -52,6 +52,6 @@ void Application::Render(olc::PixelGameEngine* pge)
 
 	map.renderMapGrid(pge);           // little map
 	player.renderMapPlayer(pge);// player in the map
-	sprite.mapSprites(pge);
+	sprite.mapSprites(pge,sprite);
 	ray.renderMapRays(pge, player, wall.nTestRay);   // rays in the map
 }

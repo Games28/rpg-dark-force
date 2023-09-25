@@ -2,12 +2,22 @@
 
 void Sprite::initSpriteinfo()
 {
-	//sprites[0] = { 640,630, 0, false ,100 };
-	//sprites[1] = { 660,690,1 ,false,100};
-	//sprites[2] = { 250,600, 1,false ,100 };
-	//sprites[3] = { 240,610, 2 ,false,200};
-	objects[1] = { 300,400, 2 , 1.0f,false ,200 };
+	//objects[0] = { 640,630, 0, false ,100 };
+	//objects[1] = { 660,690,1 ,false,100};
+	//objects[2] = { 250,600, 1,false ,100 };
+	//objects[3] = { 240,610, 2 ,false,200};
+	objects[0] = { 300,400, 2 , 0.5f,false ,{60,125} };
+	//objects[1] = { 250,600,1,2.0f,false, {100,100 } };
+	
+	
+	
+	
 
+	
+
+	
+
+	
 	
 }
 
@@ -15,7 +25,7 @@ void Sprite::initsprites()
 {
 	spriteptr[0] = new olc::Sprite("probidle.png");
 	spriteptr[1] = new olc::Sprite("r2d2ground.png");
-	spriteptr[2] = new olc::Sprite("trooperT.png");
+	spriteptr[2] = new olc::Sprite("trooperT2.png");
 
 
 }
@@ -56,7 +66,7 @@ void Sprite::moveObject(object_t& obj,Player& player,Map& map,float deltatime)
 
 
 
-olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr,object_t* obj, olc::Sprite* sprite,float size, float samplex, float sampley, float Angle)
+olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr,object_t* obj, olc::Sprite* sprite,olc::vf2d size, float samplex, float sampley, float Angle)
 {
 	auto is_in_range = [=](float a, float low, float high) {
 		return (low <= a && a < high);
@@ -64,7 +74,7 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr,object_t* obj, olc
 	
 	// "bodge" angle in the range [ -PI, PI )
 
-	
+	olc::vf2d TileSize = { 60,125 };
 	olc::vf2d vOffset;
 	if (is_in_range(Angle, -0.75f * 3.14159265f, -0.25f * 3.14159265f))
      	 vOffset = { 1.0f, 0.0f }; else   // sprite from the left
@@ -79,7 +89,7 @@ olc::Pixel Sprite::newSelectedPixel(olc::PixelGameEngine* ptr,object_t* obj, olc
 	
 	
 	// the subsprites are 100 x 100 pixels
-	olc::vf2d vSample = ((vOffset + olc::vf2d(samplex, sampley)) * 200) / olc::vf2d(float(sprite->width), float(sprite->height));
+	olc::vf2d vSample = ((vOffset + olc::vf2d(samplex, sampley)) * size) / olc::vf2d(float(sprite->width), float(sprite->height));
 
 
 	
@@ -123,9 +133,9 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		if (angleSpritePlayer < -PI)
 			angleSpritePlayer += TWO_PI;
 
-		
-		
-		
+
+
+
 
 		const float ESPSILON = 0.2f;
 
@@ -165,38 +175,38 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 	for (int i = 0; i < numVisibleSprites; i++)
 	{
 		object_t sprite = visibleSprites[i];
-		
+
 		float fVecX = sprite.x - player.x;
 		float fVecY = sprite.y - player.y;
 		float distancefromplayer = sqrtf(fVecX * fVecX + fVecY * fVecY);
-		
-		
+
+
 		float fPlayerA_rad = deg2rad(sprite.angle);
 		float fEyeX = cosf(fPlayerA_rad);
 		float fEyeY = sinf(fPlayerA_rad);
 		float fObjectAngle = atan2f(fEyeY, fEyeX) - atan2f(fVecY, fVecX);
-		
+
 		if (fObjectAngle < -3.14159f)
 			fObjectAngle += 2.0f * 3.14159f;
-		
+
 		if (fObjectAngle > 3.14159f)
 			fObjectAngle -= 2.0f * 3.14159f;
 
-		
- 	//fObjectAngle += sprite.rotationangle;
+
+		//fObjectAngle += sprite.rotationangle;
 
 		float fPlayerFOV_rad = deg2rad(60.0f);
 		float fCompensatePlayerHeight = (player.fPlayerH - 0.5f) * 64;
 
 		float  fObjHlveSliceHeight = float(WINDOW_HEIGHT / sprite.distance);
 		float  spriteheight = (TILE_SIZE / sprite.distance) * DIST_TO_PROJ_PLANE;
-		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 1) / sprite.distance);
+		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 0.5f) / sprite.distance);
 
 		float fObjCeilingNormalized = float(nHorizonHeight) - fObjHlveSliceHeight;
 		float fObjCeilingScaled = float(nHorizonHeight) - sprite.distance;
 		// and adapt all the scaling into the ceiling value
 		float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
-		float fObjCeiling = float(sprite.liftup + nHorizonHeight) - (spriteheight / 2) * 1.0f;
+		float fObjCeiling = float(sprite.liftup + nHorizonHeight) - (spriteheight / 2) * sprite.scale;
 		float fObjFloor = float(sprite.liftup + nHorizonHeight) + (spriteheight / 2);
 
 		fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
@@ -204,27 +214,27 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 		float fObjHeight = fObjFloor - fObjCeiling;
 		float fObjAR = float(spriteptr[sprite.texture]->width) / float(spriteptr[sprite.texture]->height);
-		float fObjWidth = fObjHeight;
+		float fObjWidth = fObjHeight / fObjAR;
 
 		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
-	
-	
-	
-	
+
+
+
+
 
 
 		// render the sprite
-		for (int fx = 0; fx < (int)fObjWidth; fx++) {
+		for (float fx = 0.0f; fx < (int)fObjWidth; fx++) {
 			// get distance across the screen to render
 			int nObjColumn = int(fMidOfObj + fx - (fObjWidth / 2.0f));
 			// only render this column if it's on the screen
 			if (nObjColumn >= 0 && nObjColumn < WINDOW_WIDTH) {
-				for (int fy = 0; fy < (int)fObjHeight; fy++) {
+				for (float fy = 0.0f; fy < (int)fObjHeight; fy++) {
 					// calculate sample coordinates as a percentage of object width and height
 					float fSampleX = fx / fObjWidth;
 					float fSampleY = fy / fObjHeight;
 					// sample the pixel and draw it
-					if (fx > 0 && fx < WINDOW_WIDTH && fy > 0 && fy < WINDOW_HEIGHT)
+					//if (fx > 0 && fx < WINDOW_WIDTH && fy > 0 && fy < WINDOW_HEIGHT)
 					{
 						olc::Pixel pSample;
 						//new
@@ -234,16 +244,16 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 						}
 						else
 						{
-							pSample = newSelectedPixel(PGEptr,&sprite, spriteptr[sprite.texture], sprite.size, fSampleX, fSampleY, fObjectAngle);
+							pSample = newSelectedPixel(PGEptr, &sprite, spriteptr[sprite.texture], sprite.size, fSampleX, fSampleY, fObjectAngle);
 						}
 
 						float dist = rays.rays[nObjColumn].listinfo[0].distance;
 						if (sprite.distance < dist)
 						{
-							if (pSample != olc::MAGENTA && rays.depthbuffer[nObjColumn] >= sprite.distance )
+							if (pSample != olc::MAGENTA && rays.Depthbuffer[nObjColumn] >= sprite.distance)
 							{
 								PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
-								rays.depthbuffer[nObjColumn] = sprite.distance;
+								rays.Depthbuffer[nObjColumn] = sprite.distance;
 
 							}
 						}
@@ -252,21 +262,20 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 			}
 
 		}
-
-
 	}
 }
 
-void Sprite::mapSprites(olc::PixelGameEngine* PGEptr)
+void Sprite::mapSprites(olc::PixelGameEngine* PGEptr,Sprite& sprite)
 {
-	
-		for (int i = 0; i < NUM_SPRITES; i++) {
+
+	for (int i = 0; i < NUM_SPRITES; i++) {
+			
 			PGEptr->FillRect(
 				objects[i].x * MINIMAP_SCALE_FACTOR,
 				objects[i].y * MINIMAP_SCALE_FACTOR,
 				2,
 				2,
-				(objects[i].visible) ? 0xFF00FFFF : 0xFF444444
+				olc::WHITE
 			);
 		}
 	

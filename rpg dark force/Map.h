@@ -50,6 +50,8 @@ public:
 	std::vector<int*> iTextures;
 	std::vector<std::string> sTextures;
 	
+	
+
 	texturesOne layeronetextures[5];
 	
 	int MapX, MapY;

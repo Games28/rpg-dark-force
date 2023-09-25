@@ -82,9 +82,9 @@ void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player,Map& ma
 	if (!ispickedup)
 	{
 		
-			for (auto & s : sprite.objects)
+			for (int i = 0; i < NUM_SPRITES; i++)
 			{
-				spr = &s;
+				spr = &sprite.objects[i];
 				spr->inSight = isinsight(*spr, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
 				
 				
@@ -149,21 +149,6 @@ void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player,Map& ma
 	}
 	
 		
-	for (auto obj : sprite.objects)
-	{
-		
-			if (obj.liftup < 0)
-			{
-				float newlift = 0;
-				
-				obj.liftup = newlift;
-			}
-			if (obj.liftup >= 0)
-			{
-				obj.liftup = 0;
-			}
-		
-	}
 	
 
 }
