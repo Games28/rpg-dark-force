@@ -74,7 +74,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 		{
 			movevert = true;
 			fPlayerH += strafeupspeed * run * deltatime;
-			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
 		}
 		if (PGEptr->GetKey(olc::PGDN).bHeld)
 		{
@@ -83,7 +83,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 			if (fNewHeight > 0.0f && map.FloatgetfromHeightmap(int(x), int(y)) < fNewHeight)
 			{
 				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
 			}
 		}
 
@@ -97,7 +97,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 			if (fNewHeight < 1.0f)
 			{
 				fPlayerH += fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
 			}
 		}
 		if (PGEptr->GetKey(olc::PGDN).bHeld)
@@ -107,7 +107,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 			if (fNewHeight > 0.0f)
 			{
 				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
 			}
 		}
 	}

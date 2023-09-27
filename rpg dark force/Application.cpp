@@ -1,5 +1,7 @@
 #include "Application.h"
 
+
+
 void Application::Setup()
 {
 	wall.wallTextures();

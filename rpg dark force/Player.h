@@ -29,7 +29,7 @@ public:
 	bool strafeRight;
 	int strafedirection;
 	int run;
-	int lookupordown;
+	float lookupordown;
 	float lookspeed;
 	float vertlook;
 	float strafeupspeed;

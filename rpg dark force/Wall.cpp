@@ -24,29 +24,32 @@ void Wall::changeColorIntensity(olc::Pixel& p, float factor)
 void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float wallheight, int& wallceil, int& wallfloor, Player &player)
 {
 	int nsliceHeight = ((TILE_SIZE / wallDistance) * DIST_TO_PROJ_PLANE);
-	wallceil  = halfheight - (nsliceHeight * (1.0f - player.fPlayerH)) - (wallheight - 1) * nsliceHeight;
-	wallfloor = halfheight + (nsliceHeight *  player.fPlayerH );
+	wallceil  = halfheight - (float(nsliceHeight) * (1.0f - player.fPlayerH)) - (wallheight - 1) * nsliceHeight;
+	wallfloor = halfheight + (float(nsliceHeight) *  player.fPlayerH );
 }
 
-olc::Pixel Wall::SelectSceneryPixel(const int textureid, const float samplex, const float sampley, const float distance, Side side)
+olc::Pixel Wall::SelectSceneryPixel(int textureid, float samplex, float sampley, float distance, Side side)
 {
 	olc::Pixel p;
+
+	int32_t isamplex = samplex;
+	int32_t isampley = sampley;
 
 	switch (side)
 	{
 	case Side::Top:
 	{
-		p = sprites[textureid].GetPixel(samplex, sampley);
+		p = sprites[textureid].GetPixel(isamplex, isampley);
 	}break;
 
 	case Side::Roof:
 	{
-		p = sprites[textureid].GetPixel(samplex, sampley);
+		p = sprites[textureid].GetPixel(isamplex, isampley);
 	}break;
 
 	case Side::Bottom:
 	{
-		p = sprites[textureid].GetPixel(samplex, sampley);
+		p = sprites[textureid].GetPixel(isamplex, isampley);
 		//float fdistance = ((3.0f / distance) * 100.0f);
 		//
 		//if (fdistance >= 1.0f) fdistance = 1.0f;
@@ -60,7 +63,7 @@ olc::Pixel Wall::SelectSceneryPixel(const int textureid, const float samplex, co
 
 	case Side::WalL:
 	{
-		p = sprites[textureid].GetPixel(samplex, sampley);
+		p = sprites[textureid].GetPixel(isamplex, isampley);
 
 		float brightness = 3.0;
 		float scale = 0.0f;
@@ -136,8 +139,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
             nWallCeil = rays.rays[x].listinfo[0].ceil_front;
             nWallCeil2 = rays.rays[x].listinfo[0].ceil_back;
             nWallFloor = rays.rays[x].listinfo[0].bottom_front;
-			coordX = rays.rays[x].listinfo[0].wallHitX;
-			coordY = rays.rays[x].listinfo[0].wallHitY;
+			coordX = int(rays.rays[x].listinfo[0].wallHitX);
+			coordY = int(rays.rays[x].listinfo[0].wallHitY);
 			fDistnace = rays.rays[x].listinfo[0].distance;
 			
 		} else {
@@ -203,8 +206,8 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 						nWallCeil = rays.rays[x].listinfo[hitindex].ceil_front;
 						nWallCeil2 = rays.rays[x].listinfo[hitindex].ceil_back;
 						nWallFloor = rays.rays[x].listinfo[hitindex].bottom_front;
-						coordX = rays.rays[x].listinfo[hitindex].wallHitX;
-						coordY = rays.rays[x].listinfo[hitindex].wallHitY;
+						coordX = int(rays.rays[x].listinfo[hitindex].wallHitX);
+						coordY = int(rays.rays[x].listinfo[hitindex].wallHitY);
 						fDistnace = rays.rays[x].listinfo[hitindex].distance;
 
 
@@ -252,9 +255,9 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				float fFloorProjDistance = (((TILE_SIZE * player.fPlayerH) / (float)(y - nHorizonHeight)) * DIST_TO_PROJ_PLANE) / fCosViewAngle;
 				float fFloorProjX = fPlayerX + fFloorProjDistance * fCosCurAngle;
 				float fFloorProjY = fPlayerY + fFloorProjDistance * fSinCurAngle;
-
-				while (fFloorProjX < 0.0f) { fFloorProjX += floor(TILE_SIZE); }
-				while (fFloorProjY < 0.0f) { fFloorProjY += floor(TILE_SIZE); }
+				float fTILE_SIZE = TILE_SIZE;
+				while (fFloorProjX < 0.0f) { fFloorProjX += floor(fTILE_SIZE); }
+				while (fFloorProjY < 0.0f) { fFloorProjY += floor(fTILE_SIZE); }
 				int nSampleX = (int)(fFloorProjX) % TILE_SIZE;
 				int nSampleY = (int)(fFloorProjY) % TILE_SIZE;
 
@@ -292,7 +295,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 					float blocksize = float(nWallFloor - nWallCeil) / Fcolheight;
 
 					float relative = float(y - nWallCeil);
-					nDisplayBlockHeight = Fcolheight;
+					nDisplayBlockHeight = int(Fcolheight);
 					while (relative > blocksize)
 					{
 						relative -= blocksize;
@@ -319,7 +322,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				}
 
 				//fSampleX = int(fSampleX) % TILE_SIZE;
-				fSampleY = fSampleY * TILE_SIZE;
+				fSampleY = fSampleY * float(TILE_SIZE);
 				// having both sample coordinates, get the sample and draw the pixel
 				
 					//olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);

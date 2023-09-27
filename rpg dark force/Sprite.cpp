@@ -7,9 +7,10 @@ void Sprite::initSpriteinfo()
 	//objects[2] = { 250,600, 1,false ,100 };
 	//objects[3] = { 240,610, 2 ,false,200};
 	objects[0] = { 300,400, 2 , 0.5f,false ,{60,125} };
-	//objects[1] = { 250,600,1,2.0f,false, {100,100 } };
-	
-	
+	//objects[1] = { 250,600,2,0.5f,false, {60,125 } };
+	objects[0].liftup = 0;
+	objects[0].offset = 0;
+	//objects[1].liftup = 0;
 	
 	
 
@@ -174,23 +175,33 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 
 	for (int i = 0; i < numVisibleSprites; i++)
 	{
-		object_t sprite = visibleSprites[i];
+		//object_t sprite = visibleSprites[i];
 
-		float fVecX = sprite.x - player.x;
-		float fVecY = sprite.y - player.y;
+		float fVecX = visibleSprites[i].x - player.x;
+		float fVecY = visibleSprites[i].y - player.y;
 		float distancefromplayer = sqrtf(fVecX * fVecX + fVecY * fVecY);
 
+		
+		if (PGEptr->GetKey(olc::F9).bHeld)
+		{
+			visibleSprites[i].offset += 5.0f;
+		}
 
-		float fPlayerA_rad = deg2rad(sprite.angle);
+		float fPlayerA_rad = deg2rad(visibleSprites[i].offset);
 		float fEyeX = cosf(fPlayerA_rad);
 		float fEyeY = sinf(fPlayerA_rad);
-		float fObjectAngle = atan2f(fEyeY, fEyeX) - atan2f(fVecY, fVecX);
+		visibleSprites[i].rotationangle =  atan2f(fEyeY, fEyeX) - atan2f(fVecY, fVecX);
 
-		if (fObjectAngle < -3.14159f)
-			fObjectAngle += 2.0f * 3.14159f;
+		
+		
 
-		if (fObjectAngle > 3.14159f)
-			fObjectAngle -= 2.0f * 3.14159f;
+		
+
+		if (visibleSprites[i].rotationangle < -3.14159f)
+			visibleSprites[i].rotationangle += 2.0f * 3.14159f;
+
+		if (visibleSprites[i].rotationangle > 3.14159f)
+			visibleSprites[i].rotationangle -= 2.0f * 3.14159f;
 
 
 		//fObjectAngle += sprite.rotationangle;
@@ -198,27 +209,29 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 		float fPlayerFOV_rad = deg2rad(60.0f);
 		float fCompensatePlayerHeight = (player.fPlayerH - 0.5f) * 64;
 
-		float  fObjHlveSliceHeight = float(WINDOW_HEIGHT / sprite.distance);
-		float  spriteheight = (TILE_SIZE / sprite.distance) * DIST_TO_PROJ_PLANE;
-		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 0.5f) / sprite.distance);
+		float  fObjHlveSliceHeight = float(WINDOW_HEIGHT / visibleSprites[i].distance);
+		float  spriteheight = (TILE_SIZE / visibleSprites[i].distance) * DIST_TO_PROJ_PLANE;
+		float  fObjHlveSliceHeightScld = float((WINDOW_HEIGHT * 0.5f) / visibleSprites[i].distance);
 
 		float fObjCeilingNormalized = float(nHorizonHeight) - fObjHlveSliceHeight;
-		float fObjCeilingScaled = float(nHorizonHeight) - sprite.distance;
+		float fObjCeilingScaled = float(nHorizonHeight) - visibleSprites[i].distance;
 		// and adapt all the scaling into the ceiling value
 		float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
-		float fObjCeiling = float(sprite.liftup + nHorizonHeight) - (spriteheight / 2) * sprite.scale;
-		float fObjFloor = float(sprite.liftup + nHorizonHeight) + (spriteheight / 2);
+		float fObjCeiling = float(visibleSprites[i].liftup + nHorizonHeight) - (spriteheight / 2) * visibleSprites[i].scale;
+		float fObjFloor = float(visibleSprites[i].liftup + nHorizonHeight) + (spriteheight / 2);
 
 		fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
 		fObjFloor += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
 
 		float fObjHeight = fObjFloor - fObjCeiling;
-		float fObjAR = float(spriteptr[sprite.texture]->width) / float(spriteptr[sprite.texture]->height);
+		float fObjAR = float(spriteptr[visibleSprites[i].texture]->width) / float(spriteptr[visibleSprites[i].texture]->height);
 		float fObjWidth = fObjHeight / fObjAR;
 
-		float fMidOfObj = (0.5f * (sprite.angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
+		float fMidOfObj = (0.5f * (visibleSprites[i].angle / (fPlayerFOV_rad / 2.0f)) + 0.5f) * float(WINDOW_WIDTH);
 
+		
 
+		PGEptr->DrawString(200, 10, "objectangle " + std::to_string(visibleSprites[i].offset));
 
 
 
@@ -238,22 +251,22 @@ void Sprite::SpriteProjection(olc::PixelGameEngine* PGEptr, Raycast& rays, Playe
 					{
 						olc::Pixel pSample;
 						//new
-						if (sprite.stationary)
+						if (visibleSprites[i].stationary)
 						{
-							pSample = spriteptr[sprite.texture]->Sample(fSampleX, fSampleY);
+							pSample = spriteptr[visibleSprites[i].texture]->Sample(fSampleX, fSampleY);
 						}
 						else
 						{
-							pSample = newSelectedPixel(PGEptr, &sprite, spriteptr[sprite.texture], sprite.size, fSampleX, fSampleY, fObjectAngle);
+							pSample = newSelectedPixel(PGEptr, &visibleSprites[i], spriteptr[visibleSprites[i].texture], visibleSprites[i].size, fSampleX, fSampleY, visibleSprites[i].rotationangle);
 						}
 
 						float dist = rays.rays[nObjColumn].listinfo[0].distance;
-						if (sprite.distance < dist)
+						if (visibleSprites[i].distance < dist)
 						{
-							if (pSample != olc::MAGENTA && rays.Depthbuffer[nObjColumn] >= sprite.distance)
+							if (pSample != olc::MAGENTA && rays.Depthbuffer[nObjColumn] >= visibleSprites[i].distance)
 							{
 								PGEptr->Draw(nObjColumn, fObjCeiling + fy, pSample);
-								rays.Depthbuffer[nObjColumn] = sprite.distance;
+								rays.Depthbuffer[nObjColumn] = visibleSprites[i].distance;
 
 							}
 						}

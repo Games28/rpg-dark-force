@@ -72,84 +72,96 @@ bool Force_powers::isinsight(object_t& sprite, Player& player, float fov, float&
 	return abs(ModuloTwoPI(fAligneda + 3.14159f) - angle2player) < fov;
 }
 
-void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player,Map& map, Sprite& sprite, float deltatime)
+void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player, Map& map, Sprite& sprite, float deltatime)
 {
 	float fObjPlyA;
 	olc::vi2d indicatorPos = { PGEptr->ScreenWidth() / 2, 30 };
 	PGEptr->DrawSprite(indicatorPos, indicatorsprite[0]);
-	
+
 
 	if (!ispickedup)
 	{
-		
-			for (int i = 0; i < NUM_SPRITES; i++)
+
+		for (int i = 0; i < NUM_SPRITES; i++)
+		{
+			spr = &sprite.objects[i];
+			spr->inSight = isinsight(*spr, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
+
+
+
+			if (spr->inSight)
 			{
-				spr = &sprite.objects[i];
-				spr->inSight = isinsight(*spr, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
-				
-				
-				
-				if (spr->inSight)
+
+
+				PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
+
+				if (PGEptr->GetKey(olc::SPACE).bHeld)
 				{
-					
 
-					PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
-
-					if (PGEptr->GetKey(olc::SPACE).bHeld)
-					{
-						
-						spr->pickedup = true;
-						ispickedup = true;
-						break;
-					}
-
-
-
+					spr->pickedup = true;
+					ispickedup = true;
+					break;
 				}
 
+
+
 			}
-		
-		
-		
+
+		}
+
+
+
 	}
 	else
 	{
-		
 
- 		if (spr->pickedup)
+
+		if (spr->pickedup)
 		{
 			spr->rotationangle = player.rotationAngle;
-			moveInput(PGEptr,player, *spr, sprite, map, deltatime);
+			moveInput(PGEptr, player, *spr, sprite, map, deltatime);
 			PGEptr->DrawSprite(indicatorPos, indicatorsprite[1]);
 			TKmove(*spr, player, map);
 			TKstrafe(*spr, player);
-			TKrotation(*spr, player,map);
+			TKrotation(*spr, player, map);
 			if (spr->islifting)
 			{
 				spr->liftup -= 5.0f;
 			}
+
 		}
 		else
 		{
 			
 		}
-	
-		
-		if (PGEptr->GetKey(olc::SPACE).bReleased)
-		{
 
+
+		if (!PGEptr->GetKey(olc::SPACE).bHeld)
+		{
+			
+			spr->islifting = false;
 			spr->pickedup = false;
 			ispickedup = false;
 			spr = nullptr;
 			
 		}
-		
-		
-		
+
+
+
 	}
-	
+
+	for (int i = 0; i < NUM_SPRITES; i++)
+	{
 		
-	
+		if (!sprite.objects[i].islifting)
+		{
+			//sprite.objects[i].liftup += 5.0f;
+
+			
+			particle.physicssetup(sprite.objects[i].liftup);
+			sprite.objects[i].liftup = particle.physicobjectlift(deltatime);
+		}
+	}
 
 }
 
@@ -174,14 +186,15 @@ void Force_powers::moveInput(olc::PixelGameEngine* pge,Player& player, object_t&
 
 			spr.moveObject(sprite,player,map, dt);
 			
+			
 }
 
 void Force_powers::physicsUpdate(object_t& sprite, float dt)
 {
 	
 	
-		
-
-		
+		particle.physicssetup(sprite.liftup);
+		particle.physicobjectlift(dt);
 	
+
 }

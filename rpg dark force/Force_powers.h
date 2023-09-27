@@ -3,7 +3,7 @@
 #include "olcPixelGameEngine.h"
 #include "Player.h"
 #include "Sprite.h"
-#include "Particle.h"
+#include "Physics.h"
 
 class Force_powers
 {
@@ -23,7 +23,7 @@ public:
 	float differencey;
 	bool ispickedup = false;
 	object_t* spr = nullptr;
-	Particle particle;
+	Physics particle;
 };
 
 #endif // !FORCE_POWERS_H

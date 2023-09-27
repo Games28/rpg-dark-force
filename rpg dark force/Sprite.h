@@ -21,6 +21,7 @@ struct object_t
 	int height;
 	bool pickedup;
 	float liftup = 0.0f;
+	float offset;
 
 	//movement 
 	float rotationangle = 0;

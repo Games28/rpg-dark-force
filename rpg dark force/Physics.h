@@ -3,14 +3,14 @@
 #include "Vec2.h"
 #include "defs.h"
 
-class Particle
+class Physics
 {
 public:
-	Particle() = default;
+	Physics();
 	void integrate(float& deltatime);
 	void physicsconstants();
-	void physicobjectlift(float& deltatime, bool& isfalling);
-	void physicssetup(float& lift);
+	float physicobjectlift(float& deltatime);
+	void physicssetup(float lift);
 	
 
 public:
@@ -18,7 +18,7 @@ public:
 	bool iscaught;
 	float gravity;
 	int pixels_per_meter;;
-	float* pos = nullptr;
+	float pos;
 	float vel;
 	float accelerate;
 	float deltatime;

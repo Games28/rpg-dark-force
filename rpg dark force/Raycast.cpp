@@ -64,9 +64,9 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 	if (xintercept > MAP_NUM_COLS_X * TILE_SIZE) xintercept = MAP_NUM_COLS_X * TILE_SIZE;
 
 	// Calculate the increments xstep and ystep
-	ystep = TILE_SIZE * (isRayFacingUp ? -1 : 1);
+	ystep = float(TILE_SIZE) * (isRayFacingUp ? -1 : 1);
 
-	xstep = TILE_SIZE / fRayAngleTan;
+	xstep = float(TILE_SIZE) / fRayAngleTan;
 	xstep *= (isRayFacingLt && xstep > 0) ? -1 : 1;
 	xstep *= (isRayFacingRt && xstep < 0) ? -1 : 1;
 
@@ -147,9 +147,9 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 	if (yintercept > MAP_NUM_ROWS_Y * TILE_SIZE) yintercept = MAP_NUM_ROWS_Y * TILE_SIZE;
 
 	// Calculate the increments xstep and ystep
-	xstep = TILE_SIZE * (isRayFacingLt ? -1 : 1);
+	xstep = float(TILE_SIZE) * (isRayFacingLt ? -1 : 1);
 
-	ystep = TILE_SIZE * fRayAngleTan;
+	ystep = float(TILE_SIZE) * fRayAngleTan;
 	ystep *= (isRayFacingUp && ystep > 0) ? -1 : 1;
 	ystep *= (isRayFacingDn && ystep < 0) ? -1 : 1;
 
