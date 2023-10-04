@@ -23,6 +23,7 @@ struct object_t
 	float liftup = 0.0f;
 	float offset;
 
+	
 	//movement 
 	float rotationangle = 0;
 	int turndirection = 0;
@@ -52,7 +53,7 @@ public:
 	void mapSprites(olc::PixelGameEngine* PGEptr, Sprite& sprite);
 	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }
 public:
-	object_t objects[NUM_SPRITES];
+	std::list<object_t> objects;
 	
 	olc::Sprite* spriteptr[NUM_SPRITES];
 	int vertposition = 0;

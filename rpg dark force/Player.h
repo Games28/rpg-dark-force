@@ -10,9 +10,10 @@ class Player
 public:
 	Player();
 	~Player();
-	void processInput(olc::PixelGameEngine* PGEptr,float deltatime, Map& map);
-	void movePlayer(float deltatime, Map& map);
+	void processInput(olc::PixelGameEngine* PGEptr,bool& pickedup,float deltatime, Map& map);
+	void movePlayer(olc::PixelGameEngine* pge, float deltatime, Map& map);
 	void renderMapPlayer(olc::PixelGameEngine* PGEptr);
+	bool GetMouseSteering(olc::PixelGameEngine *pge, float& fHorPerc, float& fVerPerc);
 
 public:
 	float x;
@@ -50,6 +51,7 @@ public:
 	olc::vf2d strafebefore;
 	olc::vf2d strafeafter;
 	olc::vf2d strafedifference;
+	bool bmousecontrol = false;
 	
 };
 

@@ -37,26 +37,38 @@ Player::~Player()
 {
 }
 
-void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& map)
+void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float deltatime, Map& map)
 {
-
-	if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
-	if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
-	if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
-	if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
+	//if (!pickedup)
+	{
+		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
+		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
+		if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
+		if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
+		if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
+		if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
+		if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
+		if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
+		if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
+		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
+	}
+	//else
+	//{
+	//	if (PGEptr->GetKey(olc::W).bHeld) walkDirection = 0;
+	//	if (PGEptr->GetKey(olc::S).bHeld) walkDirection = 0;
+	//	if (PGEptr->GetKey(olc::Q).bHeld) { strafedirection = 0; }
+	//	if (PGEptr->GetKey(olc::E).bHeld) {  strafedirection = 0; }
+	//}
 	if (PGEptr->GetKey(olc::D).bHeld) turnDirection = +1;
 	if (PGEptr->GetKey(olc::A).bHeld) turnDirection = -1;
-	if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
+	
 	if (PGEptr->GetKey(olc::UP).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
 	if (PGEptr->GetKey(olc::DOWN).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
 
-	if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
-	if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
-	if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
-	if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
+	
 	if (PGEptr->GetKey(olc::D).bReleased) turnDirection = 0;
 	if (PGEptr->GetKey(olc::A).bReleased) turnDirection = 0;
-	if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
+	
 	if (PGEptr->GetKey(olc::UP).bReleased) lookvert = false;
 
 	if (PGEptr->GetKey(olc::DOWN).bReleased) lookvert = false;
@@ -116,13 +128,18 @@ void Player::processInput(olc::PixelGameEngine* PGEptr, float deltatime, Map& ma
 	if (PGEptr->GetKey(olc::PGDN).bReleased) movevert = false;
 
 
+	//mouse control
 
+	if (PGEptr->GetKey(olc::M).bReleased)
+	{
+		bmousecontrol = !bmousecontrol;
+	}
 
 	// reset height and lookup factor upon pressing R
 	if (PGEptr->GetKey(olc::R).bReleased) { fPlayerH = 0.5f; lookupordown = 0.0f; }
 }
 
-void Player::movePlayer(float deltatime, Map& map)
+void Player::movePlayer(olc::PixelGameEngine* pge,float deltatime, Map& map)
 {
 	rotatebefore = rotationAngle;
 	movementbefore = { x,y };
@@ -183,8 +200,35 @@ void Player::movePlayer(float deltatime, Map& map)
 	}
 	strafedifference = strafeafter - strafebefore;
 	
-	
+	if (lookupordown <= 0.0f)
+	{
+		lookupordown = 0.0f;
+	}
 	//look up and look down cod
+	//mouse controls
+	float fRotFactor, fTiltFactor;
+	
+	if (bmousecontrol && GetMouseSteering(pge, fRotFactor, fTiltFactor))
+	{
+
+		rotationAngle += turnSpeed * fRotFactor * deltatime;
+		lookupordown -= lookspeed * fTiltFactor * deltatime;
+		pge->DrawString(200, 10, "fRotFactor " + std::to_string(fRotFactor));
+		pge->DrawString(200, 20, "fTiltFactor " + std::to_string(fTiltFactor));
+		if (fRotFactor < 0.0f)
+		{
+			turnDirection = -1;
+		}
+		else if (fRotFactor > 0.0f)
+		{
+			turnDirection = +1;
+		}
+		else
+		{
+			turnDirection  = 0;
+		}
+		
+	}
 }
 
 void Player::renderMapPlayer(olc::PixelGameEngine* PGEptr)
@@ -197,4 +241,29 @@ void Player::renderMapPlayer(olc::PixelGameEngine* PGEptr)
 		height * MINIMAP_SCALE_FACTOR,
 		p
 	);
+}
+
+bool Player::GetMouseSteering(olc::PixelGameEngine* pge,float& fHorPerc, float& fVerPerc)
+{
+	int nMouseX = pge->GetMouseX();
+	int nMouseY = pge->GetMouseY();
+
+	
+	
+		float fRangeX = (nMouseX - (WINDOW_WIDTH / 2)) / float(WINDOW_WIDTH / 2);
+		float fRangeY = (nMouseY - (WINDOW_HEIGHT / 2)) / float(WINDOW_HEIGHT / 2);
+
+		// the screen width / height is mapped onto [ -1.0, +1.0 ] range
+		// the range [ -0.2f, +0.2f ] is the stable (inactive) zone
+		fHorPerc = 0.0f;
+		fVerPerc = 0.0f;
+		
+		// if outside the stable zone, map to [ -1.0f, +1.0f ] again
+		if (fRangeX < -0.2f) fHorPerc = (fRangeX + 0.2f) * (1.0f / 0.8f);
+		if (fRangeX > 0.2f) fHorPerc = (fRangeX - 0.2f) * (1.0f / 0.8f);
+		if (fRangeY < -0.2f) fVerPerc = (fRangeY + 0.2f) * (1.0f / 0.8f);
+		if (fRangeY > 0.2f) fVerPerc = (fRangeY - 0.2f) * (1.0f / 0.8f);
+
+		return (fHorPerc != 0.0f || fVerPerc != 0.0f);
+	
 }

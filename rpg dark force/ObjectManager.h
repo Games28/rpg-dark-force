@@ -3,6 +3,7 @@
 #include "olcPixelGameEngine.h"
 #include "Physics.h"
 #include "Raycast.h"
+#include "Powers.h"
 
 
 
@@ -10,18 +11,20 @@
 class Object
 {
 public:
-	Object();
-	~Object();
+	Object() = default;
+	
 
-	void Update(float deltatime);
-	void Projection(olc::PixelGameEngine *pge, Player& player, Raycast& ray);
-	void Input(olc::PixelGameEngine* pge);
-	void Movement(float deltatime, Map& map);
+	void Update(Powers& powers,Map& map, float deltatime);
+	
+	void HorzMovement(float deltatime, Map& map,Player & player);
+	void VertMovement(float deltatime,Player &player);
+
+	
 
 public:
 	float x, y;
-
 	int texture;
+	olc::Sprite* sprite;
 	float scale;
 	bool stationary;
 	olc::vf2d size;
@@ -33,20 +36,41 @@ public:
 	int height;
 	bool pickedup;
 	float liftup = 0.0f;
-
+	float offset = 0;
+	float currentheight = 0;
 	//movement 
 	float rotationangle = 0;
 	int turndirection = 0;
 	int movedirection = 0;
 	float movespeed = 100;
 	float turnspeed = 45 * (PI / 180);
+	bool islifting = false;
+	bool isfalling = false;
+	int ObjectHeight = 0;
+	int ThrowDirection = 0;
+	bool isthrown = false;
 
 	Physics physics;
 };
 
 class ObjectManager
 {
-
+public:
+	ObjectManager() = default;
+	void InitSprite();
+	void InitObject();
+	void Update(olc::PixelGameEngine* pge, float deltatime, Map& map, Player& player);
+	void Input(olc::PixelGameEngine* pge);
+	void Render(olc::PixelGameEngine* pge, Player& player, Raycast& ray);
+	void RenderMapObjects(olc::PixelGameEngine* pge);
+	olc::Pixel SelectedPixel(olc::PixelGameEngine* ptr, Object* obj, olc::Sprite* sprite, olc::vf2d size, float samplex, float sampley, float Angle);
+public:
+	float deg2rad(float fAngleDeg) { return fAngleDeg * PI / 180.0f; }
+	std::list<Object> objects;
+	Powers powers;
+	olc::Sprite* sprites[NUM_SPRITES];
+	bool ispickedup = false;
+	Object* ptr = nullptr;
 };
 
 #endif // !OBJECTMANAGER_H

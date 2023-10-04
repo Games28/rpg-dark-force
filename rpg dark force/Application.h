@@ -10,6 +10,7 @@
 #include "Sprite.h"
 #include "Saber.h"
 #include "Force_powers.h"
+#include "ObjectManager.h"
 
 class Application
 {
@@ -32,7 +33,7 @@ public:
 	Sprite sprite;
 	Saber saber;
 	Force_powers powers;
-
+	ObjectManager OM;
 };
 
 

@@ -249,27 +249,27 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
 void Raycast::renderMapRays(olc::PixelGameEngine* PGEptr, Player& player, int testRay)
 {
 	olc::Pixel p = olc::GREEN;
-	for (int i = 0; i < NUM_RAYS; i++) {
-
-        // get first hitpoint with elevation (height > 0)
-        int useIndex = -1;
-        for (int j = 0; j < (int)rays[i].listinfo.size() && (useIndex == -1); j++)
-            if (rays[i].listinfo[j].height > 0)
-                useIndex = j;
-        // set to boundary hit if no point was found
-        if (useIndex == -1) {
-            useIndex = rays[i].listinfo.size() - 1;
-        }
-        if (useIndex >= 0) {
-            PGEptr->DrawLine(
-                player.x * MINIMAP_SCALE_FACTOR,
-                player.y * MINIMAP_SCALE_FACTOR,
-                rays[i].listinfo[useIndex].wallHitX * MINIMAP_SCALE_FACTOR,
-                rays[i].listinfo[useIndex].wallHitY * MINIMAP_SCALE_FACTOR,
-                p
-            );
-        }
-	}
+	//for (int i = 0; i < NUM_RAYS; i++) {
+    //
+    //    // get first hitpoint with elevation (height > 0)
+    //    int useIndex = -1;
+    //    for (int j = 0; j < (int)rays[i].listinfo.size() && (useIndex == -1); j++)
+    //        if (rays[i].listinfo[j].height > 0)
+    //            useIndex = j;
+    //    // set to boundary hit if no point was found
+    //    if (useIndex == -1) {
+    //        useIndex = rays[i].listinfo.size() - 1;
+    //    }
+    //    if (useIndex >= 0) {
+    //        PGEptr->DrawLine(
+    //            player.x * MINIMAP_SCALE_FACTOR,
+    //            player.y * MINIMAP_SCALE_FACTOR,
+    //            rays[i].listinfo[useIndex].wallHitX * MINIMAP_SCALE_FACTOR,
+    //            rays[i].listinfo[useIndex].wallHitY * MINIMAP_SCALE_FACTOR,
+    //            p
+    //        );
+    //    }
+	//}
 	// render test ray in distinct colour
 	int tstIndex = rays[testRay].listinfo.size() - 1;
 	if (tstIndex >= 0) {

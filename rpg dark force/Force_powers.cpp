@@ -82,9 +82,9 @@ void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player, Map& m
 	if (!ispickedup)
 	{
 
-		for (int i = 0; i < NUM_SPRITES; i++)
+		for (auto & obj : sprite.objects)
 		{
-			spr = &sprite.objects[i];
+			spr = &obj;
 			spr->inSight = isinsight(*spr, player, 10.0f * (3.14159f / 180.0f), fObjPlyA);
 
 
@@ -150,18 +150,18 @@ void Force_powers::TKUpdate(olc::PixelGameEngine* PGEptr, Player& player, Map& m
 
 	}
 
-	for (int i = 0; i < NUM_SPRITES; i++)
-	{
-		
-		if (!sprite.objects[i].islifting)
-		{
-			//sprite.objects[i].liftup += 5.0f;
-
-			
-			particle.physicssetup(sprite.objects[i].liftup);
-			sprite.objects[i].liftup = particle.physicobjectlift(deltatime);
-		}
-	}
+	//for (auto &obj : sprite.objects)
+	//{
+	//	
+	//	if (!obj.islifting)
+	//	{
+	//		//sprite.objects[i].liftup += 5.0f;
+	//
+	//		
+	//		particle.Vertphysicssetup(obj.liftup);
+	//		obj.liftup = particle.physicobjectlift(deltatime);
+	//	}
+	//}
 
 }
 
@@ -170,14 +170,12 @@ void Force_powers::moveInput(olc::PixelGameEngine* pge,Player& player, object_t&
 	//movement input
 			if (pge->GetKey(olc::I).bHeld) sprite.movedirection = +1;
 			if (pge->GetKey(olc::K).bHeld) sprite.movedirection = -1;
-		    if (pge->GetKey(olc::J).bHeld) sprite.rotationangle += -0.5;
-		    if (pge->GetKey(olc::L).bHeld) sprite.rotationangle += 0.5;
+		    if (pge->GetKey(olc::J).bHeld) sprite.offset += -0.5;
+		    if (pge->GetKey(olc::L).bHeld) sprite.offset += 0.5;
 			
 			if (pge->GetKey(olc::I).bReleased) sprite.movedirection = 0;
 			if (pge->GetKey(olc::K).bReleased) sprite.movedirection = 0;
-		    //if (pge->GetKey(olc::J).bReleased) sprite.turndirection = 0;
-		    //if (pge->GetKey(olc::L).bReleased) sprite.turndirection = 0;
-			
+		  
 		
 			//lift input
 			if (pge->GetKey(olc::U).bHeld) sprite.islifting = true;
@@ -193,7 +191,7 @@ void Force_powers::physicsUpdate(object_t& sprite, float dt)
 {
 	
 	
-		particle.physicssetup(sprite.liftup);
+		//particle.Vertphysicssetup(sprite.liftup);
 		particle.physicobjectlift(dt);
 	
 
