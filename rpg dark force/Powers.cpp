@@ -105,13 +105,13 @@ void Powers::TKthrow(Object& object, Map& map,float& deltatime)
 	object.physics.Horzphysicssetup( 8.0f);
 	Vec2 drag = Force::GenerateDragForce(object, 0.02f);
 
-	Vec2 push = Vec2(50 , 50);
+	Vec2 push = Vec2(50 * PIXELS_PER_METER, 50 * PIXELS_PER_METER);
 	object.physics.AddHorzForces(push);
 	object.physics.AddHorzForces(drag);
 	temp = object.physics.HorzIntegrate(object.rotationangle,deltatime);
 
-	float newThrowX = object.x + cos(object.rotationangle) * temp.x;
-	float newThrowY = object.y + sin(object.rotationangle) * temp.y;
+	float newThrowX = object.x + cos(object.offset) * temp.x;
+	float newThrowY = object.y + sin(object.offset) * temp.y;
 
 	
 

@@ -544,8 +544,8 @@ void ObjectManager::RenderMapObjects(olc::PixelGameEngine* pge)
 		pge->DrawLine(
 			obj.x * MINIMAP_SCALE_FACTOR,
 			obj.y * MINIMAP_SCALE_FACTOR,
-			(obj.x + cos(obj.rotationangle) * 40) * MINIMAP_SCALE_FACTOR,
-			(obj.y + sin(obj.rotationangle) * 40) * MINIMAP_SCALE_FACTOR
+			(obj.x + cos(obj.offset) * 40) * MINIMAP_SCALE_FACTOR,
+			(obj.y + sin(obj.offset) * 40) * MINIMAP_SCALE_FACTOR
 			);
 	}
 }
