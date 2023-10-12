@@ -19,7 +19,23 @@ public:
 	void HorzMovement(float deltatime, Map& map,Player & player);
 	void VertMovement(float deltatime,Player &player);
 
-	
+	//physics integrate
+	void integrate(float& deltatime);
+	void physicsconstants();
+	void physicobjectlift(float& deltatime);
+
+	//vertical physics
+	void Vertphysicssetup(float mass);
+	void Vertintegrate(float& deltatime);
+	void VertClearForces();
+	void AddVertForce(const float& force);
+
+	//horiziontal physics
+	void Horzphysicssetup(float mass);
+	void Horzintegrate(float& deltatime);
+	Vec2 HorzIntegrate(float& deltatime);
+	void AddHorzForces(const Vec2& force);
+	void HorzClearForces();
 
 public:
 	float x, y;
@@ -51,7 +67,39 @@ public:
 	bool isthrown = false;
 
 	Physics physics;
+
+	//physics intergrate
+
+	//bool isfalling;
+	bool iscaught;
+	float gravity;
+	int pixels_per_meter;;
+
+	float vel;
+	float accelerate;
+	float deltatime;
+
+	//vertical physics
+	float Vertpos;
+	float VertAccelerate;
+	float VertVel;
+	float VertsumForces;
+	float VertMass;
+	float VertinvMass;
+	int Vertradius;
+
+
+	//horiziontal physics
+	Vec2 Horzpos;
+	Vec2 HorzVel;
+	Vec2 HorzAccelerate;
+	Vec2 HorzSumforces;
+	float HorzMass;
+	float HorzInvMass;
 };
+
+
+
 
 class ObjectManager
 {
@@ -60,7 +108,7 @@ public:
 	void InitSprite();
 	void InitObject();
 	void Update(olc::PixelGameEngine* pge, float deltatime, Map& map, Player& player);
-	void Input(olc::PixelGameEngine* pge);
+	void Input(olc::PixelGameEngine* pge,Player& player);
 	void Render(olc::PixelGameEngine* pge, Player& player, Raycast& ray);
 	void RenderMapObjects(olc::PixelGameEngine* pge);
 	olc::Pixel SelectedPixel(olc::PixelGameEngine* ptr, Object* obj, olc::Sprite* sprite, olc::vf2d size, float samplex, float sampley, float Angle);

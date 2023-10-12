@@ -39,7 +39,9 @@ Player::~Player()
 
 void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float deltatime, Map& map)
 {
-	//if (!pickedup)
+
+
+	if (!pickedup)
 	{
 		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
 		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
@@ -52,13 +54,16 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 		if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
 		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
 	}
-	//else
-	//{
-	//	if (PGEptr->GetKey(olc::W).bHeld) walkDirection = 0;
-	//	if (PGEptr->GetKey(olc::S).bHeld) walkDirection = 0;
-	//	if (PGEptr->GetKey(olc::Q).bHeld) { strafedirection = 0; }
-	//	if (PGEptr->GetKey(olc::E).bHeld) {  strafedirection = 0; }
-	//}
+	else
+	{
+		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = 0;
+		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = 0;
+		if (PGEptr->GetKey(olc::Q).bHeld) { strafedirection = 0; }
+		if (PGEptr->GetKey(olc::E).bHeld) {  strafedirection = 0; }
+	}
+
+
+
 	if (PGEptr->GetKey(olc::D).bHeld) turnDirection = +1;
 	if (PGEptr->GetKey(olc::A).bHeld) turnDirection = -1;
 	

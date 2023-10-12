@@ -8,13 +8,15 @@ void Object::Update(Powers& powers,Map& map, float deltatime)
 	{
 	
 		float pixelpermeter = 50.0f;
-		physics.Vertphysicssetup(liftup, 40.0f);
-		float gravity = physics.VertMass * 9.8f * pixelpermeter;
-		physics.AddVertForce(gravity);
-		liftup = physics.physicobjectlift(deltatime);
+		Vertphysicssetup(40.0f);
+		float gravity = VertMass * 9.8f * pixelpermeter;
+		AddVertForce(gravity);
+		physicobjectlift(deltatime);
 		
-		if(isthrown)
+		if (isthrown)
 			powers.TKthrow(*this, map, deltatime);
+		
+		
 
 
 	}
@@ -53,6 +55,108 @@ void Object::VertMovement(float deltatime, Player& player)
 {
 	liftup = player.lookupordown * -1.0f;
 	//liftup += ObjectHeight * movespeed * deltatime;
+}
+
+void Object::integrate(float& deltatime)
+{
+}
+
+void Object::physicobjectlift(float& deltatime)
+{
+	Vertintegrate(deltatime);
+
+
+
+	if (Vertpos >= 0)
+	{
+		Vertpos = 0;
+
+		VertVel *= -0.5f;
+	}
+	liftup = Vertpos;
+}
+
+void Object::Vertphysicssetup( float mass)
+{
+	Vertpos = liftup;
+	VertMass = mass;
+	if (VertMass != 0.0f)
+	{
+		VertinvMass = 1.0f / VertMass;
+	}
+	else
+	{
+		VertinvMass = 0.0f;
+	}
+}
+
+void Object::Vertintegrate(float& deltatime)
+{
+	VertAccelerate = VertsumForces * VertinvMass;
+
+	VertVel += VertAccelerate * deltatime;
+	Vertpos += VertVel * deltatime;
+
+	VertClearForces();
+}
+
+void Object::VertClearForces()
+{
+	VertsumForces = 0;
+}
+
+void Object::AddVertForce(const float& force)
+{
+	VertsumForces += force;
+}
+
+void Object::Horzphysicssetup( float mass)
+{
+	Horzpos.x = x;
+	Horzpos.y = y;
+	HorzMass = mass;
+	if (HorzMass != 0.0f)
+	{
+		HorzInvMass = 1.0f / HorzMass;
+	}
+	else
+	{
+		HorzInvMass = 0.0f;
+	}
+}
+
+void Object::Horzintegrate(float& deltatime)
+{
+	HorzAccelerate = HorzSumforces * HorzInvMass;
+
+	HorzVel += HorzAccelerate * deltatime;
+
+	Horzpos += HorzVel * deltatime;
+	x = Horzpos.x;
+	y = Horzpos.y;
+	HorzClearForces();
+}
+
+Vec2 Object::HorzIntegrate(float& deltatime)
+{
+	HorzAccelerate = HorzSumforces * HorzInvMass;
+
+	HorzVel += HorzAccelerate * deltatime;
+
+	Horzpos += HorzVel * deltatime;
+	
+	HorzClearForces();
+	return Horzpos;
+}
+
+void Object::AddHorzForces(const Vec2& force)
+{
+	HorzSumforces += force;
+}
+
+void Object::HorzClearForces()
+{
+	HorzSumforces = Vec2(0, 0);
 }
 
 void ObjectManager::InitSprite()
@@ -121,6 +225,7 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 				if (pge->GetKey(olc::SPACE).bHeld)
 				{
 					ptr->isthrown = false;
+					powers.throwcount = 0;
 					ptr->pickedup = true;
 					ispickedup = true;
 					break;
@@ -186,30 +291,44 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 	}
 }
 
-void ObjectManager::Input(olc::PixelGameEngine* pge)
+void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 {
 	for (auto& obj : objects)
 	{
 		if (obj.pickedup)
 		{
-			if ( pge->GetMouse(0).bHeld) obj.movedirection = +1;
-			if (pge->GetMouse(1).bHeld) obj.movedirection = -1;
-			if ( pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
-			if ( pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
+			if (!player.bmousecontrol)
+			{
+				if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
+				if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
 
-			if (pge->GetMouse(0).bReleased) obj.movedirection = 0;
-			if (pge->GetMouse(1).bReleased) obj.movedirection = 0;
-			if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
-			if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
+				if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
+				if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
+				if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
+				if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
 
-			//lift input
-			if (pge->GetKey(olc::U).bHeld) obj.islifting = true;
-			//if (pge->GetKey(olc::U).bReleased) obj.islifting = false;
-			//if (pge->GetKey(olc::LEFT).bHeld) obj.ObjectHeight = -1;
-			//if (pge->GetKey(olc::RIGHT).bHeld) obj.ObjectHeight = +1;
-			//if (pge->GetKey(olc::LEFT).bReleased) obj.ObjectHeight = 0;
-			//if (pge->GetKey(olc::RIGHT).bReleased) obj.ObjectHeight = 0;
-			
+
+				if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
+				if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
+			}
+			else 
+			{
+				if (pge->GetMouse(0).bHeld) obj.movedirection = +1;
+				if (pge->GetMouse(1).bHeld) obj.movedirection = -1;
+
+
+				if (pge->GetMouse(0).bReleased) obj.movedirection = 0;
+				if (pge->GetMouse(1).bReleased) obj.movedirection = 0;
+
+
+				//lift input
+				if (pge->GetKey(olc::U).bHeld) obj.islifting = true;
+				//if (pge->GetKey(olc::U).bReleased) obj.islifting = false;
+				//if (pge->GetKey(olc::LEFT).bHeld) obj.ObjectHeight = -1;
+				//if (pge->GetKey(olc::RIGHT).bHeld) obj.ObjectHeight = +1;
+				//if (pge->GetKey(olc::LEFT).bReleased) obj.ObjectHeight = 0;
+				//if (pge->GetKey(olc::RIGHT).bReleased) obj.ObjectHeight = 0;
+			}
 			
 		}
 		else
@@ -467,3 +586,7 @@ olc::Pixel ObjectManager::SelectedPixel(olc::PixelGameEngine* ptr, Object* obj, 
 
 	return p;
 }
+
+
+
+

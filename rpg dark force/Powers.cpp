@@ -75,18 +75,40 @@ bool Powers::isinsight(Object& object, Player& player, float fov, float& angle2p
 
 void Powers::TKthrow(Object& object, Map& map,float& deltatime)
 {
-	
+	//new attempting with physics code inside object class
+	//float throwstep = object.ThrowDirection * 2 * deltatime;
+	//
+	//Vec2 temp;
+	//
+	//Vec2 drag = Force::GenerateDragForce(object, 2.0f);
+	//Vec2 push;
+	//object.Horzphysicssetup(4.0f);
+	//
+	//push = Vec2(50, 50);
+	//
+	//object.AddHorzForces(push);
+	//object.AddHorzForces(drag);
+	//
+	//
+	//temp = object.HorzIntegrate(deltatime);
+	//
+	//if (!map.mapHasWallAt(temp.x, temp.y))
+	//{
+	//	object.x = temp.x;
+	//	object.y = temp.y;
+	//}
 
-	float throwstep = object.ThrowDirection * object.movespeed * deltatime;
+	//old attempt with separate physics class
+	float throwstep = object.ThrowDirection * 2 * deltatime;
 
 	Vec2 temp;
-	
-	
+	object.physics.Horzphysicssetup( 8.0f);
+	Vec2 drag = Force::GenerateDragForce(object, 0.02f);
 
-	object.physics.Horzphysicssetup(object.x,object.y, 4.0f);
 	Vec2 push = Vec2(50 , 50);
 	object.physics.AddHorzForces(push);
-	temp = object.physics.HorzIntegrate(deltatime);
+	object.physics.AddHorzForces(drag);
+	temp = object.physics.HorzIntegrate(object.rotationangle,deltatime);
 
 	float newThrowX = object.x + cos(object.rotationangle) * temp.x;
 	float newThrowY = object.y + sin(object.rotationangle) * temp.y;

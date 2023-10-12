@@ -1,4 +1,5 @@
 #include "Physics.h"
+#include "ObjectManager.h"
 
 Physics::Physics()
 {
@@ -71,11 +72,10 @@ void Physics::AddVertForce(const float& force)
 	VertsumForces += force;
 }
 
-void Physics::Horzphysicssetup(float& x, float& y, float mass)
+void Physics::Horzphysicssetup( float mass)
 {
 	
-	//Horzpos->x = x;
-	//Horzpos->y = y;
+
 	HorzMass = mass;
 	if (HorzMass != 0.0f)
 	{
@@ -93,18 +93,20 @@ void Physics::Horzintegrate(float& deltatime)
 
 	HorzVel += HorzAccelerate * deltatime;
 
-	*Horzpos += HorzVel * deltatime;
+	Horzpos += HorzVel * deltatime;
 	HorzClearForces();
 }
 
-Vec2 Physics::HorzIntegrate(float& deltatime)
+Vec2 Physics::HorzIntegrate(float &rotationangle,float& deltatime)
 {
-	Vec2 vel;
+	Vec2 vel = Vec2(0,0);
 	HorzAccelerate = HorzSumforces * HorzInvMass;
 
 	HorzVel += HorzAccelerate * deltatime;
 
-	vel = HorzVel * deltatime;
+	vel = HorzVel  * deltatime;
+
+
 
 	HorzClearForces();
 
@@ -119,5 +121,29 @@ void Physics::AddHorzForces(const Vec2& force)
 void Physics::HorzClearForces()
 {
 	HorzSumforces = Vec2(0, 0);
-	Horzpos = nullptr;
+	
+}
+
+
+float Force::clamp(float val, float min, float max)
+{
+	if (val < min) return min;
+	if (val > max) return max;
+	return val;
+}
+
+Vec2 Force::GenerateDragForce(const Object& object, float k)
+{
+	Vec2 dragForce = Vec2(0, 0);
+	
+	if (object.physics.HorzVel.MagnitudeSquared() > 0)
+	{
+		Vec2 dragDirection = object.physics.HorzVel.UnitVector() * -1.0f;
+		float dragMagnitude = k * object.physics.HorzVel.MagnitudeSquared();
+	
+		dragForce = dragDirection * dragMagnitude;
+	
+	}
+
+	return dragForce;
 }

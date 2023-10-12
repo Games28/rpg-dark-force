@@ -23,7 +23,8 @@ public:
 	olc::Sprite* indicatorsprite[2];
 	float differencex;
 	float differencey;
-	
+	int throwcount = 0;
+
 	
 };
 
