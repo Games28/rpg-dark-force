@@ -100,7 +100,7 @@ void Powers::TKthrow(Object& object, Map& map,Player& player,float& deltatime)
 	object.physics.push *= 0.9f;
 	object.physics.AddHorzForces(object.physics.push);
 	object.physics.AddHorzForces(drag);
-	if (ptype == powertype::THROWN)
+	if (player.controller == controlstyle::THROWN)
 	{
 		
 		switch (throwdir)

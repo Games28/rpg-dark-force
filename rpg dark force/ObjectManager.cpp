@@ -117,16 +117,14 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 
 	case controlstyle::PULLED:
 	{
-		pge->DrawString({ 10,20 }, "controller style skyrim/ bioshock, object moves with player only" + std::to_string(player.controller));
+		pge->DrawString({ 10,20 }, "controller style skyrim/ bioshock,SPACE: hold obj, arrows for rotation, object moves with player only" + std::to_string(player.controller));
 
-		if (powers.ptype == powertype::PULLING)
-		{
-			pge->DrawString({ 10,30 }, "pulling mode for controls, SPACE: hold obj, arrows for rotation, can move with player" + std::to_string(powers.ptype));
-		}
-		if (powers.ptype == powertype::THROWN)
-		{
-			pge->DrawString({ 10,30 }, "throwing mode controls, SPACE: hold obj where is, J,I,K,L for moving object in direction, not move with player" + std::to_string(powers.ptype));
-		}
+		
+
+	}break;
+	case controlstyle::THROWN:
+	{
+		pge->DrawString({ 10,30 }, "throwing mode controls, SPACE: hold obj where is, J,I,K,L for moving object in direction, not move with player" + std::to_string(player.controller));
 	}break;
 	}
 	
@@ -174,7 +172,7 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 			if (ptr->pickedup)
 			{
 
-				if (powers.ptype == powertype::THROWN)
+				if (player.controller == controlstyle::THROWN)
 				{
 					powers.TKthrow(*ptr, map, player, deltatime);
 				}
@@ -188,7 +186,11 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 					powers.TKmove(*ptr, player, map);
 					powers.TKstrafe(*ptr, player);
 					powers.TKrotation(pge, *ptr, player, map);
-					powers.TKpull(*ptr, player, 10);
+					if (player.controller == controlstyle::THROWN)
+					{
+						powers.TKpull(*ptr, player, 10);
+					}
+					
 
 				}
 			}
@@ -229,31 +231,11 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 
 void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 {
-	if (player.controller == controlstyle::PULLED)
-	{
-		if (pge->GetKey(olc::F4).bPressed)
-			powers.ptype = powertype::PULLING;
-		if (pge->GetKey(olc::F5).bPressed)
-			powers.ptype = powertype::THROWN;
-	}
+	
 	for (auto& obj : objects)
 	{
-		if (powers.ptype == powertype::THROWN)
-		{
-			
-				if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
-					 powers.throwdir = THROWINGDIRECITON::UP;
-				if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
-					 powers.throwdir = THROWINGDIRECITON::DOWN;
-				if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
-					 powers.throwdir = THROWINGDIRECITON::LEFT;
-				if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
-					 powers.throwdir = THROWINGDIRECITON::RIGHT;
-			
-			
-		}
-		else
-		{
+		
+		
 			if (obj.pickedup)
 			{
 				//if (!player.bmousecontrol)
@@ -316,6 +298,21 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 					if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
 					if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
 				}
+
+				if (player.controller == controlstyle::THROWN)
+				{
+
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
+						powers.throwdir = THROWINGDIRECITON::UP;
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
+						powers.throwdir = THROWINGDIRECITON::DOWN;
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
+						powers.throwdir = THROWINGDIRECITON::LEFT;
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
+						powers.throwdir = THROWINGDIRECITON::RIGHT;
+
+
+				}
 			}
 			else
 			{
@@ -326,7 +323,7 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 				if (pge->GetKey(olc::LEFT).bHeld) obj.ObjectHeight = 0;
 				if (pge->GetKey(olc::RIGHT).bHeld) obj.ObjectHeight = 0;
 			}
-		}
+		
 		
 	}
 

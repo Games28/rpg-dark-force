@@ -9,7 +9,8 @@ enum controlstyle
 {
 	STASIONARY,
 	MOVEMENT,
-	PULLED
+	PULLED,
+	THROWN
 };
 
 class Player

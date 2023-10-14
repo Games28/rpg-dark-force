@@ -6,11 +6,7 @@
 
 class Object;
 
-enum powertype
-{
-	PULLING,
-	THROWN
-};
+
 
 enum THROWINGDIRECITON
 {
@@ -39,7 +35,7 @@ public:
 	float differencey;
 	int throwcount = 0;
 
-	powertype ptype = powertype::THROWN;
+	
 	THROWINGDIRECITON throwdir = THROWINGDIRECITON::STILL;
 };
 

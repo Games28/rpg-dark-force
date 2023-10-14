@@ -39,13 +39,15 @@ Player::~Player()
 
 void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float deltatime, Map& map)
 {
-	PGEptr->DrawString({ 10,10 }, "control options: F1 STATANARY, F2 MOVEMENT, F3 PULLED, if PULLED f4 pulling, f5 throwing");
-	if (PGEptr->GetKey(olc::F1).bHeld)
+	PGEptr->DrawString({ 10,10 }, "control options: F1 STATANARY, F2 MOVEMENT, F3 PULLED, f4 throwing");
+	if (PGEptr->GetKey(olc::F1).bPressed)
 		controller = controlstyle::STASIONARY;
-	if (PGEptr->GetKey(olc::F2).bHeld)
+	if (PGEptr->GetKey(olc::F2).bPressed)
 		controller = controlstyle::MOVEMENT;
-	if (PGEptr->GetKey(olc::F3).bHeld)
+	if (PGEptr->GetKey(olc::F3).bPressed)
 		controller = controlstyle::PULLED;
+	if (PGEptr->GetKey(olc::F4).bPressed)
+		controller = controlstyle::THROWN;
 
 	if (controller == controlstyle::STASIONARY)
 	{
