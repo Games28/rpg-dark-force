@@ -52,7 +52,7 @@ public:
 	Vec2 HorzSumforces;
 	float HorzMass;
 	float HorzInvMass;
-
+	Vec2 push = Vec2(50 * PIXELS_PER_METER, 50 * PIXELS_PER_METER);
 };
 
 

@@ -14,28 +14,12 @@ public:
 	Object() = default;
 	
 
-	void Update(Powers& powers,Map& map, float deltatime);
+	void Update(Powers& powers,Map& map,Player& player, float deltatime);
 	
 	void HorzMovement(float deltatime, Map& map,Player & player);
 	void VertMovement(float deltatime,Player &player);
 
-	//physics integrate
-	void integrate(float& deltatime);
-	void physicsconstants();
-	void physicobjectlift(float& deltatime);
-
-	//vertical physics
-	void Vertphysicssetup(float mass);
-	void Vertintegrate(float& deltatime);
-	void VertClearForces();
-	void AddVertForce(const float& force);
-
-	//horiziontal physics
-	void Horzphysicssetup(float mass);
-	void Horzintegrate(float& deltatime);
-	Vec2 HorzIntegrate(float& deltatime);
-	void AddHorzForces(const Vec2& force);
-	void HorzClearForces();
+	
 
 public:
 	float x, y;
@@ -63,39 +47,13 @@ public:
 	bool islifting = false;
 	bool isfalling = false;
 	int ObjectHeight = 0;
-	int ThrowDirection = 0;
+	float ThrowDirection = 0.0f;
 	bool isthrown = false;
 
 	Physics physics;
 
 	//physics intergrate
 
-	//bool isfalling;
-	bool iscaught;
-	float gravity;
-	int pixels_per_meter;;
-
-	float vel;
-	float accelerate;
-	float deltatime;
-
-	//vertical physics
-	float Vertpos;
-	float VertAccelerate;
-	float VertVel;
-	float VertsumForces;
-	float VertMass;
-	float VertinvMass;
-	int Vertradius;
-
-
-	//horiziontal physics
-	Vec2 Horzpos;
-	Vec2 HorzVel;
-	Vec2 HorzAccelerate;
-	Vec2 HorzSumforces;
-	float HorzMass;
-	float HorzInvMass;
 };
 
 

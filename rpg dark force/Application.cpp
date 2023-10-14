@@ -56,10 +56,10 @@ void Application::Render(olc::PixelGameEngine* pge)
 
 
 
-	map.renderMapGrid(pge);           // little map
-	player.renderMapPlayer(pge);// player in the map
-	//sprite.mapSprites(pge,sprite);
+	//map.renderMapGrid(pge);           // little map
+	//player.renderMapPlayer(pge);// player in the map
+	////sprite.mapSprites(pge,sprite);
 	OM.Render(pge, player, ray);
-	OM.RenderMapObjects(pge);
-	ray.renderMapRays(pge, player, wall.nTestRay);   // rays in the map
+	//OM.RenderMapObjects(pge);
+	//ray.renderMapRays(pge, player, wall.nTestRay);   // rays in the map
 }

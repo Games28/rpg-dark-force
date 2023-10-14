@@ -73,45 +73,78 @@ bool Powers::isinsight(Object& object, Player& player, float fov, float& angle2p
 	return abs(ModuloTwoPI(fAligneda + 3.14159f) - angle2player) < fov;
 }
 
-void Powers::TKthrow(Object& object, Map& map,float& deltatime)
+void Powers::TKpull(Object& object, Player& player,float Height)
 {
-	//new attempting with physics code inside object class
-	//float throwstep = object.ThrowDirection * 2 * deltatime;
-	//
-	//Vec2 temp;
-	//
-	//Vec2 drag = Force::GenerateDragForce(object, 2.0f);
-	//Vec2 push;
-	//object.Horzphysicssetup(4.0f);
-	//
-	//push = Vec2(50, 50);
-	//
-	//object.AddHorzForces(push);
-	//object.AddHorzForces(drag);
-	//
-	//
-	//temp = object.HorzIntegrate(deltatime);
-	//
-	//if (!map.mapHasWallAt(temp.x, temp.y))
-	//{
-	//	object.x = temp.x;
-	//	object.y = temp.y;
-	//}
+	float holddistance = 80.0f;
 
-	//old attempt with separate physics class
-	float throwstep = object.ThrowDirection * 2 * deltatime;
+	float differencex = object.x - player.x;
+	float differencey = object.y - player.y;
 
+	float distance = sqrtf(differencex * differencex + differencey * differencey);
+
+	object.x = player.x + cos(player.rotationAngle) * holddistance;
+	object.y = player.y + sin(player.rotationAngle) * holddistance;
+
+}
+
+void Powers::TKthrow(Object& object, Map& map,Player& player,float& deltatime)
+{
+	
+	
 	Vec2 temp;
 	object.physics.Horzphysicssetup( 8.0f);
 	Vec2 drag = Force::GenerateDragForce(object, 0.02f);
-
-	Vec2 push = Vec2(50 * PIXELS_PER_METER, 50 * PIXELS_PER_METER);
-	object.physics.AddHorzForces(push);
+	float newThrowX = 0;
+	float newThrowY = 0;
+	
+	object.physics.push *= 0.9f;
+	object.physics.AddHorzForces(object.physics.push);
 	object.physics.AddHorzForces(drag);
-	temp = object.physics.HorzIntegrate(object.rotationangle,deltatime);
+	if (ptype == powertype::THROWN)
+	{
+		
+		switch (throwdir)
+		{
+		case THROWINGDIRECITON::UP:
+		{
+			object.ThrowDirection = player.rotationAngle;
+			temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
+		}break;
+		case THROWINGDIRECITON::DOWN:
+		{
+			object.ThrowDirection = player.rotationAngle + (180 * (3.14159f / 180));
+			temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
+		}break;
 
-	float newThrowX = object.x + cos(object.offset) * temp.x;
-	float newThrowY = object.y + sin(object.offset) * temp.y;
+		case THROWINGDIRECITON::LEFT:
+		{
+			object.ThrowDirection = player.rotationAngle + (270 * (3.14159f / 180));
+			temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
+		}break;
+		case THROWINGDIRECITON::RIGHT:
+		{
+			object.ThrowDirection = player.rotationAngle + (90 * (3.14159f / 180));
+			temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
+		}break;
+
+		
+		
+		}
+		
+				
+		newThrowX = object.x + cos(object.ThrowDirection) * temp.x;
+		newThrowY = object.y + sin(object.ThrowDirection) * temp.y;
+			
+		
+	}
+	else
+	{
+		temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
+		newThrowX = object.x + cos(object.offset) * temp.x;
+		newThrowY = object.y + sin(object.offset) * temp.y;
+	}
+
+	
 
 	
 

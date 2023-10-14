@@ -5,6 +5,13 @@
 #include "defs.h"
 #include "MapEditor.h"
 
+enum controlstyle
+{
+	STASIONARY,
+	MOVEMENT,
+	PULLED
+};
+
 class Player
 {
 public:
@@ -52,7 +59,7 @@ public:
 	olc::vf2d strafeafter;
 	olc::vf2d strafedifference;
 	bool bmousecontrol = false;
-	
+	controlstyle controller = controlstyle::PULLED;
 };
 
 #endif // !PLAYER_H
