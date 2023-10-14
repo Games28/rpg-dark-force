@@ -49,7 +49,7 @@ public:
 	int ObjectHeight = 0;
 	float ThrowDirection = 0.0f;
 	bool isthrown = false;
-
+	int liftcount = 0;
 	Physics physics;
 
 	//physics intergrate

@@ -24,6 +24,8 @@ void Physics::physicsconstants()
 float Physics::physicobjectlift(float& deltatime)
 {
 	
+	
+
 	Vertintegrate(deltatime);
 
 	
@@ -32,7 +34,7 @@ float Physics::physicobjectlift(float& deltatime)
 	{
 		Vertpos = 0;
 
-		VertVel *= -0.5f;
+		VertVel *= -0.2f;
 	}
 
 	return Vertpos;
@@ -61,6 +63,20 @@ void Physics::Vertintegrate(float& deltatime)
 	
 	VertClearForces();
 }
+
+float Physics::VertIntegrate(float& deltatime)
+{
+	VertAccelerate = VertsumForces * VertinvMass;
+
+	VertVel += VertAccelerate * deltatime;
+	Vertpos += VertVel * deltatime;
+
+	
+	VertClearForces();
+	return Vertpos;
+}
+
+
 
 void Physics::VertClearForces()
 {

@@ -39,41 +39,51 @@ Player::~Player()
 
 void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float deltatime, Map& map)
 {
-	PGEptr->DrawString({ 10,10 }, "control options: F1 STATANARY, F2 MOVEMENT, F3 PULLED, f4 throwing");
-	if (PGEptr->GetKey(olc::F1).bPressed)
-		controller = controlstyle::STASIONARY;
-	if (PGEptr->GetKey(olc::F2).bPressed)
-		controller = controlstyle::MOVEMENT;
-	if (PGEptr->GetKey(olc::F3).bPressed)
-		controller = controlstyle::PULLED;
-	if (PGEptr->GetKey(olc::F4).bPressed)
-		controller = controlstyle::THROWN;
-
-	if (controller == controlstyle::STASIONARY)
-	{
-		if (!pickedup)
-		{
-			if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
-			if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
-			if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
-			if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
-			if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
-			if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
-			if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
-			if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
-			if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
-			if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
-		}
-		else
-		{
-			if (PGEptr->GetKey(olc::W).bHeld) walkDirection = 0;
-			if (PGEptr->GetKey(olc::S).bHeld) walkDirection = 0;
-			if (PGEptr->GetKey(olc::Q).bHeld) { strafedirection = 0; }
-			if (PGEptr->GetKey(olc::E).bHeld) { strafedirection = 0; }
-		}
-	}
 	
-	if (controller == controlstyle::MOVEMENT)
+	//if (PGEptr->GetKey(olc::F1).bPressed)
+	//	controller = controlstyle::STASIONARY;
+	//if (PGEptr->GetKey(olc::F2).bPressed)
+	//	controller = controlstyle::MOVEMENT;
+	//if (PGEptr->GetKey(olc::F3).bPressed)
+	//	controller = controlstyle::PULLED;
+	//if (PGEptr->GetKey(olc::F4).bPressed)
+	//	controller = controlstyle::THROWN;
+
+	//if (PGEptr->GetKey(olc::SHIFT).bHeld)
+	//{
+	//	jumping = 100.0f * pixelpermeter;
+	//	liftcount = 10;
+	//}
+	//if (!PGEptr->GetKey(olc::SHIFT).bHeld)
+	//{
+	//	jumping = 0;
+	//}
+
+	//if (controller == controlstyle::STASIONARY)
+	//{
+	//	if (!pickedup)
+	//	{
+	//		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
+	//		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
+	//		if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
+	//		if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
+	//		if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
+	//		if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
+	//		if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
+	//		if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
+	//		if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
+	//		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
+	//	}
+	//	else
+	//	{
+	//		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = 0;
+	//		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = 0;
+	//		if (PGEptr->GetKey(olc::Q).bHeld) { strafedirection = 0; }
+	//		if (PGEptr->GetKey(olc::E).bHeld) { strafedirection = 0; }
+	//	}
+	//}
+	
+	//if (controller == controlstyle::MOVEMENT)
 	{
 		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
 		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
@@ -87,47 +97,37 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
 	}
 
-	if (controller == controlstyle::PULLED)
-	{
-		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
-		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
-		if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
-		if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
-		if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
-		if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
-		if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
-		if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
-		if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
-		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
-	}
+	//if (controller == controlstyle::PULLED)
+	//{
+	//	if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
+	//	if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
+	//	if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
+	//	if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
+	//	if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
+	//	if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
+	//	if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
+	//	if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
+	//	if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
+	//	if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
+	//}
 
 	if (PGEptr->GetKey(olc::D).bHeld) turnDirection = +1;
 	if (PGEptr->GetKey(olc::A).bHeld) turnDirection = -1;
 	
-	if (controller == controlstyle::PULLED)
-	{
-		if (PGEptr->GetKey(olc::UP).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
-		if (PGEptr->GetKey(olc::DOWN).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
-		if (PGEptr->GetKey(olc::UP).bReleased) lookvert = false;
-
-		if (PGEptr->GetKey(olc::DOWN).bReleased) lookvert = false;
-	}
-	else
-	{
-		if (PGEptr->GetKey(olc::U).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
-		if (PGEptr->GetKey(olc::O).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
-		if (PGEptr->GetKey(olc::U).bReleased) lookvert = false;
-
-		if (PGEptr->GetKey(olc::O).bReleased) lookvert = false;
-	}
+	//if (controller == controlstyle::PULLED)
+	//{
+	//	if (PGEptr->GetKey(olc::UP).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
+	//	if (PGEptr->GetKey(olc::DOWN).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
+	//	if (PGEptr->GetKey(olc::UP).bReleased) lookvert = false;
+	//
+	//	if (PGEptr->GetKey(olc::DOWN).bReleased) lookvert = false;
+	//}
+	
 	
 	if (PGEptr->GetKey(olc::D).bReleased) turnDirection = 0;
 	if (PGEptr->GetKey(olc::A).bReleased) turnDirection = 0;
 	
-	if (PGEptr->GetKey(olc::U).bReleased) lookvert = false;
-
-	if (PGEptr->GetKey(olc::O).bReleased) lookvert = false;
-
+	
 
 	//NOTE - for multi level rendering there's only clamping to keep fPlayerH > 0.0f, there's no upper limit.
 
@@ -189,7 +189,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 	{
 		bmousecontrol = !bmousecontrol;
 	}
-
+	PGEptr->DrawString(200, 20, "fplayerH: " + std::to_string(fPlayerH));
 	// reset height and lookup factor upon pressing R
 	if (PGEptr->GetKey(olc::R).bReleased) { fPlayerH = 0.5f; lookupordown = 0.0f; }
 }
@@ -321,4 +321,25 @@ bool Player::GetMouseSteering(olc::PixelGameEngine* pge,float& fHorPerc, float& 
 
 		return (fHorPerc != 0.0f || fVerPerc != 0.0f);
 	
+}
+
+void Player::Jumping(Map& map, float deltatime)
+{
+	physics.Vertphysicssetup(fPlayerH, mass);
+
+	
+		physics.AddVertForce(jumping);
+	
+		physics.AddVertForce(gravity);
+	
+
+	
+
+	fPlayerH = physics.VertIntegrate(deltatime);
+
+	if (fPlayerH <= 0.5f)
+	{
+		
+		fPlayerH = 0.5f;
+	}
 }

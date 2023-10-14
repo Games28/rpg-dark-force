@@ -15,6 +15,7 @@ public:
 	//vertical physics
 	void Vertphysicssetup(float lift, float mass);
 	void Vertintegrate(float& deltatime);
+	float VertIntegrate(float& deltatime);
 	void VertClearForces();
 	void AddVertForce(const float& force);
 
@@ -28,7 +29,7 @@ public:
 public:
 	bool isfalling;
 	bool iscaught;
-	float gravity;
+	
 	int pixels_per_meter;
 	
 	float vel;
@@ -52,6 +53,8 @@ public:
 	Vec2 HorzSumforces;
 	float HorzMass;
 	float HorzInvMass;
+	float fallcount = 100.0f;
+	
 	Vec2 push = Vec2(50 * PIXELS_PER_METER, 50 * PIXELS_PER_METER);
 };
 
