@@ -115,13 +115,13 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 	if (PGEptr->GetKey(olc::A).bHeld) turnDirection = -1;
 	
 	//if (controller == controlstyle::PULLED)
-	//{
-	//	if (PGEptr->GetKey(olc::UP).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
-	//	if (PGEptr->GetKey(olc::DOWN).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
-	//	if (PGEptr->GetKey(olc::UP).bReleased) lookvert = false;
-	//
-	//	if (PGEptr->GetKey(olc::DOWN).bReleased) lookvert = false;
-	//}
+	{
+		if (PGEptr->GetKey(olc::UP).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
+		if (PGEptr->GetKey(olc::DOWN).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
+		if (PGEptr->GetKey(olc::UP).bReleased) lookvert = false;
+	
+		if (PGEptr->GetKey(olc::DOWN).bReleased) lookvert = false;
+	}
 	
 	
 	if (PGEptr->GetKey(olc::D).bReleased) turnDirection = 0;
@@ -325,21 +325,21 @@ bool Player::GetMouseSteering(olc::PixelGameEngine* pge,float& fHorPerc, float& 
 
 void Player::Jumping(Map& map, float deltatime)
 {
-	physics.Vertphysicssetup(fPlayerH, mass);
-
-	
-		physics.AddVertForce(jumping);
-	
-		physics.AddVertForce(gravity);
-	
-
-	
-
-	fPlayerH = physics.VertIntegrate(deltatime);
-
-	if (fPlayerH <= 0.5f)
-	{
-		
-		fPlayerH = 0.5f;
-	}
+	//physics.Vertphysicssetup(fPlayerH, mass);
+	//
+	//
+	//	physics.AddVertForce(jumping);
+	//
+	//	physics.AddVertForce(gravity);
+	//
+	//
+	//
+	//
+	//fPlayerH = physics.VertIntegrate(deltatime);
+	//
+	//if (fPlayerH <= 0.5f)
+	//{
+	//	
+	//	fPlayerH = 0.5f;
+	//}
 }
