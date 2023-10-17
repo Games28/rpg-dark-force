@@ -40,17 +40,7 @@ void Object::Update(Powers& powers,Map& map,Player& player, float deltatime)
 
 void Object::HorzMovement(float deltatime, Map& map, Player& player)
 {
-	auto normalizeangle = [=](float& angle)
-		{
-			angle = remainder(angle, TWO_PI);
-			if (angle < 0) {
-				angle = TWO_PI + angle;
-			}
-		};
-
-
-
-
+	
 
 	float movestep = movedirection * movespeed * deltatime;
 
@@ -75,9 +65,9 @@ void Object::VertMovement(float deltatime, Player& player)
 
 void ObjectManager::InitSprite()
 {
-	sprites[0] = new olc::Sprite("probidle.png");
-	sprites[1] = new olc::Sprite("r2d2ground.png");
-	sprites[2] = new olc::Sprite("trooperT2.png");
+	sprites[0] = new olc::Sprite("npc/probidle.png");
+	sprites[1] = new olc::Sprite("npc/r2d2ground.png");
+	sprites[2] = new olc::Sprite("npc/trooperT2.png");
 	powers.initSprite();
 }
 
@@ -87,7 +77,7 @@ void ObjectManager::InitObject()
 	obj.x = 300;
 	obj.y = 400;
 	obj.texture = 2;
-	obj.scale = 0.5f;
+	obj.scale = 1.0f;
 	obj.stationary = false;
 	obj.size = { 60,125 };
 	obj.liftup = 0;
@@ -97,7 +87,7 @@ void ObjectManager::InitObject()
 	obj1.x = 200;
 	obj1.y = 400;
 	obj1.texture = 2;
-	obj1.scale = 0.5f;
+	obj1.scale = 1.0f;
 	obj1.stationary = false;
 	obj1.size = { 60,125 };
 	obj1.liftup = 0;
@@ -254,22 +244,22 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 				//
 				//}
 
-				//if (player.controller == controlstyle::STASIONARY)
-				//{
-				//	if (pge->GetKey(olc::Q).bHeld) obj.offset += -0.5;
-				//	if (pge->GetKey(olc::E).bHeld) obj.offset += 0.5;
-				//
-				//	if (pge->GetKey(olc::Q).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::E).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
-				//	if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
-				//
-				//
-				//	if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
-				//	if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
-				//}
+				if (player.controller == controlstyle::STASIONARY)
+				{
+					if (pge->GetKey(olc::Q).bHeld) obj.offset += -0.5;
+					if (pge->GetKey(olc::E).bHeld) obj.offset += 0.5;
+				
+					if (pge->GetKey(olc::Q).bReleased) obj.offset += 0;
+					if (pge->GetKey(olc::E).bReleased) obj.offset += 0;
+					if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
+					if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
+				
+				
+					if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
+					if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
+				}
 
-				//if (player.controller == controlstyle::MOVEMENT)
+				if (player.controller == controlstyle::MOVEMENT)
 				{
 					if (pge->GetKey(olc::J).bHeld) obj.offset += -0.5;
 					if (pge->GetKey(olc::L).bHeld) obj.offset += 0.5;
@@ -282,28 +272,28 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 					if (pge->GetKey(olc::K).bReleased) obj.movedirection = 0;
 				}
 
-				//if (player.controller == controlstyle::PULLED)
-				//{
-				//	if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
-				//	if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
-				//	if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
-				//}
-				//
-				//if (player.controller == controlstyle::THROWN)
-				//{
-				//
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::UP;
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::DOWN;
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::LEFT;
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::RIGHT;
-				//
-				//
-				//}
+				if (player.controller == controlstyle::PULLED)
+				{
+					if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
+					if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
+					if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
+					if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
+				}
+				
+				if (player.controller == controlstyle::THROWN)
+				{
+				
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
+						powers.throwdir = THROWINGDIRECITON::UP;
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
+						powers.throwdir = THROWINGDIRECITON::DOWN;
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
+						powers.throwdir = THROWINGDIRECITON::LEFT;
+					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
+						powers.throwdir = THROWINGDIRECITON::RIGHT;
+				
+				
+				}
 			}
 			else
 			{

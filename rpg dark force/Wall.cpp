@@ -3,12 +3,12 @@
 void Wall::wallTextures()
 {
     //std::string sPath = "image/";
-	sprites[0] = olc::Sprite("sand1.png");
-	sprites[1] = olc::Sprite("stonewall.png");
-	sprites[2] = olc::Sprite("Tatooinedoor1.png");
-	sprites[3] = olc::Sprite("Tatooinedoor2.png");
-	sprites[4] = olc::Sprite("tatooinewindow2.png");
-	sprites[5] = olc::Sprite("Tatooinehousewall.png");
+	sprites[0] = olc::Sprite("scenery/sand1.png");
+	sprites[1] = olc::Sprite("scenery/stonewall.png");
+	sprites[2] = olc::Sprite("scenery/Tatooinedoor1.png");
+	sprites[3] = olc::Sprite("scenery/Tatooinedoor2.png");
+	sprites[4] = olc::Sprite("scenery/tatooinewindow2.png");
+	sprites[5] = olc::Sprite("scenery/Tatooinehousewall.png");
 	
 	
 

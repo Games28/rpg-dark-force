@@ -14,7 +14,7 @@ Player::Player()
 	strafeLeft = true;
 	strafeRight = true;
 	strafedirection = 0;
-	run = 1;
+	frun = 1;
 	lookspeed = 200.0f;
 	lookupordown = 0;
 	vertlook = 0;
@@ -40,94 +40,101 @@ Player::~Player()
 void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float deltatime, Map& map)
 {
 	
-	//if (PGEptr->GetKey(olc::F1).bPressed)
-	//	controller = controlstyle::STASIONARY;
-	//if (PGEptr->GetKey(olc::F2).bPressed)
-	//	controller = controlstyle::MOVEMENT;
-	//if (PGEptr->GetKey(olc::F3).bPressed)
-	//	controller = controlstyle::PULLED;
-	//if (PGEptr->GetKey(olc::F4).bPressed)
-	//	controller = controlstyle::THROWN;
-
-	//if (PGEptr->GetKey(olc::SHIFT).bHeld)
-	//{
-	//	jumping = 100.0f * pixelpermeter;
-	//	liftcount = 10;
-	//}
-	//if (!PGEptr->GetKey(olc::SHIFT).bHeld)
-	//{
-	//	jumping = 0;
-	//}
-
-	//if (controller == controlstyle::STASIONARY)
-	//{
-	//	if (!pickedup)
-	//	{
-	//		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
-	//		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
-	//		if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
-	//		if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
-	//		if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
-	//		if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
-	//		if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
-	//		if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
-	//		if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
-	//		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
-	//	}
-	//	else
-	//	{
-	//		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = 0;
-	//		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = 0;
-	//		if (PGEptr->GetKey(olc::Q).bHeld) { strafedirection = 0; }
-	//		if (PGEptr->GetKey(olc::E).bHeld) { strafedirection = 0; }
-	//	}
-	//}
-	
-	//if (controller == controlstyle::MOVEMENT)
+	if (PGEptr->GetKey(olc::W).bHeld)
 	{
-		if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
-		if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
-		if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
-		if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
-		if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
-		if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
-		if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
-		if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
-		if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
-		if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
+		walkDirection = +1;
 	}
 
-	//if (controller == controlstyle::PULLED)
-	//{
-	//	if (PGEptr->GetKey(olc::W).bHeld) walkDirection = +1;
-	//	if (PGEptr->GetKey(olc::S).bHeld) walkDirection = -1;
-	//	if (PGEptr->GetKey(olc::Q).bHeld) { strafeLeft = true; strafedirection = +1; }
-	//	if (PGEptr->GetKey(olc::E).bHeld) { strafeRight = true; strafedirection = -1; }
-	//	if (PGEptr->GetKey(olc::SHIFT).bHeld) run = 3;
-	//	if (PGEptr->GetKey(olc::W).bReleased) walkDirection = 0;
-	//	if (PGEptr->GetKey(olc::S).bReleased) walkDirection = 0;
-	//	if (PGEptr->GetKey(olc::Q).bReleased) strafedirection = 0;
-	//	if (PGEptr->GetKey(olc::E).bReleased)	strafedirection = 0;
-	//	if (PGEptr->GetKey(olc::SHIFT).bReleased) run = 1;
-	//}
-
-	if (PGEptr->GetKey(olc::D).bHeld) turnDirection = +1;
-	if (PGEptr->GetKey(olc::A).bHeld) turnDirection = -1;
-	
-	//if (controller == controlstyle::PULLED)
+	if (PGEptr->GetKey(olc::S).bHeld)
 	{
-		if (PGEptr->GetKey(olc::UP).bHeld) { lookvert = true; lookupordown += lookspeed * deltatime; }
-		if (PGEptr->GetKey(olc::DOWN).bHeld) { lookvert = true; lookupordown -= lookspeed * deltatime; }
-		if (PGEptr->GetKey(olc::UP).bReleased) lookvert = false;
-	
-		if (PGEptr->GetKey(olc::DOWN).bReleased) lookvert = false;
+		walkDirection = -1;
 	}
-	
-	
-	if (PGEptr->GetKey(olc::D).bReleased) turnDirection = 0;
-	if (PGEptr->GetKey(olc::A).bReleased) turnDirection = 0;
-	
-	
+
+	if (PGEptr->GetKey(olc::Q).bHeld)
+	{
+		strafeLeft = true;
+		strafedirection = +1;
+	}
+
+
+	if (PGEptr->GetKey(olc::E).bHeld)
+	{
+		strafeRight = true;
+		strafedirection = -1;
+	}
+
+
+	if (PGEptr->GetKey(olc::D).bHeld)
+	{
+		turnDirection = +1;
+	}
+
+	if (PGEptr->GetKey(olc::A).bHeld)
+	{
+		turnDirection = -1;
+	}
+
+	if (PGEptr->GetKey(olc::SHIFT).bHeld)
+	{
+		frun = 3;
+	}
+
+	if (PGEptr->GetKey(olc::UP).bHeld)
+	{
+		lookvert = true;
+		lookupordown += lookspeed * deltatime;
+	}
+	if (PGEptr->GetKey(olc::DOWN).bHeld)
+	{
+		lookvert = true;
+		lookupordown -= lookspeed * deltatime;
+	}
+
+	if (PGEptr->GetKey(olc::W).bReleased)
+	{
+		walkDirection = 0;
+	}
+
+	if (PGEptr->GetKey(olc::S).bReleased)
+	{
+		walkDirection = 0;
+	}
+
+	if (PGEptr->GetKey(olc::Q).bReleased)
+	{
+
+		strafedirection = 0;
+	}
+
+	if (PGEptr->GetKey(olc::E).bReleased)
+	{
+
+		strafedirection = 0;
+	}
+
+	if (PGEptr->GetKey(olc::D).bReleased)
+	{
+		turnDirection = 0;
+	}
+
+	if (PGEptr->GetKey(olc::A).bReleased)
+	{
+		turnDirection = 0;
+	}
+	if (PGEptr->GetKey(olc::SHIFT).bReleased)
+	{
+		frun = 1;
+	}
+	if (PGEptr->GetKey(olc::UP).bReleased)
+	{
+		lookvert = false;
+
+	}
+	if (PGEptr->GetKey(olc::DOWN).bReleased)
+	{
+		lookvert = false;
+
+	}
 
 	//NOTE - for multi level rendering there's only clamping to keep fPlayerH > 0.0f, there's no upper limit.
 
@@ -140,17 +147,17 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 		if (PGEptr->GetKey(olc::PGUP).bHeld)
 		{
 			movevert = true;
-			fPlayerH += strafeupspeed * run * deltatime;
-			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
+			fPlayerH += strafeupspeed * frun * deltatime;
+			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
 		}
 		if (PGEptr->GetKey(olc::PGDN).bHeld)
 		{
 			movevert = true;
-			float fNewHeight = fPlayerH - strafeupspeed * run * deltatime;
+			float fNewHeight = fPlayerH - strafeupspeed * frun * deltatime;
 			if (fNewHeight > 0.0f && map.FloatgetfromHeightmap(int(x), int(y)) < fNewHeight)
 			{
 				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
 			}
 		}
 
@@ -160,36 +167,37 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 		if (PGEptr->GetKey(olc::PGUP).bHeld)
 		{
 			movevert = true;
-			float fNewHeight = fPlayerH + strafeupspeed * run * deltatime;
+			float fNewHeight = fPlayerH + strafeupspeed * frun * deltatime;
 			if (fNewHeight < 1.0f)
 			{
-				fPlayerH += fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
+				fPlayerH = fNewHeight;
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
 			}
 		}
 		if (PGEptr->GetKey(olc::PGDN).bHeld)
 		{
 			movevert = true;
-			float fNewHeight = fPlayerH - strafeupspeed * run * deltatime;
+			float fNewHeight = fPlayerH - strafeupspeed * frun * deltatime;
 			if (fNewHeight > 0.0f)
 			{
 				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT) * fPlayerH;
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
 			}
 		}
 	}
 
-	if (PGEptr->GetKey(olc::PGUP).bReleased) movevert = false;
-	if (PGEptr->GetKey(olc::PGDN).bReleased) movevert = false;
-
-
-	//mouse control
-
-	if (PGEptr->GetKey(olc::M).bReleased)
+	if (PGEptr->GetKey(olc::PGUP).bReleased)
 	{
-		bmousecontrol = !bmousecontrol;
+		movevert = false;
+
 	}
-	PGEptr->DrawString(200, 20, "fplayerH: " + std::to_string(fPlayerH));
+	if (PGEptr->GetKey(olc::PGDN).bReleased)
+	{
+		movevert = false;
+
+	}
+
+
 	// reset height and lookup factor upon pressing R
 	if (PGEptr->GetKey(olc::R).bReleased) { fPlayerH = 0.5f; lookupordown = 0.0f; }
 }
@@ -213,8 +221,8 @@ void Player::movePlayer(olc::PixelGameEngine* pge,float deltatime, Map& map)
 	rotationdifference = rotateafter - rotatebefore;
 	float moveStep = walkDirection * walkSpeed * deltatime;
 
-	float newPlayerX = x + cos(rotationAngle) * moveStep * run;
-	float newPlayerY = y + sin(rotationAngle) * moveStep * run;
+	float newPlayerX = x + cos(rotationAngle) * moveStep * frun;
+	float newPlayerY = y + sin(rotationAngle) * moveStep * frun;
 
 	//wall collision
 	if (!map.mapHasWallAt(newPlayerX, newPlayerY)) {
@@ -255,10 +263,7 @@ void Player::movePlayer(olc::PixelGameEngine* pge,float deltatime, Map& map)
 	}
 	strafedifference = strafeafter - strafebefore;
 	
-	if (lookupordown <= 0.0f)
-	{
-		lookupordown = 0.0f;
-	}
+
 	//look up and look down cod
 	//mouse controls
 	float fRotFactor, fTiltFactor;

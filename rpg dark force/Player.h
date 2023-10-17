@@ -39,7 +39,7 @@ public:
 	bool strafeLeft;
 	bool strafeRight;
 	int strafedirection;
-	int run;
+	int frun;
 	float lookupordown;
 	float lookspeed;
 	float vertlook;
@@ -68,7 +68,7 @@ public:
 	float gravity = mass * 9.8f * pixelpermeter;
 	int liftcount = 10;
 	Physics physics;
- 	//controlstyle controller = controlstyle::PULLED;
+ 	controlstyle controller = controlstyle::MOVEMENT;
 };
 
 #endif // !PLAYER_H

@@ -7,9 +7,8 @@
 #include "Player.h"
 #include "Raycast.h"
 #include "Wall.h"
-#include "Sprite.h"
+
 #include "Saber.h"
-#include "Force_powers.h"
 #include "ObjectManager.h"
 
 class Application
@@ -30,9 +29,9 @@ public:
 	Player player;
 	Raycast ray;
 	Wall wall;
-	Sprite sprite;
+	
 	Saber saber;
-	Force_powers powers;
+	
 	ObjectManager OM;
 };
 

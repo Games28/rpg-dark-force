@@ -131,7 +131,6 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="defs.h" />
-    <ClInclude Include="Force_powers.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapEditor.h" />
     <ClInclude Include="ObjectManager.h" />
@@ -141,13 +140,11 @@
     <ClInclude Include="Powers.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="Saber.h" />
-    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Force_powers.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Physics.cpp" />
@@ -156,7 +153,6 @@
     <ClCompile Include="Raycast.cpp" />
     <ClCompile Include="Saber.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>

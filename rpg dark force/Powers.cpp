@@ -3,8 +3,8 @@
 
 void Powers::initSprite()
 {
-	indicatorsprite[0] = new olc::Sprite("newicon.png");
-	indicatorsprite[1] = new olc::Sprite("newiconglow.png");
+	indicatorsprite[0] = new olc::Sprite("npc/newicon.png");
+	indicatorsprite[1] = new olc::Sprite("npc/newiconglow.png");
 }
 
 void Powers::TKmove(Object& object, Player& player, Map& map)

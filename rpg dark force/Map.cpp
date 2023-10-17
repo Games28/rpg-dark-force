@@ -5,11 +5,11 @@ bool Map::mapHasWallAt(float x, float y)
 	if (x < 0 || x >= MAP_NUM_COLS_X * TILE_SIZE || y < 0 || y >= MAP_NUM_ROWS_Y * TILE_SIZE) {
 		return true;
 	}
-	int mapGridIndexX = floor(x / TILE_SIZE);
-	int mapGridIndexY = floor(y / TILE_SIZE);
+	int mapGridIndexX = (int)floor(x / TILE_SIZE);
+	int mapGridIndexY = (int)floor(y / TILE_SIZE);
 	//return Floatheightmap[mapGridIndexY][mapGridIndexX] != 0;
 	float height = 0;
-	for (int i = 0; i < fMaps.size(); i++)
+	for (int i = 0; i < (int)fMaps.size(); i++)
 	{
 		height += fMaps[i][mapGridIndexY * MapX + mapGridIndexX];
 	}
@@ -165,7 +165,7 @@ float Map::FloatgetfromHeightmap(int x, int y)
 	else
 	{
 		result = 0;
-		for (int i = 0; i < fMaps.size(); i++)
+		for (int i = 0; i < (int)fMaps.size(); i++)
 		{
 			
 			result += fMaps[i][y * MapX + x];

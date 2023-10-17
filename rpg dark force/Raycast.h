@@ -54,7 +54,7 @@ public:
 public:
 	Ray rays[NUM_RAYS];
 	float* Depthbuffer = new float[WINDOW_WIDTH];
-	float fMaxDistnace = sqrt(MAP_NUM_COLS_X * MAP_NUM_COLS_X + MAP_NUM_ROWS_Y * MAP_NUM_ROWS_Y);
+	float fMaxDistnace = (float)sqrt(MAP_NUM_COLS_X * MAP_NUM_COLS_X + MAP_NUM_ROWS_Y * MAP_NUM_ROWS_Y);
 
 	
 };
