@@ -100,49 +100,12 @@ void Powers::TKthrow(Object& object, Map& map,Player& player,float& deltatime)
 	object.physics.push *= 0.95f;
 	object.physics.AddHorzForces(object.physics.push);
 	object.physics.AddHorzForces(drag);
-	//if (player.controller == controlstyle::THROWN)
-	//{
-	//	
-	//	switch (throwdir)
-	//	{
-	//	case THROWINGDIRECITON::UP:
-	//	{
-	//		object.ThrowDirection = player.rotationAngle;
-	//		temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
-	//	}break;
-	//	case THROWINGDIRECITON::DOWN:
-	//	{
-	//		object.ThrowDirection = player.rotationAngle + (180 * (3.14159f / 180));
-	//		temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
-	//	}break;
-	//
-	//	case THROWINGDIRECITON::LEFT:
-	//	{
-	//		object.ThrowDirection = player.rotationAngle + (270 * (3.14159f / 180));
-	//		temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
-	//	}break;
-	//	case THROWINGDIRECITON::RIGHT:
-	//	{
-	//		object.ThrowDirection = player.rotationAngle + (90 * (3.14159f / 180));
-	//		temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
-	//	}break;
-	//
-	//	
-	//	
-	//	}
-	//	
-	//			
-	//	newThrowX = object.x + cos(object.ThrowDirection) * temp.x;
-	//	newThrowY = object.y + sin(object.ThrowDirection) * temp.y;
-	//		
-	//	
-	//}
-	//else
-	{
+	
+	
 		temp = object.physics.HorzIntegrate(object.rotationangle, deltatime);
 		newThrowX = object.x + cos(object.offset) * temp.x;
 		newThrowY = object.y + sin(object.offset) * temp.y;
-	}
+	
 
 	
 

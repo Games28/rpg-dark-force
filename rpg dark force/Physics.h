@@ -16,6 +16,7 @@ public:
 	void Vertphysicssetup(float lift, float mass);
 	void Vertintegrate(float& deltatime);
 	float VertIntegrate(float& deltatime);
+	float VertIntegr(float& deltatime);
 	void VertClearForces();
 	void AddVertForce(const float& force);
 

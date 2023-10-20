@@ -76,6 +76,15 @@ float Physics::VertIntegrate(float& deltatime)
 	return Vertpos;
 }
 
+float Physics::VertIntegr(float& deltatime)
+{
+	VertAccelerate = VertsumForces * VertinvMass;
+
+	VertVel += VertAccelerate * deltatime;
+	VertClearForces();
+	return VertVel;
+}
+
 
 
 void Physics::VertClearForces()

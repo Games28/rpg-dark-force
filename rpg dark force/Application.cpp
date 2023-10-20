@@ -24,8 +24,8 @@ void Application::ProcessInput(olc::PixelGameEngine* pge, float& fElapsedTime)
 {
 	//player input
 	player.processInput(pge,OM.ispickedup, fElapsedTime, map);
-	//player.Jumping(map, fElapsedTime);
-	OM.Input(pge, player);
+	//player.Jumping(pge,map, fElapsedTime);
+	OM.Input(pge, player, fElapsedTime);
 	
 	//object movement input
 

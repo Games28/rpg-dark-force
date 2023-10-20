@@ -16,17 +16,17 @@ void Object::Update(Powers& powers,Map& map,Player& player, float deltatime)
 			float pixelpermeter = 50.0f;
 			float gravity = physics.VertMass * 9.8f * pixelpermeter;
 			float uplift = -100.0f * pixelpermeter;;
-			if (liftcount > 0)
-			{
-				physics.AddVertForce(uplift);
-			}
-			else
+			//if (liftcount > 0)
+			//{
+			//	physics.AddVertForce(uplift);
+			//}
+			//else
 			{
 				physics.AddVertForce(gravity);
 			}
 
              liftup = physics.physicobjectlift(deltatime);
-			powers.TKthrow(*this, map, player, deltatime);
+			//powers.TKthrow(*this, map, player, deltatime);
 		}
 		
 		
@@ -57,8 +57,13 @@ void Object::HorzMovement(float deltatime, Map& map, Player& player)
 
 void Object::VertMovement(float deltatime, Player& player)
 {
-	liftup = (player.lookupordown ) * -1.0f;
-	//liftup += ObjectHeight * movespeed * deltatime;
+	
+
+
+
+
+	
+	
 }
 
 
@@ -107,7 +112,7 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 
 	float fObjPlyA;
 	olc::vi2d indicatorPos = { WINDOW_WIDTH / 2, 30 };
-	pge->DrawSprite(indicatorPos, powers.indicatorsprite[0]);
+	//pge->DrawSprite(indicatorPos, powers.indicatorsprite[0]);
 	
 	
 		if (!ispickedup)
@@ -124,10 +129,11 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 				{
 
 
-					pge->DrawSprite(indicatorPos, powers.indicatorsprite[1]);
+					//pge->DrawSprite(indicatorPos, powers.indicatorsprite[1]);
 
 					if (pge->GetKey(olc::SPACE).bHeld)
 					{
+						ptr->VertMovement(deltatime, player);
 						ptr->liftcount = 20;
 						ptr->physics.push = Vec2(50 * PIXELS_PER_METER, 50 * PIXELS_PER_METER);
 						ptr->isthrown = false;
@@ -162,8 +168,8 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 
 
 					ptr->HorzMovement(deltatime, map, player);
-					ptr->VertMovement(deltatime, player);
-					pge->DrawSprite(indicatorPos, powers.indicatorsprite[1]);
+					
+					//pge->DrawSprite(indicatorPos, powers.indicatorsprite[1]);
 					powers.TKmove(*ptr, player, map);
 					powers.TKstrafe(*ptr, player);
 					powers.TKrotation(pge, *ptr, player, map);
@@ -210,15 +216,16 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 	}
 }
 
-void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
+void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player, float deltatime)
 {
-	
+	pge->DrawString(200, 30, "liftup: " + std::to_string(player.fPlayerH));
 	for (auto& obj : objects)
 	{
 		
 		
 			if (obj.pickedup)
 			{
+
 				//if (!player.bmousecontrol)
 				//{
 				//	if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
@@ -244,56 +251,71 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player)
 				//
 				//}
 
-				if (player.controller == controlstyle::STASIONARY)
+				//if (player.controller == controlstyle::STASIONARY)
+				//{
+				//	if (pge->GetKey(olc::Q).bHeld) obj.offset += -0.5;
+				//	if (pge->GetKey(olc::E).bHeld) obj.offset += 0.5;
+				//
+				//	if (pge->GetKey(olc::Q).bReleased) obj.offset += 0;
+				//	if (pge->GetKey(olc::E).bReleased) obj.offset += 0;
+				//	if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
+				//	if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
+				//
+				//
+				//	if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
+				//	if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
+				//}
+				//
+				//if (player.controller == controlstyle::MOVEMENT)
 				{
-					if (pge->GetKey(olc::Q).bHeld) obj.offset += -0.5;
-					if (pge->GetKey(olc::E).bHeld) obj.offset += 0.5;
-				
-					if (pge->GetKey(olc::Q).bReleased) obj.offset += 0;
-					if (pge->GetKey(olc::E).bReleased) obj.offset += 0;
-					if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
-					if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
-				
-				
-					if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
-					if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
-				}
-
-				if (player.controller == controlstyle::MOVEMENT)
-				{
+					pge->DrawString(200, 20, "liftup: " + std::to_string(obj.liftup));
+					
 					if (pge->GetKey(olc::J).bHeld) obj.offset += -0.5;
 					if (pge->GetKey(olc::L).bHeld) obj.offset += 0.5;
 					if (pge->GetKey(olc::I).bHeld) obj.movedirection = +1;
 					if (pge->GetKey(olc::K).bHeld) obj.movedirection = -1;
 
-					if (pge->GetKey(olc::J).bReleased) obj.offset += 0;
-					if (pge->GetKey(olc::L).bReleased) obj.offset += 0;
-					if (pge->GetKey(olc::I).bReleased) obj.movedirection = 0;
-					if (pge->GetKey(olc::K).bReleased) obj.movedirection = 0;
+					//test vertical look and move
+					//player.strafeupspeed * player.frun* deltatime;
+					if (pge->GetKey(olc::PGDN).bHeld ) obj.liftup += player.strafeupspeed * player.frun * deltatime;
+					if (pge->GetKey(olc::PGUP).bHeld ) obj.liftup -= player.strafeupspeed * player.frun * deltatime;
+					
+					if (pge->GetKey(olc::PGDN).bReleased) obj.liftup -= 0;
+					if (pge->GetKey(olc::PGUP).bReleased) obj.liftup += 0;
+					
+					if (pge->GetKey(olc::UP).bHeld) obj.liftup -= 10.0f;
+					if (pge->GetKey(olc::DOWN).bHeld) obj.liftup += 10.0f;
+					
+					if (pge->GetKey(olc::UP).bReleased) obj.liftup -= 0;
+					if (pge->GetKey(olc::DOWN).bReleased) obj.liftup += 0;
+
+				
+					
+
 				}
 
-				if (player.controller == controlstyle::PULLED)
-				{
-					if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
-					if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
-					if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
-					if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
-				}
-				
-				if (player.controller == controlstyle::THROWN)
-				{
-				
-					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
-						powers.throwdir = THROWINGDIRECITON::UP;
-					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
-						powers.throwdir = THROWINGDIRECITON::DOWN;
-					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
-						powers.throwdir = THROWINGDIRECITON::LEFT;
-					if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
-						powers.throwdir = THROWINGDIRECITON::RIGHT;
-				
-				
-				}
+				//if (player.controller == controlstyle::PULLED)
+				//{
+				//	if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
+				//	if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
+				//	if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
+				//	if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
+				//}
+				//
+				//if (player.controller == controlstyle::THROWN)
+				//{
+				//
+				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
+				//		powers.throwdir = THROWINGDIRECITON::UP;
+				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
+				//		powers.throwdir = THROWINGDIRECITON::DOWN;
+				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
+				//		powers.throwdir = THROWINGDIRECITON::LEFT;
+				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
+				//		powers.throwdir = THROWINGDIRECITON::RIGHT;
+				//
+				//
+				//}
 			}
 			else
 			{
@@ -369,15 +391,22 @@ void ObjectManager::Render(olc::PixelGameEngine* pge, Player& player, Raycast& r
 
 	int nHorizonHeight = WINDOW_HEIGHT * player.fPlayerH + (int)player.lookupordown;
 
-
-
-
+	
+	
 
 	for (auto& obj : objects)
 	{
 
 		if (obj.visible)
 		{
+
+
+
+			//float newheight = lookdividedhundred - heightminuslook;
+
+
+
+
 			//object_t sprite = visibleSprites[i];
 
 			float fVecX = obj.x - player.x;
@@ -422,11 +451,21 @@ void ObjectManager::Render(olc::PixelGameEngine* pge, Player& player, Raycast& r
 			float fObjCeilingScaled = float(nHorizonHeight) - obj.distance;
 			// and adapt all the scaling into the ceiling value
 			float fScalingDifference = fObjCeilingNormalized - fObjCeilingScaled;
-			float fObjCeiling = float(obj.liftup + nHorizonHeight) - (spriteheight / 2) * obj.scale;
-			float fObjFloor = float(obj.liftup + nHorizonHeight) + (spriteheight / 2);
+			float fObjCeiling = float( nHorizonHeight) - (spriteheight / 2) * obj.scale;
+			float fObjFloor = float( nHorizonHeight) + (spriteheight / 2);
 
 			fObjCeiling += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
 			fObjFloor += fCompensatePlayerHeight * fObjHlveSliceHeight * 2.0f;
+			
+
+			if (obj.pickedup)
+			{
+				fObjCeiling += obj.liftup;
+				fObjFloor += obj.liftup;
+			}
+			
+			
+		
 
 			float fObjHeight = fObjFloor - fObjCeiling;
 			float fObjAR = float(sprites[obj.texture]->width) / float(sprites[obj.texture]->height);

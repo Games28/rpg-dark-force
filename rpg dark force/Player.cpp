@@ -39,7 +39,15 @@ Player::~Player()
 
 void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float deltatime, Map& map)
 {
-	
+	if (PGEptr->GetKey(olc::SHIFT).bHeld)
+	{
+		jumping = true;
+	}
+	if (PGEptr->GetKey(olc::SHIFT).bReleased)
+	{
+		jumping = false;
+	}
+
 	if (PGEptr->GetKey(olc::W).bHeld)
 	{
 		walkDirection = +1;
@@ -140,6 +148,7 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 
 		// cache current height of horizon, so that you can compensate for changes in it via the look up value
 	float fCachHorHeight = float(WINDOW_HEIGHT) * fPlayerH + lookupordown;
+	//move up or down test
 
 	if (MULTIPLE_LEVELS)
 	{
@@ -197,6 +206,9 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 
 	}
 
+
+	//look up or down test
+	
 
 	// reset height and lookup factor upon pressing R
 	if (PGEptr->GetKey(olc::R).bReleased) { fPlayerH = 0.5f; lookupordown = 0.0f; }
@@ -328,23 +340,33 @@ bool Player::GetMouseSteering(olc::PixelGameEngine* pge,float& fHorPerc, float& 
 	
 }
 
-void Player::Jumping(Map& map, float deltatime)
+void Player::Jumping(olc::PixelGameEngine *pge,Map& map, float deltatime)
 {
-	//physics.Vertphysicssetup(fPlayerH, mass);
-	//
-	//
-	//	physics.AddVertForce(jumping);
-	//
-	//	physics.AddVertForce(gravity);
-	//
-	//
-	//
-	//
-	//fPlayerH = physics.VertIntegrate(deltatime);
-	//
-	//if (fPlayerH <= 0.5f)
-	//{
-	//	
-	//	fPlayerH = 0.5f;
-	//}
+	float lift = 0;
+	float fCachHorHeight = float(WINDOW_HEIGHT) * fPlayerH + lookupordown;
+
+	float gravity = 9.8f;
+	physics.Vertphysicssetup(fPlayerH, 4);
+	physics.AddVertForce(gravity);
+	lift = physics.VertIntegr(deltatime);
+
+		// if the player height is adapted, keep horizon height stable by compensating with look up value
+		if (pge->GetKey(olc::SHIFT).bHeld)
+		{
+			//movevert = true;
+			fPlayerH += strafeupspeed * frun * deltatime;
+			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+		}
+		if(!pge->GetKey(olc::SHIFT).bHeld)
+		{
+			//movevert = true;
+			float fNewHeight = fPlayerH - (2.0f * deltatime);
+			if (fNewHeight > 0.5f && map.FloatgetfromHeightmap(int(x), int(y)) < fNewHeight)
+			{
+				fPlayerH = fNewHeight;
+				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+			}
+		}
+
+
 }

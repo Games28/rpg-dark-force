@@ -23,7 +23,7 @@ public:
 	void movePlayer(olc::PixelGameEngine* pge, float deltatime, Map& map);
 	void renderMapPlayer(olc::PixelGameEngine* PGEptr);
 	bool GetMouseSteering(olc::PixelGameEngine *pge, float& fHorPerc, float& fVerPerc);
-	void Jumping(Map& map, float deltatime);
+	void Jumping(olc::PixelGameEngine* pge,Map& map, float deltatime);
 
 public:
 	float x;
@@ -62,7 +62,7 @@ public:
 	olc::vf2d strafeafter;
 	olc::vf2d strafedifference;
 	bool bmousecontrol = false;
-	float jumping = 0.0f;
+	bool jumping = false;
 	float mass = 4.0f;
 	float pixelpermeter = 50.0f;
 	float gravity = mass * 9.8f * pixelpermeter;
