@@ -20,6 +20,7 @@
 #define MINIMAP_SCALE_FACTOR 0.1   // should be 0.1
 
 #define NUM_TEXTURES 14
+
 #define TEXTURE_WIDTH 64
 #define TEXUTRE_HEIGHT 64
 

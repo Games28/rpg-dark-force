@@ -21,7 +21,7 @@ class Powers
 public:
 	Powers() = default;
 	void initSprite();
-	void TKmove(Object& object, Player& player, Map& map);
+	void TKmove(olc::PixelGameEngine* pge, Object& object, Player& player, Map& map);
 	void TKstrafe(Object& object, Player& player);
 	void TKrotation(olc::PixelGameEngine* pge, Object& object, Player& player, Map& map);
 	bool isinsight(Object& object, Player& player, float fov, float& angle2player);

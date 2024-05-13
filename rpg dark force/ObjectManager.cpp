@@ -15,16 +15,16 @@ void Object::Update(Powers& powers,Map& map,Player& player, float deltatime)
 			physics.Vertphysicssetup(liftup, 20.0f);
 			float pixelpermeter = 50.0f;
 			float gravity = physics.VertMass * 9.8f * pixelpermeter;
-			float uplift = -100.0f * pixelpermeter;;
-			//if (liftcount > 0)
-			//{
-			//	physics.AddVertForce(uplift);
-			//}
-			//else
-			{
-				physics.AddVertForce(gravity);
-			}
-
+			//float uplift = -100.0f * pixelpermeter;;
+              if (liftcount > 0)
+              {
+              	//physics.AddVertForce(uplift);
+              }
+              else
+              {
+              	physics.AddVertForce(gravity);
+              }
+			 
              liftup = physics.physicobjectlift(deltatime);
 			//powers.TKthrow(*this, map, player, deltatime);
 		}
@@ -170,7 +170,7 @@ void ObjectManager::Update(olc::PixelGameEngine* pge,float deltatime, Map& map, 
 					ptr->HorzMovement(deltatime, map, player);
 					
 					//pge->DrawSprite(indicatorPos, powers.indicatorsprite[1]);
-					powers.TKmove(*ptr, player, map);
+					powers.TKmove(pge,*ptr, player, map);
 					powers.TKstrafe(*ptr, player);
 					powers.TKrotation(pge, *ptr, player, map);
 					//if (player.controller == controlstyle::THROWN)
@@ -226,47 +226,7 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player, float delta
 			if (obj.pickedup)
 			{
 
-				//if (!player.bmousecontrol)
-				//{
-				//	if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
-				//	if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
-				//
-				//	if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
-				//	if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
-				//
-				//
-				//	if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
-				//	if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
-				//}
-				//else 
-				//{
-				//	if (pge->GetMouse(0).bHeld) obj.movedirection = +1;
-				//	if (pge->GetMouse(1).bHeld) obj.movedirection = -1;
-				//
-				//
-				//	if (pge->GetMouse(0).bReleased) obj.movedirection = 0;
-				//	if (pge->GetMouse(1).bReleased) obj.movedirection = 0;
-				//
-				//}
-
-				//if (player.controller == controlstyle::STASIONARY)
-				//{
-				//	if (pge->GetKey(olc::Q).bHeld) obj.offset += -0.5;
-				//	if (pge->GetKey(olc::E).bHeld) obj.offset += 0.5;
-				//
-				//	if (pge->GetKey(olc::Q).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::E).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::W).bHeld) obj.movedirection = +1;
-				//	if (pge->GetKey(olc::S).bHeld) obj.movedirection = -1;
-				//
-				//
-				//	if (pge->GetKey(olc::W).bReleased) obj.movedirection = 0;
-				//	if (pge->GetKey(olc::S).bReleased) obj.movedirection = 0;
-				//}
-				//
-				//if (player.controller == controlstyle::MOVEMENT)
+				
 				{
 					pge->DrawString(200, 20, "liftup: " + std::to_string(obj.liftup));
 					
@@ -277,14 +237,14 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player, float delta
 
 					//test vertical look and move
 					//player.strafeupspeed * player.frun* deltatime;
-					if (pge->GetKey(olc::PGDN).bHeld ) obj.liftup += player.strafeupspeed * player.frun * deltatime;
-					if (pge->GetKey(olc::PGUP).bHeld ) obj.liftup -= player.strafeupspeed * player.frun * deltatime;
+					//if (pge->GetKey(olc::PGDN).bHeld ) obj.liftup += player.strafeupspeed * player.frun * deltatime;
+					//if (pge->GetKey(olc::PGUP).bHeld ) obj.liftup -= player.strafeupspeed * player.frun * deltatime;
 					
-					if (pge->GetKey(olc::PGDN).bReleased) obj.liftup -= 0;
-					if (pge->GetKey(olc::PGUP).bReleased) obj.liftup += 0;
+					//if (pge->GetKey(olc::PGDN).bReleased) obj.liftup -= 0;
+					//if (pge->GetKey(olc::PGUP).bReleased) obj.liftup += 0;
 					
-					if (pge->GetKey(olc::UP).bHeld) obj.liftup -= 10.0f;
-					if (pge->GetKey(olc::DOWN).bHeld) obj.liftup += 10.0f;
+					if (pge->GetKey(olc::UP).bHeld) obj.liftup -= player.lookspeed * deltatime;
+					if (pge->GetKey(olc::DOWN).bHeld) obj.liftup += player.lookspeed * deltatime;
 					
 					if (pge->GetKey(olc::UP).bReleased) obj.liftup -= 0;
 					if (pge->GetKey(olc::DOWN).bReleased) obj.liftup += 0;
@@ -294,28 +254,7 @@ void ObjectManager::Input(olc::PixelGameEngine* pge, Player& player, float delta
 
 				}
 
-				//if (player.controller == controlstyle::PULLED)
-				//{
-				//	if (pge->GetKey(olc::LEFT).bHeld) obj.offset += -0.5;
-				//	if (pge->GetKey(olc::RIGHT).bHeld) obj.offset += 0.5;
-				//	if (pge->GetKey(olc::LEFT).bReleased) obj.offset += 0;
-				//	if (pge->GetKey(olc::RIGHT).bReleased) obj.offset += 0;
-				//}
-				//
-				//if (player.controller == controlstyle::THROWN)
-				//{
-				//
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::I).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::UP;
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::K).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::DOWN;
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::J).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::LEFT;
-				//	if (pge->GetKey(olc::SPACE).bHeld && pge->GetKey(olc::L).bPressed)
-				//		powers.throwdir = THROWINGDIRECITON::RIGHT;
-				//
-				//
-				//}
+				
 			}
 			else
 			{

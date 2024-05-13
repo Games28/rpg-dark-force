@@ -7,13 +7,29 @@ void Powers::initSprite()
 	indicatorsprite[1] = new olc::Sprite("npc/newiconglow.png");
 }
 
-void Powers::TKmove(Object& object, Player& player, Map& map)
+void Powers::TKmove(olc::PixelGameEngine* pge, Object& object, Player& player, Map& map)
 {
 	
-	float movex = object.x + player.movedifference.x;
-	float movey = object.y + player.movedifference.y;
-
 	
+
+	float rotatex = cos(player.rotationAngle);
+	float rotatey = sin(player.rotationAngle);
+
+	int xoffset = 0; int yoffset = 0;
+
+	if (rotatex < 0)
+		xoffset = -40;
+	else
+		xoffset = 40;
+
+	if (rotatey < 0)
+		yoffset = -40;
+	else
+		yoffset = 40;
+	float movex = (object.x + xoffset) + player.movedifference.x;
+	float movey = (object.y + yoffset) + player.movedifference.y;
+
+	pge->DrawString(200, 10, "rx: " + std::to_string(rotatex) + "ry: " + std::to_string(rotatey));
 
 	if (!map.mapHasWallAt(movex, movey))
 	{
@@ -41,11 +57,24 @@ void Powers::TKrotation(olc::PixelGameEngine* pge,Object& object, Player& player
 	float angle_player_to_object = atan2f(differenceY, differenceX);
 
 	float angle_difference = player.rotationdifference;
+	float rotatex = (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
+	float rotatey = (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));
 
-	float rotatex = object.x + distance * (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
-	float rotatey = object.y + distance * (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));
+	int xoffset = 0; int yoffset = 0;
+	if (rotatex < 0)
+		xoffset = -40;
+	else
+		xoffset = 40;
 
-	if (!map.mapHasWallAt(rotatex, rotatey))
+	if (rotatey < 0)
+		yoffset = -40;
+	else
+		yoffset = 40;
+	
+	float newposX = (object.x + xoffset) + distance * rotatex;
+	float newposY = (object.y + yoffset) + distance * rotatey;
+	
+	if (!map.mapHasWallAt(newposX, newposY))
 	{
 		object.x += distance * (cosf(angle_player_to_object + angle_difference) - cosf(angle_player_to_object));
 		object.y += distance * (sinf(angle_player_to_object + angle_difference) - sinf(angle_player_to_object));

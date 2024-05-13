@@ -150,61 +150,61 @@ void Player::processInput(olc::PixelGameEngine* PGEptr,bool& pickedup, float del
 	float fCachHorHeight = float(WINDOW_HEIGHT) * fPlayerH + lookupordown;
 	//move up or down test
 
-	if (MULTIPLE_LEVELS)
-	{
-		// if the player height is adapted, keep horizon height stable by compensating with look up value
-		if (PGEptr->GetKey(olc::PGUP).bHeld)
-		{
-			movevert = true;
-			fPlayerH += strafeupspeed * frun * deltatime;
-			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
-		}
-		if (PGEptr->GetKey(olc::PGDN).bHeld)
-		{
-			movevert = true;
-			float fNewHeight = fPlayerH - strafeupspeed * frun * deltatime;
-			if (fNewHeight > 0.0f && map.FloatgetfromHeightmap(int(x), int(y)) < fNewHeight)
-			{
-				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
-			}
-		}
-
-	}
-	else
-	{
-		if (PGEptr->GetKey(olc::PGUP).bHeld)
-		{
-			movevert = true;
-			float fNewHeight = fPlayerH + strafeupspeed * frun * deltatime;
-			if (fNewHeight < 1.0f)
-			{
-				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
-			}
-		}
-		if (PGEptr->GetKey(olc::PGDN).bHeld)
-		{
-			movevert = true;
-			float fNewHeight = fPlayerH - strafeupspeed * frun * deltatime;
-			if (fNewHeight > 0.0f)
-			{
-				fPlayerH = fNewHeight;
-				lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
-			}
-		}
-	}
-
-	if (PGEptr->GetKey(olc::PGUP).bReleased)
-	{
-		movevert = false;
-
-	}
-	if (PGEptr->GetKey(olc::PGDN).bReleased)
-	{
-		movevert = false;
-
-	}
+	//if (MULTIPLE_LEVELS)
+	//{
+	//	// if the player height is adapted, keep horizon height stable by compensating with look up value
+	//	if (PGEptr->GetKey(olc::PGUP).bHeld)
+	//	{
+	//		movevert = true;
+	//		fPlayerH += strafeupspeed * frun * deltatime;
+	//		lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+	//	}
+	//	if (PGEptr->GetKey(olc::PGDN).bHeld)
+	//	{
+	//		movevert = true;
+	//		float fNewHeight = fPlayerH - strafeupspeed * frun * deltatime;
+	//		if (fNewHeight > 0.0f && map.FloatgetfromHeightmap(int(x), int(y)) < fNewHeight)
+	//		{
+	//			fPlayerH = fNewHeight;
+	//			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+	//		}
+	//	}
+	//
+	//}
+	//else
+	//{
+	//	if (PGEptr->GetKey(olc::PGUP).bHeld)
+	//	{
+	//		movevert = true;
+	//		float fNewHeight = fPlayerH + strafeupspeed * frun * deltatime;
+	//		if (fNewHeight < 1.0f)
+	//		{
+	//			fPlayerH = fNewHeight;
+	//			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+	//		}
+	//	}
+	//	if (PGEptr->GetKey(olc::PGDN).bHeld)
+	//	{
+	//		movevert = true;
+	//		float fNewHeight = fPlayerH - strafeupspeed * frun * deltatime;
+	//		if (fNewHeight > 0.0f)
+	//		{
+	//			fPlayerH = fNewHeight;
+	//			lookupordown = fCachHorHeight - float(WINDOW_HEIGHT * fPlayerH);
+	//		}
+	//	}
+	//}
+	//
+	//if (PGEptr->GetKey(olc::PGUP).bReleased)
+	//{
+	//	movevert = false;
+	//
+	//}
+	//if (PGEptr->GetKey(olc::PGDN).bReleased)
+	//{
+	//	movevert = false;
+	//
+	//}
 
 
 	//look up or down test
@@ -232,6 +232,24 @@ void Player::movePlayer(olc::PixelGameEngine* pge,float deltatime, Map& map)
 	rotateafter = rotationAngle;
 	rotationdifference = rotateafter - rotatebefore;
 	float moveStep = walkDirection * walkSpeed * deltatime;
+
+	float rotatex = cos(rotationAngle);
+	float rotatey = sin(rotationAngle);
+
+	int xoffset = 0; int yoffset = 0;
+
+	if (rotatex < 0)
+		xoffset = -40;
+	else
+		xoffset = 40;
+
+	if (rotatey < 0)
+		yoffset = -40;
+	else
+		yoffset = 40;
+	
+	float tempplayerx = (x + xoffset) + cos(rotationAngle) * moveStep * frun;
+	float tempplayery = (y + yoffset) + sin(rotationAngle) * moveStep * frun;
 
 	float newPlayerX = x + cos(rotationAngle) * moveStep * frun;
 	float newPlayerY = y + sin(rotationAngle) * moveStep * frun;
