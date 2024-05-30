@@ -28,7 +28,7 @@ void Wall::calculateBottomAndTop(float wallDistance, int halfheight, float wallh
 	wallfloor = halfheight + (float(nsliceHeight) *  player.fPlayerH );
 }
 
-olc::Pixel Wall::SelectSceneryPixel(int textureid, float samplex, float sampley, float distance, Side side)
+olc::Pixel Wall::SelectSceneryPixel(int textureid, int samplex, int sampley, float distance, Side side)
 {
 	olc::Pixel p;
 
@@ -326,7 +326,7 @@ void Wall::renderWallProjection(olc::PixelGameEngine* PGEptr, Player& player, Ra
 				// having both sample coordinates, get the sample and draw the pixel
 				
 					//olc::Pixel auxSample = sprites[textureid].GetPixel(fSampleX, fSampleY);
-				olc::Pixel auxSample = SelectSceneryPixel(textureid, fSampleX, fSampleY,fDistnace, Side::WalL);
+				olc::Pixel auxSample = SelectSceneryPixel(textureid, (int)fSampleX, (int)fSampleY,fDistnace, Side::WalL);
 					PGEptr->Draw(x, y, auxSample);
 				//DepthDraw(x, y, rays.rays[x].listinfo[0].distance, auxSample);
 

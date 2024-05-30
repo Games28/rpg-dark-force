@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "olcPixelGameEngine.h"
-
+#include "defs.h"
 #include "Player.h"
 #include "Map.h"
 

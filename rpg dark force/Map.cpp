@@ -48,7 +48,7 @@ bool Map::isOutSideMap(float x, float y)
 void Map::renderMapGrid(olc::PixelGameEngine* PGEptr)
 {
     // fill background for minimap
-    PGEptr->FillRect( 0, 0, MAP_NUM_COLS_X * TILE_SIZE * MINIMAP_SCALE_FACTOR, MAP_NUM_ROWS_Y * TILE_SIZE * MINIMAP_SCALE_FACTOR, olc::DARK_YELLOW );
+    PGEptr->FillRect( 0, 0, (int)MAP_NUM_COLS_X * TILE_SIZE * MINIMAP_SCALE_FACTOR, (int)MAP_NUM_ROWS_Y * TILE_SIZE * MINIMAP_SCALE_FACTOR, olc::DARK_YELLOW );
 
     // draw each tile
 	for (int i = 0; i < MAP_NUM_ROWS_Y; i++) {

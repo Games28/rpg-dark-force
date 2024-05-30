@@ -223,7 +223,7 @@ void Raycast::castRay(float rayAngle, int stripID, Player& player, Map& map)
     bool bRunUp = true;
     float nHeightTracker = 0;
     std::vector<struct intersectInfo> tempList(rays[stripID].listinfo); // copy hit list to a temporary list
-    rays[stripID].distance.push_back(rays[stripID].listinfo[0].distance);
+    
     rays[stripID].listinfo.clear();                                         // clear hit list
 
     for (int i = 0; i < (int)tempList.size(); i++) {
